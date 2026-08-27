@@ -23,15 +23,15 @@ matching-team.jpg     이걸로 배정합니다       관리사님 여러 분 �
 voucher.jpg           참사랑은 어떤 곳인가    전자바우처 검색 결과      ← 실제 캡처
 
 [품질평가]
-grade.jpg             품질평가 A등급          A등급 인증서              ← 실제
+grade.jpg             품질평가 A등급          A등급 인증서              ← 실제   ✅ 블로그에서 받음
 
 [정기 교육 · 간담회]  ← 전부 실제 사진
-edu-lecture.jpg       양성과정 강의
+edu-lecture.jpg       양성과정 강의   ✅ 블로그에서 받음
 edu-practice.jpg      신생아 목욕 실습
-edu-bosu.jpg          2026 정기 보수교육
-edu-grad.jpg          수료식 단체사진
-meeting.jpg           제공인력 간담회
-meeting-award.jpg     우수 관리사 시상
+edu-bosu.jpg          2026 정기 보수교육   ✅ 블로그에서 받음
+edu-grad.jpg          수료식 단체사진   ✅ 블로그에서 받음
+meeting.jpg           제공인력 간담회   ✅ 블로그에서 받음
+meeting-award.jpg     우수 관리사 시상   ✅ 블로그에서 받음
 
 [다른 업체와 비교]
 compare-people.jpg    ① 몇 분 계세요          인력 배정 보드
@@ -59,10 +59,10 @@ class-scene.jpg       산모교실                지난 진행 사진          
 class-gift.jpg        산모교실                사은품 이미지
 
 [가족 산후관리사]
-poster-family.jpg     가족 산후관리사         「딸과 며느리」 포스터    ← 실제
+poster-family.jpg     가족 산후관리사         「딸과 며느리」 포스터    ← 실제   ✅ 블로그에서 받음
 family-care.jpg       가족 산후관리사         친정어머니와 손주
 poster-extra.jpg      가족 산후관리사         영유아·정리수납·AI 포스터 ← 실제
-family-edu.jpg        가족 산후관리사         가족 관리사 교육 현장     ← 실제
+family-edu.jpg        가족 산후관리사         가족 관리사 교육 현장     ← 실제   ✅ 블로그에서 받음
 
 [마무리]
 closing-warm.jpg      마무리                  산모와 아기, 창가
