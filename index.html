@@ -1,0 +1,2518 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>참사랑 베이비페어 상담</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* ═══════════════════════════════════════════════════════════
+   팔레트 — 브랜드 핑크는 유지, 글씨는 전부 진한 핑크로.
+   (검토의견서: 파스텔 글씨는 노트북에서 안 읽힘 → #C2185B 계열)
+   본문 대비 15:1 / 강조 6.4:1 이상으로 잡음.
+   ═══════════════════════════════════════════════════════════ */
+:root{
+  --ground:#FAF6F7;
+  --surface:#FFFFFF;
+  --surface-2:#FDF1F6;      /* 파스텔 핑크 — 면(배경)에만 사용 */
+  --line:#EFDCE4;
+  --line-2:#E3C6D3;
+  --ink:#231A1E;            /* 본문 15.4:1 */
+  --text-2:#5E4A52;         /* 보조 8.1:1 */
+  --text-3:#8A7079;         /* 약한 텍스트 4.6:1 */
+  --brand:#C2185B;          /* 강조 글씨 6.4:1 */
+  --brand-d:#98123F;        /* 더 진한 강조 9.2:1 */
+  --brand-soft:#FDF1F6;
+  --brand-line:#EDBCD3;
+  --gold:#8A6212;           /* 골드 대체 — 원래 #D9A54A는 2:1 */
+  --good:#0F6B3C;
+  --good-soft:#E4F3EA;
+  --good-line:#A9D6BC;
+  --warn:#8A4B02;
+  --warn-soft:#FCF0DE;
+  --warn-line:#E8C79A;
+  --crit:#A31D1D;
+  --crit-soft:#FBE8E8;
+  --crit-line:#EDB5B5;
+  --shadow:0 1px 2px rgba(60,20,40,.05), 0 12px 32px -18px rgba(60,20,40,.28);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;height:100%;}
+body{
+  background:var(--ground);color:var(--ink);
+  font-family:"IBM Plex Sans KR","Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+  font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;
+}
+.num{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums;}
+.serif{font-family:"Gowun Batang","Batang",serif;}
+
+/* ── 전체 틀 ── */
+.app{display:grid;grid-template-columns:266px minmax(0,1fr);min-height:100vh;}
+@media (max-width:1000px){.app{grid-template-columns:1fr;}}
+
+/* ── 왼쪽 진행 목록 ── */
+.rail{
+  background:var(--surface);border-right:1px solid var(--line);
+  display:flex;flex-direction:column;position:sticky;top:0;height:100vh;
+}
+@media (max-width:1000px){.rail{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);}}
+
+/* 상담 중에는 화면 전체가 상담 내용 — 목록은 필요할 때만 */
+body.presenting .app{grid-template-columns:minmax(0,1fr);}
+body.presenting .rail{display:none;}
+body.presenting.menu .rail{
+  display:flex;position:fixed;left:0;top:0;bottom:0;width:280px;height:100vh;z-index:82;
+  box-shadow:0 0 40px -8px rgba(60,20,40,.3);
+}
+.railveil{position:fixed;inset:0;background:rgba(35,26,30,.42);z-index:81;display:none;}
+body.presenting.menu .railveil{display:block;}
+@media (prefers-reduced-motion:reduce){body.presenting .rail{transition:none;}}
+.rail-h{padding:20px 20px 14px;border-bottom:1px solid var(--line);}
+.rail-h .logo{font-family:"Gowun Batang",serif;font-weight:700;font-size:21px;color:var(--brand-d);letter-spacing:-.02em;}
+.rail-h .tag{font-size:13px;color:var(--text-3);margin-top:2px;}
+.prog{height:5px;background:var(--surface-2);border-radius:99px;margin-top:12px;overflow:hidden;}
+.prog i{display:block;height:100%;background:var(--brand);border-radius:99px;transition:width .3s;}
+.prog-t{font-size:12px;color:var(--text-3);margin-top:6px;}
+
+/* 상담 코스 선택 */
+.courses{display:grid;gap:6px;margin-top:14px;}
+.crs{
+  display:flex;align-items:baseline;gap:8px;width:100%;text-align:left;
+  font-family:inherit;cursor:pointer;padding:9px 12px;border-radius:9px;
+  background:var(--surface);border:1.5px solid var(--line-2);color:var(--text-2);transition:.13s;
+}
+.crs:hover{border-color:var(--brand);background:var(--brand-soft);}
+.crs.on{background:var(--brand);border-color:var(--brand);color:#fff;}
+.crs b{font-size:14.5px;font-weight:600;}
+.crs span{font-size:12.5px;color:var(--text-3);margin-left:auto;}
+.crs.on span{color:rgba(255,255,255,.82);}
+.crs:focus-visible{outline:3px solid var(--brand-line);outline-offset:2px;}
+
+.steps{flex:1;overflow-y:auto;padding:10px 10px 16px;}
+.snav{
+  display:flex;gap:11px;align-items:flex-start;width:100%;text-align:left;
+  background:none;border:0;font-family:inherit;cursor:pointer;
+  padding:9px 11px;border-radius:9px;color:var(--text-2);transition:.13s;
+}
+.snav:hover{background:var(--surface-2);color:var(--brand-d);}
+.snav.on{background:var(--brand);color:#fff;}
+.snav.done .sn{background:var(--good);color:#fff;border-color:var(--good);}
+.snav.on .sn{background:rgba(255,255,255,.22);color:#fff;border-color:transparent;}
+.sn{
+  flex:0 0 24px;width:24px;height:24px;border-radius:7px;
+  border:1.5px solid var(--line-2);background:var(--surface);
+  display:grid;place-items:center;font-size:12px;font-weight:600;
+  font-family:"IBM Plex Mono",monospace;color:var(--text-3);transition:.13s;
+}
+.st{font-size:14.5px;font-weight:500;line-height:1.4;padding-top:1px;}
+.snav.on .st{font-weight:600;}
+.sgroup{font-size:11.5px;font-weight:600;letter-spacing:.08em;color:var(--text-3);
+  padding:14px 12px 5px;text-transform:uppercase;}
+
+.rail-f{padding:12px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px;}
+
+/* ── 버튼 ── */
+.btn{
+  font-family:inherit;font-size:14.5px;font-weight:500;cursor:pointer;
+  background:var(--surface);color:var(--text-2);
+  border:1.5px solid var(--line-2);border-radius:10px;padding:10px 16px;transition:.14s;
+}
+.btn:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-soft);}
+.btn:focus-visible{outline:3px solid var(--brand-line);outline-offset:2px;}
+.btn.on{background:var(--brand);border-color:var(--brand);color:#fff;}
+.btn.pri{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600;}
+.btn.pri:hover{background:var(--brand-d);border-color:var(--brand-d);color:#fff;}
+.btn.lg{font-size:16px;padding:13px 24px;}
+
+/* ── 무대 — 한 화면에 딱 맞게 ── */
+.stage{display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+.slide{
+  flex:1;min-height:0;padding:30px 46px 18px;width:100%;
+  display:flex;justify-content:center;align-items:flex-start;overflow:hidden;
+}
+.slide.scrolls{overflow-y:auto;align-items:flex-start;}
+@media (max-width:760px){.slide{padding:20px 18px 14px;}}
+.fitbox{width:100%;max-width:1120px;transform-origin:top center;transition:transform .18s;}
+.slide-anim{animation:slideIn .26s ease-out;}
+@keyframes slideIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+@media (prefers-reduced-motion:reduce){.slide-anim{animation:none;}}
+
+/* ── 상담자 서랍 (대본 · 체크리스트) ── */
+.drawer{
+  flex:0 0 auto;background:#231A1E;border-top:2px solid #3D2D34;
+  max-height:0;overflow:hidden;transition:max-height .25s;
+}
+.drawer.open{max-height:48vh;overflow-y:auto;}
+.drawer-in{padding:20px 46px 26px;max-width:1120px;margin:0 auto;}
+@media (max-width:760px){.drawer-in{padding:16px 18px 22px;}}
+.drawer .script{margin-bottom:16px;border:0;padding:0;background:none;}
+.drawer .chk{background:#2D2126;border-color:#3D2D34;box-shadow:none;margin-bottom:0;}
+.drawer .chk h4{color:#F2A8C6;}
+.drawer .chk h4 .cnt{background:rgba(242,168,198,.16);border-color:rgba(242,168,198,.35);color:#FFD3E4;}
+.drawer .chk label{color:#E8DCE1;border-bottom-color:#3D2D34;}
+.drawer .chk input:checked + span{color:#8A7079;}
+
+/* 전체화면 시작 커버 */
+.cover{
+  position:fixed;inset:0;z-index:90;background:linear-gradient(160deg,#FFF 0%,#FDF1F6 100%);
+  display:grid;place-items:center;text-align:center;padding:30px;
+}
+.cover.hide{display:none;}
+.cover .cv{max-width:640px;}
+.cover .lg{font-family:"Gowun Batang",serif;font-size:44px;font-weight:700;color:var(--brand-d);
+  letter-spacing:-.025em;line-height:1.25;}
+@media (max-width:640px){.cover .lg{font-size:32px;}}
+.cover .sb{font-size:19px;color:var(--text-2);margin-top:12px;line-height:1.6;}
+.cover .go{margin-top:30px;font-size:20px;padding:17px 44px;}
+.cover .hint{margin-top:18px;font-size:14px;color:var(--text-3);line-height:1.7;}
+.cover .hint .kbd{margin:0 2px;}
+.eyebrow{
+  font-size:13px;font-weight:600;letter-spacing:.1em;color:var(--brand);
+  text-transform:uppercase;margin-bottom:9px;
+}
+h1.title{
+  font-family:"Gowun Batang",serif;font-weight:700;
+  font-size:40px;line-height:1.25;margin:0 0 10px;letter-spacing:-.025em;
+  text-wrap:balance;color:var(--ink);
+}
+@media (max-width:760px){h1.title{font-size:30px;}}
+p.lede{font-size:19px;color:var(--text-2);margin:0 0 26px;max-width:62ch;line-height:1.6;}
+p.lede b{color:var(--brand-d);font-weight:600;}
+
+.cards{display:grid;gap:16px;margin-bottom:22px;}
+.c2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));}
+.c3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));}
+.c4{grid-template-columns:repeat(auto-fit,minmax(190px,1fr));}
+.box{
+  background:var(--surface);border:1.5px solid var(--line);border-radius:14px;
+  padding:20px 22px;box-shadow:var(--shadow);
+}
+.box.relief{border-color:var(--brand);border-width:2px;}
+.box.relief h3{color:var(--brand);}
+.box.soft{background:var(--surface-2);border-color:var(--brand-line);box-shadow:none;}
+.box h3{font-size:18px;font-weight:600;margin:0 0 9px;color:var(--brand-d);letter-spacing:-.01em;}
+.box p{margin:0 0 8px;font-size:16px;color:var(--text-2);line-height:1.65;}
+.box p:last-child{margin-bottom:0;}
+.box ul{margin:0;padding-left:19px;font-size:16px;color:var(--text-2);line-height:1.75;}
+.box li{margin-bottom:5px;}
+.box li b,.box p b{color:var(--ink);font-weight:600;}
+
+/* 숫자 강조 */
+.stat{text-align:center;padding:22px 16px;}
+.stat .v{font-size:38px;font-weight:700;color:var(--brand);line-height:1.1;letter-spacing:-.03em;
+  font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;}
+.stat .k{font-size:15px;color:var(--text-2);margin-top:6px;font-weight:500;}
+.stat .why{font-size:13.5px;color:var(--text-3);margin-top:5px;line-height:1.5;}
+.stat.hero{background:var(--brand);border-color:var(--brand);}
+.stat.hero .v,.stat.hero .k{color:#fff;}
+.stat.hero .why{color:rgba(255,255,255,.88);}
+
+/* 핵심 한 줄 */
+.punch{
+  background:var(--brand-soft);border:2px solid var(--brand-line);border-left:6px solid var(--brand);
+  border-radius:12px;padding:18px 22px;margin-bottom:22px;
+}
+.punch .lab{font-size:12.5px;font-weight:600;letter-spacing:.08em;color:var(--brand);margin-bottom:5px;}
+.punch .txt{font-size:20px;font-weight:600;color:var(--brand-d);line-height:1.5;letter-spacing:-.015em;}
+@media (max-width:760px){.punch .txt{font-size:17.5px;}}
+
+/* 주의 / 확인필요 */
+.note{border-radius:12px;padding:15px 19px;margin-bottom:18px;font-size:16px;line-height:1.6;
+  display:flex;gap:12px;align-items:flex-start;}
+.note .ic{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:17px;flex:0 0 auto;}
+.note.w{background:var(--warn-soft);border:1.5px solid var(--warn-line);color:var(--warn);}
+.note.c{background:var(--crit-soft);border:1.5px solid var(--crit-line);color:var(--crit);}
+.note.g{background:var(--good-soft);border:1.5px solid var(--good-line);color:var(--good);}
+.note b{font-weight:600;}
+.tbd{
+  display:inline-block;font-size:12.5px;font-weight:600;vertical-align:2px;
+  background:var(--warn-soft);color:var(--warn);border:1px solid var(--warn-line);
+  border-radius:99px;padding:1px 9px;margin-left:6px;white-space:nowrap;
+}
+
+/* 타임라인 */
+.tl{display:grid;gap:0;margin-bottom:22px;background:var(--surface);
+  border:1.5px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);}
+.tl-row{display:grid;grid-template-columns:118px 1fr;gap:0;border-bottom:1px solid var(--line);}
+.tl-row:last-child{border-bottom:0;}
+.tl-t{background:var(--surface-2);padding:15px 16px;font-family:"IBM Plex Mono",monospace;
+  font-weight:600;font-size:15px;color:var(--brand-d);border-right:1px solid var(--line);}
+.tl-b{padding:14px 18px;}
+.tl-b .tag{display:inline-block;font-size:12px;font-weight:600;border-radius:99px;
+  padding:1px 9px;margin-right:7px;margin-bottom:4px;}
+.tag.m{background:#FBE4EE;color:var(--brand-d);}
+.tag.b{background:#E2EEFA;color:#0E4E86;}
+.tag.h{background:var(--good-soft);color:var(--good);}
+.tl-b .txt{font-size:15.5px;color:var(--text-2);line-height:1.6;}
+@media (max-width:620px){.tl-row{grid-template-columns:1fr;}.tl-t{border-right:0;border-bottom:1px solid var(--line);}}
+
+/* 절차 */
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:13px;margin-bottom:22px;}
+.fstep{background:var(--surface);border:1.5px solid var(--line);border-radius:13px;padding:17px 18px;position:relative;}
+.fstep .n{width:26px;height:26px;border-radius:8px;background:var(--brand);color:#fff;
+  display:grid;place-items:center;font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:600;margin-bottom:9px;}
+.fstep h4{margin:0 0 5px;font-size:16px;font-weight:600;color:var(--ink);}
+.fstep p{margin:0;font-size:14.5px;color:var(--text-2);line-height:1.55;}
+
+/* 상담자 대본 패널 */
+.script{
+  background:#231A1E;color:#F4E9EE;border-radius:14px;padding:22px 26px;margin-bottom:22px;
+  border:1.5px solid #3D2D34;
+}
+.script h4{margin:0 0 12px;font-size:14px;font-weight:600;letter-spacing:.06em;
+  color:#F2A8C6;text-transform:uppercase;display:flex;align-items:center;gap:9px;}
+.script h4::before{content:"";width:4px;height:14px;background:#F2A8C6;border-radius:2px;}
+.script .say{font-size:17px;line-height:1.75;margin:0 0 13px;color:#FBF3F6;}
+.script .say:last-child{margin-bottom:0;}
+.script .say::before{content:"“";color:#F2A8C6;font-weight:700;}
+.script .say::after{content:"”";color:#F2A8C6;font-weight:700;}
+.script .tip{
+  margin-top:15px;padding:13px 16px;background:rgba(242,168,198,.12);
+  border-radius:10px;font-size:15px;line-height:1.6;color:#F7DDE7;border:1px solid rgba(242,168,198,.28);
+}
+.script .tip b{color:#FFD3E4;font-weight:600;}
+
+/* 체크리스트 */
+.chk{background:var(--surface);border:1.5px solid var(--line);border-radius:14px;
+  padding:18px 22px;margin-bottom:22px;box-shadow:var(--shadow);}
+.chk h4{margin:0 0 11px;font-size:14.5px;font-weight:600;color:var(--text-2);
+  display:flex;align-items:center;gap:8px;}
+.chk h4 .cnt{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--brand);
+  background:var(--brand-soft);border:1px solid var(--brand-line);border-radius:99px;padding:1px 9px;}
+.chk label{display:flex;gap:11px;align-items:flex-start;padding:8px 0;cursor:pointer;
+  border-bottom:1px dashed var(--line);font-size:16px;color:var(--text-2);line-height:1.55;}
+.chk label:last-child{border-bottom:0;}
+.chk input{margin-top:4px;width:19px;height:19px;flex:0 0 19px;accent-color:var(--brand);cursor:pointer;}
+.chk input:checked + span{color:var(--text-3);text-decoration:line-through;}
+
+/* 입력 */
+.form{display:grid;gap:16px;margin-bottom:22px;}
+.f2{grid-template-columns:repeat(auto-fit,minmax(250px,1fr));}
+.lab{display:block;font-size:15px;font-weight:600;color:var(--text-2);margin-bottom:8px;}
+.lab .tip{font-weight:400;color:var(--text-3);font-size:13.5px;}
+.seg{display:flex;flex-wrap:wrap;gap:8px;}
+.seg label{position:relative;flex:1 1 0;min-width:96px;}
+.seg input{position:absolute;opacity:0;width:0;height:0;}
+.seg span{display:block;text-align:center;padding:12px 10px;font-size:16px;font-weight:500;
+  background:var(--surface);border:1.5px solid var(--line-2);border-radius:11px;color:var(--text-2);
+  cursor:pointer;transition:.13s;}
+.seg span small{display:block;font-size:12.5px;font-weight:400;color:var(--text-3);margin-top:1px;}
+.seg span:hover{border-color:var(--brand-line);background:var(--brand-soft);}
+.seg input:checked + span{background:var(--brand);border-color:var(--brand);color:#fff;}
+.seg input:checked + span small{color:rgba(255,255,255,.85);}
+.seg input:focus-visible + span{outline:3px solid var(--brand-line);outline-offset:2px;}
+.seg input:disabled + span{opacity:.35;cursor:not-allowed;}
+input[type="text"],input[type="number"],input[type="date"],select{
+  width:100%;font-family:inherit;font-size:16px;padding:12px 14px;
+  border:1.5px solid var(--line-2);border-radius:11px;background:var(--surface);color:var(--ink);}
+input[type="number"]{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;}
+input:focus,select:focus{outline:3px solid var(--brand-line);outline-offset:-1px;border-color:var(--brand);}
+.hintline{font-size:13.5px;color:var(--text-3);margin-top:7px;line-height:1.55;}
+.hintline b{color:var(--text-2);}
+.chkbox{display:flex;gap:11px;align-items:flex-start;padding:13px 16px;background:var(--surface);
+  border:1.5px solid var(--line-2);border-radius:11px;cursor:pointer;transition:.13s;}
+.chkbox:hover{border-color:var(--brand-line);background:var(--brand-soft);}
+.chkbox:has(input:checked){border-color:var(--brand);background:var(--brand-soft);}
+.chkbox input{margin-top:3px;width:19px;height:19px;flex:0 0 19px;accent-color:var(--brand);}
+.chkbox .t{font-size:15.5px;}
+.chkbox .t b{font-weight:600;}
+.chkbox .t em{display:block;font-style:normal;font-size:13.5px;color:var(--text-3);margin-top:3px;line-height:1.5;}
+
+/* 요금 계산 */
+.calc{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:22px;align-items:start;}
+@media (max-width:1040px){.calc{grid-template-columns:1fr;}}
+.pchoose{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;}
+@media (max-width:600px){.pchoose{grid-template-columns:1fr;}}
+.pchoose label{position:relative;}
+.pchoose input{position:absolute;opacity:0;width:0;height:0;}
+.pcard{display:block;padding:16px 14px 17px;border:1.5px solid var(--line-2);border-radius:13px;
+  background:var(--surface);cursor:pointer;text-align:center;transition:.14s;}
+.pcard:hover{border-color:var(--brand-line);background:var(--brand-soft);}
+.pchoose input:checked + .pcard{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft);}
+.pchoose input:focus-visible + .pcard{outline:3px solid var(--brand-line);outline-offset:2px;}
+.pcard .pn{display:block;font-size:13.5px;font-weight:600;color:var(--text-3);}
+.pchoose input:checked + .pcard .pn{color:var(--brand);}
+.pcard .pd{display:block;font-size:28px;font-weight:700;line-height:1.2;margin-top:2px;color:var(--ink);
+  font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;letter-spacing:-.02em;}
+.pchoose input:checked + .pcard .pd{color:var(--brand);}
+.pcard .pf{display:block;font-size:20px;font-weight:600;margin-top:11px;padding-top:11px;
+  border-top:1px dashed var(--line-2);color:var(--ink);}
+.pchoose input:checked + .pcard .pf{color:var(--brand-d);}
+.pcard .pl{display:block;font-size:12px;color:var(--text-3);margin-top:1px;}
+.pcard .ps{display:block;font-size:13px;color:var(--text-3);margin-top:6px;}
+
+.resbox{background:var(--surface);border:1.5px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;}
+.res-h{padding:17px 21px 13px;border-bottom:1px solid var(--line);}
+.res-h .code{font-family:"IBM Plex Mono",monospace;font-size:20px;font-weight:600;color:var(--brand);}
+.res-h .chip{float:right;font-size:13px;font-weight:600;background:var(--brand-soft);
+  border:1px solid var(--brand-line);color:var(--brand-d);padding:3px 11px;border-radius:99px;}
+.res-h .desc{font-size:14px;color:var(--text-3);margin-top:7px;line-height:1.5;clear:both;}
+.lines{padding:8px 21px 6px;}
+.ln{display:flex;align-items:baseline;gap:12px;padding:11px 0;border-bottom:1px dashed var(--line);}
+.ln:last-child{border-bottom:0;}
+.ln .k{font-size:15px;color:var(--text-2);}
+.ln .k em{display:block;font-style:normal;font-size:12.5px;color:var(--text-3);margin-top:1px;}
+.ln .v{margin-left:auto;font-size:18px;font-weight:600;white-space:nowrap;}
+.ln.g .v{color:var(--brand);}
+.ln.r .v{color:var(--good);}
+.final{margin:8px 18px 16px;padding:20px 22px;border-radius:13px;
+  background:var(--brand);border:1.5px solid var(--brand);}
+.final .cap{font-size:14px;font-weight:600;color:rgba(255,255,255,.92);}
+.final .big{font-size:42px;font-weight:700;line-height:1.1;margin-top:5px;color:#fff;letter-spacing:-.03em;}
+.final .per{font-size:13.5px;color:rgba(255,255,255,.85);margin-top:7px;}
+.verdict{margin:0 18px 16px;padding:15px 18px;border-radius:12px;font-size:15.5px;line-height:1.6;}
+.verdict.ok{background:var(--good-soft);border:1.5px solid var(--good-line);color:var(--good);}
+.verdict.warn{background:var(--warn-soft);border:1.5px solid var(--warn-line);color:var(--warn);}
+.verdict.no{background:var(--crit-soft);border:1.5px solid var(--crit-line);color:var(--crit);}
+.verdict .nm{font-size:22px;font-weight:700;display:block;margin-bottom:3px;}
+.verdict b{font-weight:600;}
+.prepay{margin:0 18px 16px;padding:14px 17px;border-radius:12px;background:var(--surface-2);
+  border:1px solid var(--brand-line);font-size:15px;color:var(--text-2);line-height:1.65;}
+.prepay b{color:var(--brand-d);font-weight:600;}
+
+table.ref{width:100%;border-collapse:collapse;font-size:14.5px;}
+table.ref th,table.ref td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:right;}
+table.ref th:first-child,table.ref td:first-child{text-align:left;}
+table.ref thead th{color:var(--text-3);font-weight:500;font-size:13px;border-bottom:1.5px solid var(--line-2);}
+table.ref td{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;color:var(--text-2);}
+table.ref tr.hl td{background:var(--brand-soft);color:var(--brand-d);font-weight:600;}
+.scrollx{overflow-x:auto;}
+
+/* 하단 이동 바 */
+.bar{
+  flex:0 0 auto;background:var(--surface);border-top:1.5px solid var(--line);
+  padding:12px 46px;display:flex;align-items:center;gap:12px;z-index:20;
+}
+/* 터치 노트북 — 손가락으로 눌러도 편한 크기 */
+.bar .btn{min-height:52px;}
+.bar .btn.pri{min-width:180px;font-size:18px;}
+@media (max-width:760px){.bar{padding:10px 16px;}.bar .btn.pri{min-width:130px;font-size:16px;}}
+@media (max-width:760px){.bar{padding:12px 18px;}}
+.bar .mid{margin-left:auto;margin-right:auto;font-size:15px;color:var(--text-3);
+  display:flex;align-items:baseline;gap:10px;}
+.bar .mid b{color:var(--ink);font-weight:600;font-size:16px;}
+.bar .mid .pg{font-family:"IBM Plex Mono",monospace;font-size:13.5px;color:var(--brand);
+  background:var(--brand-soft);border:1px solid var(--brand-line);border-radius:99px;padding:2px 10px;}
+@media (max-width:820px){.bar .mid b{display:none;}}
+.kbd{font-family:"IBM Plex Mono",monospace;font-size:12px;background:var(--surface-2);
+  border:1px solid var(--line-2);border-radius:5px;padding:1px 6px;color:var(--text-2);}
+
+/* 요약 */
+.sum{background:var(--surface);border:2px solid var(--brand-line);border-radius:16px;
+  padding:26px 30px;margin-bottom:22px;}
+.sum h3{font-family:"Gowun Batang",serif;font-size:24px;margin:0 0 16px;color:var(--brand-d);}
+.sum-row{display:flex;gap:14px;padding:11px 0;border-bottom:1px dashed var(--line);font-size:16.5px;}
+.sum-row:last-child{border-bottom:0;}
+.sum-row .k{color:var(--text-3);min-width:132px;flex:0 0 132px;}
+.sum-row .v{color:var(--ink);font-weight:500;}
+.sum-row.big .v{font-size:22px;font-weight:700;color:var(--brand);}
+
+.tel{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:13px;}
+.tel .t{background:var(--surface);border:1.5px solid var(--line);border-radius:13px;padding:17px 19px;}
+.tel .t .nm{font-size:15px;color:var(--text-3);}
+.tel .t .no{font-family:"IBM Plex Mono",monospace;font-size:22px;font-weight:600;color:var(--brand-d);margin-top:3px;}
+
+/* ── 질문·답 (비교 단계) ── */
+.qa{display:grid;gap:14px;}
+.qa-item{border:1.5px solid var(--line);border-radius:13px;padding:16px 19px;background:var(--surface);}
+.qa-q{font-size:17.5px;font-weight:600;color:var(--ink);margin-bottom:9px;line-height:1.5;}
+.qa-a{font-size:17px;color:var(--brand-d);background:var(--brand-soft);border-radius:9px;
+  padding:10px 14px;margin-bottom:9px;font-weight:500;}
+.qa-w{font-size:15.5px;color:var(--text-2);line-height:1.65;}
+
+/* ── 산모님이 직접 고르는 화면 ── */
+.pick{display:grid;gap:13px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));margin-bottom:20px;}
+.pk{
+  background:var(--surface);border:2px solid var(--line-2);border-radius:15px;
+  padding:22px 18px;text-align:center;cursor:pointer;transition:.16s;font-family:inherit;
+}
+.pk:hover{border-color:var(--brand);transform:translateY(-2px);box-shadow:0 10px 24px -14px rgba(194,24,91,.55);}
+.pk.sel{border-color:var(--brand);background:var(--brand-soft);box-shadow:0 0 0 4px rgba(194,24,91,.1);}
+.pk .em{font-size:34px;line-height:1;display:block;margin-bottom:10px;}
+.pk .tl2{font-size:17.5px;font-weight:600;color:var(--ink);display:block;}
+.pk .sb{font-size:14px;color:var(--text-3);display:block;margin-top:4px;line-height:1.45;}
+.pk.sel .tl2{color:var(--brand-d);}
+.pk:focus-visible{outline:3px solid var(--brand-line);outline-offset:3px;}
+
+/* 고르신 항목 칩 */
+.chips{display:flex;flex-wrap:wrap;gap:8px;}
+.cp{display:inline-block;font-size:15px;padding:6px 14px;border-radius:99px;
+  background:var(--surface-2);border:1.5px solid var(--line-2);color:var(--text-2);}
+.cp.st{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600;}
+
+.qhead{font-size:22px;font-weight:600;color:var(--ink);margin:0 0 4px;letter-spacing:-.015em;}
+.qhead.big{font-family:"Gowun Batang",serif;font-size:36px;font-weight:700;line-height:1.3;
+  margin-bottom:6px;letter-spacing:-.025em;text-wrap:balance;}
+@media (max-width:760px){.qhead.big{font-size:26px;}}
+.onequestion{padding:6px 0 4px;}
+.pick.big{grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:15px;}
+.pick.big .pk{padding:30px 20px;}
+.pick.big .em{font-size:44px;margin-bottom:12px;}
+.pick.big .tl2{font-size:20px;}
+.pick.big .sb{font-size:15px;}
+.qcount{font-family:"IBM Plex Mono",monospace;font-size:14px;color:var(--brand);font-weight:600;
+  background:var(--brand-soft);border:1px solid var(--brand-line);border-radius:99px;padding:2px 11px;
+  display:inline-block;margin-bottom:10px;}
+.qsub{font-size:16px;color:var(--text-3);margin:0 0 18px;}
+
+/* 결과 카드 */
+.result-card{
+  background:linear-gradient(160deg,#C2185B 0%,#98123F 100%);
+  color:#fff;border-radius:18px;padding:32px 34px;margin-bottom:20px;
+}
+.result-card .rl{font-size:14px;font-weight:600;letter-spacing:.08em;opacity:.85;}
+.result-card .rt{font-family:"Gowun Batang",serif;font-size:34px;font-weight:700;
+  margin:6px 0 12px;line-height:1.25;letter-spacing:-.02em;}
+@media (max-width:640px){.result-card .rt{font-size:26px;}}
+.result-card .rd{font-size:17.5px;line-height:1.7;opacity:.95;max-width:60ch;}
+.result-card .rd b{color:#FFE0EE;font-weight:600;}
+.reco{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));margin-top:22px;}
+.reco .r{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);
+  border-radius:12px;padding:15px 17px;}
+.reco .r h5{margin:0 0 5px;font-size:15.5px;font-weight:600;color:#fff;}
+.reco .r p{margin:0;font-size:14.5px;line-height:1.55;color:rgba(255,255,255,.9);}
+
+/* 금액 맞추기 */
+.guess{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));margin-bottom:20px;}
+.gk{background:var(--surface);border:2px solid var(--line-2);border-radius:14px;padding:24px 14px;
+  text-align:center;cursor:pointer;transition:.16s;font-family:inherit;}
+.gk:hover{border-color:var(--brand);transform:translateY(-2px);}
+.gk .amt{font-family:"IBM Plex Mono",monospace;font-size:23px;font-weight:700;color:var(--ink);letter-spacing:-.02em;}
+.gk .lb{font-size:13.5px;color:var(--text-3);margin-top:4px;}
+.gk.picked{border-color:var(--text-3);background:var(--surface-2);}
+.gk.answer{border-color:var(--good);background:var(--good-soft);}
+.gk.answer .amt{color:var(--good);}
+.gk .mk{display:block;font-size:12.5px;font-weight:600;margin-top:6px;}
+.gk.picked .mk{color:var(--text-3);}
+.gk.answer .mk{color:var(--good);}
+
+.reveal{background:var(--surface);border:2px solid var(--brand);border-radius:16px;
+  padding:28px 32px;margin-bottom:20px;text-align:center;}
+.reveal .rv-l{font-size:15px;color:var(--text-2);}
+.reveal .rv-big{font-family:"IBM Plex Mono",monospace;font-size:52px;font-weight:700;
+  color:var(--brand);line-height:1.1;margin:8px 0;letter-spacing:-.03em;}
+@media (max-width:640px){.reveal .rv-big{font-size:38px;}}
+.reveal .rv-s{font-size:16.5px;color:var(--text-2);line-height:1.6;}
+.reveal .rv-s b{color:var(--brand-d);font-weight:600;}
+
+/* O/X 퀴즈 */
+.quiz{background:var(--surface);border:1.5px solid var(--line);border-radius:15px;
+  padding:22px 26px;margin-bottom:16px;box-shadow:var(--shadow);}
+.quiz .qn{font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:600;color:var(--brand);}
+.quiz .qt{font-size:19.5px;font-weight:600;color:var(--ink);margin:6px 0 15px;line-height:1.5;}
+.ox{display:flex;gap:12px;margin-bottom:0;}
+.ox button{flex:1;font-family:inherit;font-size:26px;font-weight:700;padding:15px;
+  border:2px solid var(--line-2);border-radius:13px;background:var(--surface);
+  cursor:pointer;color:var(--text-3);transition:.15s;}
+.ox button:hover{border-color:var(--brand);color:var(--brand);}
+.ox button.right{border-color:var(--good);background:var(--good-soft);color:var(--good);}
+.ox button.wrong{border-color:var(--crit);background:var(--crit-soft);color:var(--crit);}
+.ox button:focus-visible{outline:3px solid var(--brand-line);outline-offset:2px;}
+.qans{margin-top:15px;padding:15px 18px;border-radius:12px;font-size:16px;line-height:1.65;}
+.qans.o{background:var(--good-soft);border:1.5px solid var(--good-line);color:var(--good);}
+.qans.x{background:var(--warn-soft);border:1.5px solid var(--warn-line);color:var(--warn);}
+.qans b{font-weight:600;}
+.qscore{font-size:17px;font-weight:600;color:var(--brand-d);background:var(--brand-soft);
+  border:1.5px solid var(--brand-line);border-radius:12px;padding:15px 20px;margin-bottom:18px;}
+
+/* 사진 자리 */
+.ph{border:2px dashed var(--line-2);border-radius:13px;background:var(--surface-2);
+  min-height:150px;display:grid;place-items:center;text-align:center;padding:20px;}
+.ph .pt{font-size:15px;color:var(--text-3);line-height:1.6;}
+.ph .pf{font-family:"IBM Plex Mono",monospace;font-size:13.5px;color:var(--brand);
+  background:#fff;border:1px solid var(--brand-line);border-radius:7px;padding:3px 10px;
+  display:inline-block;margin-top:8px;}
+.ph img{max-width:100%;border-radius:11px;display:block;}
+figure.shot{margin:0;}
+figure.shot img{width:100%;border-radius:13px;border:1.5px solid var(--line);display:block;}
+figure.shot figcaption{font-size:14px;color:var(--text-3);margin-top:8px;}
+
+/* 자주 묻는 질문 패널 */
+.fabs{position:fixed;right:22px;bottom:88px;z-index:60;display:flex;flex-direction:column;gap:10px;}
+.fab{
+  background:var(--brand);color:#fff;border:0;border-radius:99px;
+  padding:14px 22px;font-family:inherit;font-size:15.5px;font-weight:600;cursor:pointer;
+  box-shadow:0 8px 24px -8px rgba(194,24,91,.65);transition:.15s;
+}
+.fab:hover{background:var(--brand-d);}
+.fab:focus-visible{outline:3px solid var(--brand-line);outline-offset:3px;}
+@media (max-width:760px){.fabs{right:14px;bottom:78px;}.fab{padding:12px 17px;font-size:14px;}}
+.sheet{position:fixed;inset:0;z-index:70;background:rgba(35,26,30,.5);display:none;}
+.sheet.open{display:block;}
+.sheet-in{
+  position:absolute;right:0;top:0;bottom:0;width:min(560px,100%);
+  background:var(--surface);border-left:1.5px solid var(--line);
+  display:flex;flex-direction:column;
+}
+.sheet-h{padding:20px 24px 14px;border-bottom:1.5px solid var(--line);}
+.sheet-h h3{margin:0 0 4px;font-family:"Gowun Batang",serif;font-size:22px;color:var(--brand-d);}
+.sheet-h p{margin:0;font-size:14px;color:var(--text-3);}
+.sheet-tabs{display:flex;gap:8px;margin-top:13px;}
+.sheet-tabs button{flex:1;font-family:inherit;font-size:14.5px;font-weight:500;padding:9px;
+  border:1.5px solid var(--line-2);background:var(--surface);border-radius:10px;color:var(--text-2);cursor:pointer;}
+.sheet-tabs button.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600;}
+.sheet-s{padding:12px 24px 0;}
+.sheet-s input{width:100%;}
+.sheet-b{flex:1;overflow-y:auto;padding:14px 24px 24px;}
+.fq{border-bottom:1px solid var(--line);padding:13px 0;}
+.fq:last-child{border-bottom:0;}
+.fq .q{font-size:16.5px;font-weight:600;color:var(--ink);cursor:pointer;display:flex;gap:9px;align-items:flex-start;}
+.fq .q::before{content:"Q";font-family:"IBM Plex Mono",monospace;color:var(--brand);flex:0 0 auto;font-weight:700;}
+.fq .a{font-size:15.5px;color:var(--text-2);line-height:1.7;margin-top:8px;padding-left:22px;display:none;}
+.fq.open .a{display:block;}
+.fq .a b{color:var(--ink);font-weight:600;}
+.fq .a .warn{color:var(--warn);font-weight:600;}
+.sheet-x{position:absolute;left:-52px;top:16px;width:40px;height:40px;border-radius:99px;
+  background:var(--surface);border:1.5px solid var(--line);cursor:pointer;font-size:19px;color:var(--text-2);}
+@media (max-width:760px){.sheet-x{left:auto;right:16px;top:-52px;}}
+
+@media print{
+  .rail,.bar,.script,.chk,.fabs,.sheet{display:none;}
+  .app{grid-template-columns:1fr;}
+  .slide{padding:0;}
+  body{background:#fff;font-size:12px;}
+  .box{box-shadow:none;}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;}}
+</style>
+</head>
+<body>
+
+<div class="cover" id="cover">
+  <div class="cv">
+    <div class="lg">참사랑어머니회<br>베이비페어 상담</div>
+    <div class="sb">산모님과 함께 보면서 진행합니다.<br>버튼 하나로 시작해 <b>다음</b>만 누르시면 됩니다.</div>
+    <button class="btn pri go" id="startBtn" type="button">상담 시작하기</button>
+    <div class="hint">
+      <span class="kbd">→</span> 다음 · <span class="kbd">←</span> 이전 ·
+      <span class="kbd">N</span> 상담자 대본 · <span class="kbd">F</span> 질문 찾기<br>
+      시작하면 <b>전체화면</b>으로 바뀝니다. 끝내려면 <span class="kbd">Esc</span>.
+    </div>
+  </div>
+</div>
+
+<div class="railveil" id="railveil"></div>
+<div class="app">
+  <!-- ════ 왼쪽 진행 목록 ════ -->
+  <nav class="rail">
+    <div class="rail-h">
+      <div class="logo">참사랑어머니회</div>
+      <div class="tag">베이비페어 상담 · 창원</div>
+      <div class="prog"><i id="progBar" style="width:0%"></i></div>
+      <div class="prog-t" id="progTxt">0 / 0</div>
+    </div>
+    <div class="steps" id="stepNav"></div>
+    <div class="rail-f">
+      <button class="btn" id="scriptBtn" type="button">상담 대본 보기</button>
+      <button class="btn" id="resetBtn" type="button">새 상담 시작</button>
+    </div>
+  </nav>
+
+  <!-- ════ 무대 ════ -->
+  <main class="stage">
+    <div class="slide" id="slide"><div class="fitbox" id="fitbox"></div></div>
+    <div class="drawer" id="drawer"><div class="drawer-in" id="drawerIn"></div></div>
+    <div class="fabs">
+      <button class="fab" id="faqFab" type="button">자주 묻는 질문</button>
+    </div>
+    <div class="bar">
+      <button class="btn" id="menuBtn" type="button">☰ 목차</button>
+      <button class="btn" id="prevBtn" type="button">← 이전</button>
+      <span class="mid" id="barMid"></span>
+      <button class="btn" id="scriptBtn2" type="button">대본</button>
+      <button class="btn pri lg" id="nextBtn" type="button">다음 →</button>
+    </div>
+  </main>
+</div>
+
+<div class="sheet" id="faqSheet">
+  <div class="sheet-in">
+    <button class="sheet-x" id="faqX" type="button">✕</button>
+    <div class="sheet-h">
+      <h3>바로 찾아 답하기</h3>
+      <p>산모님 질문에 그 자리에서 답하세요. 상담자 화면입니다.</p>
+      <div class="sheet-tabs">
+        <button data-tab="faq" class="on" type="button">자주 묻는 질문</button>
+        <button data-tab="obj" type="button">이런 말 나오면</button>
+      </div>
+      <div class="sheet-s" style="padding-left:0;padding-right:0;">
+        <input type="text" id="faqSearch" placeholder="검색 — 예: 환급, 큰아이, 교체">
+      </div>
+    </div>
+    <div class="sheet-b" id="faqBody"></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* ═══════════════════════════════════════════════════════════════
+   요금 데이터 — 창원시 2026년 고시표 (단위: 천 원)
+   서비스가격 = 정부지원금 + 본인부담금, 환급 = 본인부담금×90%(15일 상한)
+   → 108개 항목 원본 대조 검증 완료
+   ═══════════════════════════════════════════════════════════════ */
+var DAYS = {A1:[5,10,15],A2:[10,15,20],A3:[10,15,20],B1:[10,15,20],B2:[10,15,20],C1:[15,25,40]};
+var TABLE = {
+  "A-가-1":{gov:[659,1165,1525],self:[73,299,671]},
+  "A-통합-1":{gov:[569,1002,1303],self:[163,462,893]},
+  "A-라-1":{gov:[456,764,1035],self:[276,700,1161]},
+  "A-가-2":{gov:[1345,1794,2094],self:[119,402,834]},
+  "A-통합-2":{gov:[1165,1525,1767],self:[299,671,1161]},
+  "A-라-2":{gov:[943,1193,1440],self:[521,1003,1488]},
+  "A-가-3":{gov:[1374,1838,2154],self:[90,358,774]},
+  "A-통합-3":{gov:[1195,1548,1797],self:[269,648,1131]},
+  "A-라-3":{gov:[973,1236,1499],self:[491,960,1429]},
+  "B-가-1":{gov:[1758,2357,2771],self:[74,391,893]},
+  "B-통합-1":{gov:[1572,2050,2436],self:[260,698,1228]},
+  "B-라-1":{gov:[1274,1605,1952],self:[558,1143,1712]},
+  "B-가-2":{gov:[2614,3478,4289],self:[234,794,1407]},
+  "B-통합-2":{gov:[2369,3165,3915],self:[479,1107,1781]},
+  "B-라-2":{gov:[2004,2698,3353],self:[844,1574,2343]},
+  "C-가-1":{gov:[5431,8303,12088],self:[113,937,2696]},
+  "C-통합-1":{gov:[4983,7368,11039],self:[561,1872,3745]},
+  "C-라-1":{gov:[4253,6337,9540],self:[1291,2903,5244]}
+};
+var FEE150 = {
+  2:{income:6299000,office:229357,region:164508,mixed:232890},
+  3:{income:8039000,office:290169,region:240352,mixed:296127},
+  4:{income:9743000,office:360410,region:322443,mixed:374300},
+  5:{income:11336000,office:410439,region:378691,mixed:432308},
+  6:{income:12834000,office:490306,region:473662,mixed:535512},
+  7:{income:14273000,office:535512,region:525833,mixed:584741},
+  8:{income:15712000,office:584741,region:579249,mixed:634423}
+};
+var CIRCLED = ["","①","②","③"], PNAME = ["단축","표준","연장"], RATE = .9, DAYCAP = 15;
+
+function won(n){ return Math.round(n).toLocaleString("ko-KR") + "원"; }
+function limit180(f){ return Math.round(FEE150[f].income * 1.2); }
+
+/* ═══ 상담 상태 ═══ */
+var S = {
+  name:"", phone:"", due:"",
+  fetus:"single", order:1, staff:1, disability:false, preemie:false,
+  basic:false, mode:"income", fam:3, ins:"office",
+  incA:"", incB:"", feeA:"", feeB:"", dual:false,
+  period:1
+};
+var checks = {};
+
+/* ═══ 요금 계산 ═══ */
+function letterOf(){
+  var seq = ["A","B","C","D"], base = S.fetus === "single" ? 0 : S.fetus === "twin" ? 1 : 2;
+  return seq[base + (S.disability ? 1 : 0)];
+}
+function incomeOf(){
+  var fam = S.fam;
+  if (S.basic) return {code:"가", label:"수급자 · 차상위", entered:true, fam:fam, band:"under150"};
+  if (S.mode === "income") {
+    var a = parseFloat(S.incA)||0, b = parseFloat(S.incB)||0, t = a+b;
+    var l1 = FEE150[fam].income, l8 = limit180(fam);
+    var band = t <= l1 ? "under150" : (t <= l8 ? "between" : "over180");
+    return {code: band==="under150"?"통합":"라",
+      label: band==="under150"?"중위소득 150% 이하":"중위소득 150% 초과",
+      mode:"income", entered:t>0, total:t, limit:l1, limit180:l8, fam:fam, band:band,
+      formula:(a>0&&b>0)?(won(a)+" + "+won(b)+" = "+won(t)):won(t)};
+  }
+  var fa = parseFloat(S.feeA)||0, fb = parseFloat(S.feeB)||0, tt, fm;
+  if (S.dual && fa>0 && fb>0){ var lo=Math.min(fa,fb), hi=Math.max(fa,fb); tt=hi+lo*.5;
+    fm = won(hi)+" + ("+won(lo)+" × 0.5) = "+won(tt); }
+  else { tt=fa+fb; fm=(fa>0&&fb>0)?(won(fa)+" + "+won(fb)+" = "+won(tt)):won(tt); }
+  var lim = FEE150[fam][S.ins], under = tt <= lim;
+  return {code:under?"통합":"라", label:under?"중위소득 150% 이하":"중위소득 150% 초과",
+    mode:"fee", entered:(fa>0||fb>0), total:tt, limit:lim, fam:fam, ins:S.ins, formula:fm,
+    band: under?"under150":"unknownOver"};
+}
+function quote(){
+  var L = letterOf(), inc = incomeOf();
+  var numIdx, dk;
+  if (L === "A"){ numIdx = S.order; dk = "A"+S.order; }
+  else if (L === "B"){ numIdx = S.staff; dk = "B"+S.staff; }
+  else { numIdx = 1; dk = "C1"; }
+  if (L === "D") return {unavailable:true, inc:inc, letter:"D"};
+  var days = DAYS[dk], row = TABLE[L+"-"+inc.code+"-"+numIdx];
+  if (!row) return {unavailable:true, inc:inc, letter:L};
+  var capIdx = -1;
+  for (var j=0;j<3;j++) if (days[j] <= DAYCAP) capIdx = j;
+  var capSelf = capIdx >= 0 ? row.self[capIdx]*1000 : 0;
+  var all = [];
+  for (var k=0;k<3;k++){
+    var g = row.gov[k]*1000, s = row.self[k]*1000;
+    var rf = Math.round(Math.min(s, capSelf)*RATE);
+    all.push({gov:g, self:s, price:g+s, refund:rf, final:s-rf, capped:Math.min(s,capSelf)<s});
+  }
+  return {unavailable:false, letter:L, numIdx:numIdx, inc:inc, days:days, all:all,
+          capSelf:capSelf, code:L+"-"+inc.code+"-"+CIRCLED[numIdx]+"형"};
+}
+
+/* ═══════════ 상담 단계 ═══════════ */
+var STEPS = [
+{ group:"산모님 먼저", nav:"내 산후조리 유형 찾기", render:s_typefinder },
+{ group:"산모님 먼저", nav:"이걸로 관리사님을 배정합니다", render:s_matching },
+{ group:"산모님 먼저", nav:"걱정하시는 부분, 이렇게 풀어드립니다", render:s_relief },
+{ group:"우리는", nav:"참사랑은 어떤 곳인가", render:s_company },
+{ group:"우리는", nav:"강점 ① 품질평가 A등급", render:s_grade },
+{ group:"우리는", nav:"강점 ② 도지정 교육기관", render:s_edu },
+{ group:"우리는", nav:"강점 ③ 정부 자문기관", render:s_advisor },
+{ group:"우리는", nav:"다른 업체와 뭐가 다른가", render:s_compare },
+{ group:"서비스", nav:"관리사님이 하는 일", render:s_service },
+{ group:"서비스", nav:"관리사님의 하루", render:s_day },
+{ group:"서비스", nav:"O · X 퀴즈 — 이건 될까요?", render:s_quiz },
+{ group:"서비스", nav:"이용 안내 · 주의사항", render:s_rules },
+{ group:"요금", nav:"요금 유형 이해하기", render:s_feeintro },
+{ group:"요금", nav:"소득 구간 확인하기", render:s_income },
+{ group:"요금", nav:"금액 맞춰보기", render:s_guess },
+{ group:"요금", nav:"내 본인부담금", render:s_calc },
+{ group:"요금", nav:"환급 안내", render:s_refund },
+{ group:"요금", nav:"이용 절차", render:s_process },
+{ group:"더 드리는 것", nav:"산모교실 · 이벤트", render:s_class },
+{ group:"더 드리는 것", nav:"가족 산후관리사", render:s_family },
+{ group:"마무리", nav:"왜 참사랑인가", render:s_why },
+{ group:"마무리", nav:"오늘 상담 요약", render:s_summary },
+{ group:"마무리", nav:"접수하고 마무리", render:s_close }
+];
+var cur = 0;
+function visible(){ return STEPS.map(function(_,i){ return i; }); }
+
+/* ═══ 공통 조각 ═══ */
+function script(lines, tip){
+  var h = '<div class="script" data-script><h4>상담자 대본</h4>';
+  lines.forEach(function(l){ h += '<p class="say">' + l + '</p>'; });
+  if (tip) h += '<div class="tip"><b>진행 팁 —</b> ' + tip + '</div>';
+  return h + '</div>';
+}
+function checklist(id, items){
+  var h = '<div class="chk"><h4>이 단계에서 꼭 짚을 것 <span class="cnt" id="cnt_'+id+'"></span></h4>';
+  items.forEach(function(t,i){
+    var key = id+"_"+i, on = checks[key] ? " checked" : "";
+    h += '<label><input type="checkbox" data-chk="'+key+'"'+on+'><span>'+t+'</span></label>';
+  });
+  return h + '</div>';
+}
+/* 사진 자리 — images 폴더에 파일을 넣으면 자동으로 나타납니다 */
+function photo(file, caption){
+  return '<figure class="shot" data-ph="'+file+'" data-cap="'+caption+'">' +
+    '<div class="ph"><div class="pt">'+caption+'<span class="pf">images / '+file+'</span></div></div></figure>';
+}
+function loadPhotos(){
+  document.querySelectorAll("figure[data-ph]").forEach(function(fig){
+    var file = fig.dataset.ph, cap = fig.dataset.cap;
+    var im = new Image();
+    im.onload = function(){
+      fig.innerHTML = '<img src="images/'+file+'" alt="'+cap+'"><figcaption>'+cap+'</figcaption>';
+    };
+    im.src = "images/" + file;
+  });
+}
+
+function head(eyebrow, title, lede){
+  return '<div class="eyebrow">'+eyebrow+'</div><h1 class="title">'+title+'</h1>' +
+         (lede ? '<p class="lede">'+lede+'</p>' : '');
+}
+
+/* ═══════════ 0. 산모님 상황 ═══════════ */
+function renderIntake(){
+  return head("상담 준비", "먼저 산모님 상황만 여쭤볼게요",
+    "여기서 한 번만 입력하면, 뒤에 나오는 <b>요금과 본인부담금이 산모님 것으로</b> 자동 계산됩니다.") +
+  '<div class="note g"><span class="ic">→</span><span>' +
+    '<b>왼쪽 위에서 상담 코스를 고르세요.</b> 산모님이 바쁘시면 <b>빠른 상담(3분)</b>, ' +
+    '보통은 <b>기본 상담(7분)</b>, 관심 많으시면 <b>전체 상담</b>. ' +
+    '상담 중에 언제든 바꾸셔도 됩니다.</span></div>' +
+  script([
+    "안녕하세요, 베이비페어에 방문해 주셔서 감사합니다. 저희는 산모·신생아 건강관리사 서비스를 전문으로 하는 참사랑어머니회입니다.",
+    "출산을 앞두고 계시면 딱 5분만 시간 내주세요. 정부지원으로 받으실 수 있는 산모도우미 서비스를 정확한 금액까지 알려드릴게요.",
+    "먼저 몇 가지만 여쭤볼게요. 출산 예정일이 언제쯤이세요? 첫째이신가요, 둘째이신가요?"
+  ], "여기서 파악한 내용으로 이후 설명 톤을 조정하세요. 소득은 부담스러워하시면 <b>건너뛰고 나중에 요금 단계에서</b> 여쭤봐도 됩니다.") +
+
+  '<div class="cards c2">' +
+    '<div class="box"><h3>출산 정보</h3>' +
+      '<div class="form">' +
+        '<div><span class="lab">태아 수</span><div class="seg">' +
+          seg("fetus","single","단태아","아기 1명") + seg("fetus","twin","쌍태아","2명") +
+          seg("fetus","triplet","삼태아 이상","3명~") + '</div></div>' +
+        '<div><span class="lab">출산 순위 <span class="tip">— 이번 아기 기준</span></span><div class="seg">' +
+          seg("order","1","첫째아") + seg("order","2","둘째아") + seg("order","3","셋째아 이상") +
+          '</div><div class="hintline" id="orderNote"></div></div>' +
+        '<div id="staffWrap" hidden><span class="lab">관리사 인원</span><div class="seg">' +
+          seg("staff","1","1명") + seg("staff","2","2명") + '</div>' +
+          '<div class="hintline">쌍태아는 1명·2명 중 선택, 삼태아 이상은 2명 고정입니다.</div></div>' +
+        '<label class="chkbox"><input type="checkbox" data-s="disability"' + (S.disability?" checked":"") + '>' +
+          '<span class="t"><b>산모가 중증 장애인입니다</b><em>한 단계 위 유형이 적용됩니다 (단태아→B형, 쌍태아→C형)</em></span></label>' +
+        '<label class="chkbox"><input type="checkbox" data-s="preemie"' + (S.preemie?" checked":"") + '>' +
+          '<span class="t"><b>미숙아로 중환자실·집중치료실에 입원했습니다</b><em>서비스 기간을 한 단계 길게 고를 수 있습니다</em></span></label>' +
+      '</div></div>' +
+
+    '<div class="box"><h3>소득 구간</h3>' +
+      '<div class="form">' +
+        '<label class="chkbox"><input type="checkbox" data-s="basic"' + (S.basic?" checked":"") + '>' +
+          '<span class="t"><b>기초생활수급자 · 차상위계층입니다</b><em>해당하면 소득과 무관하게 &lsquo;가형&rsquo; — 본인부담금이 가장 적습니다</em></span></label>' +
+        '<div id="incWrap">' +
+          '<div><span class="lab">무엇으로 확인할까요?</span><div class="seg">' +
+            seg("mode","income","월 소득으로","부스에서 빠르게") + seg("mode","fee","건강보험료로","보건소 판정 기준") +
+            '</div></div>' +
+          '<div style="margin-top:14px;"><span class="lab">가구원 수 <span class="tip">— 태아도 포함 (쌍둥이면 2명)</span></span>' +
+            select("fam", [2,3,4,5,6,7,8].map(function(n){return [n, n+"인 가구"];})) +
+            '<div class="hintline">산모 + 남편 + 태아 1명 = <b>3인</b></div></div>' +
+          '<div id="modeIncome" style="margin-top:14px;">' +
+            '<span class="lab">부부 월 소득 <span class="tip">— 세전. 대략만 넣으셔도 됩니다</span></span>' +
+            '<div class="form f2">' + numin("incA","산모 월 소득") + numin("incB","배우자 월 소득") + '</div></div>' +
+          '<div id="modeFee" style="margin-top:14px;" hidden>' +
+            '<span class="lab">건강보험 가입 형태</span><div class="seg">' +
+              seg("ins","office","둘 다 직장") + seg("ins","region","둘 다 지역") + seg("ins","mixed","직장+지역","혼합") + '</div>' +
+            '<div style="margin-top:12px;"><span class="lab">월 건강보험료 <span class="tip">— 장기요양보험료 제외</span></span>' +
+            '<div class="form f2">' + numin("feeA","산모 보험료") + numin("feeB","배우자 보험료") + '</div></div>' +
+            '<label class="chkbox" style="margin-top:12px;"><input type="checkbox" data-s="dual"' + (S.dual?" checked":"") + '>' +
+              '<span class="t"><b>맞벌이 부부입니다</b><em>낮은 쪽 보험료를 절반으로 깎아 합산합니다</em></span></label>' +
+          '</div>' +
+        '</div>' +
+        '<div id="intakeVerdict"></div>' +
+      '</div></div>' +
+  '</div>' +
+
+  '<div class="box"><h3>연락처 <span style="font-weight:400;font-size:14px;color:var(--text-3);">— 상담 마무리에 접수할 때 씁니다</span></h3>' +
+    '<div class="form f2">' +
+      '<div><span class="lab">성함</span><input type="text" data-s="name" value="'+esc(S.name)+'" placeholder="산모님 성함"></div>' +
+      '<div><span class="lab">연락처</span><input type="text" data-s="phone" value="'+esc(S.phone)+'" placeholder="010-0000-0000"></div>' +
+      '<div><span class="lab">출산 예정일</span><input type="date" data-s="due" value="'+esc(S.due)+'"></div>' +
+    '</div></div>';
+}
+
+/* ═══════════ 0-B. 산후조리 유형 찾기 (참여형) ═══════════ */
+var TFQ = [
+  { k:"birth", q:"이번이 몇째 아기예요?", sub:"이걸로 지원 유형과 일수가 정해집니다",
+    opts:[["first","1\ufe0f\u20e3","첫째예요",""],
+          ["second","2\ufe0f\u20e3","둘째예요",""],
+          ["third","3\ufe0f\u20e3","셋째 이상이에요",""],
+          ["twin","\ud83d\udc6f","쌍둥이예요",""],
+          ["triplet","\ud83d\udc76","삼둥이 이상이에요",""]] },
+  { k:"jori", q:"산후조리는 어디서 하실 계획이세요?", sub:"집에서 보내는 시간이 진짜 산후조리입니다",
+    opts:[["center","\ud83c\udfe5","조리원 갔다가 집으로","보통 2주 정도"],
+          ["home","\ud83c\udfe0","조리원 없이 집에서","처음부터 집에서"],
+          ["undecided","\ud83e\udd14","아직 고민 중이에요",""]] },
+  { k:"help", q:"집에서 도와주실 분이 계세요?", sub:"이 답에 따라 안내가 크게 달라집니다",
+    opts:[["mom","\ud83d\udc75","친정엄마가 오세요",""],
+          ["mil","\ud83d\udc69\u200d\ud83e\uddb3","시어머니가 오세요",""],
+          ["husband","\ud83d\udc68","남편만 있어요",""],
+          ["none","\ud83d\ude45","도와주실 분이 없어요",""]] },
+  { k:"focus", multi:true, q:"서비스 받으실 때 어디에 가장 신경 써주면 좋겠어요?",
+    sub:"여러 개 고르셔도 됩니다 \u2014 이 순서대로 챙겨드립니다",
+    opts:[["body","\ud83d\udc97","내 몸 회복","부종 · 수유 · 산후풍"],
+          ["baby","\ud83d\udc76","아기 돌보기","목욕 · 수유 · 응급"],
+          ["house","\ud83e\uddfa","집안일","밥 · 청소 · 빨래"],
+          ["feed","\ud83c\udf7c","모유수유 도움","젖몸살 · 수유 자세"],
+          ["learn","\ud83d\udcda","육아 방법 배우기","혼자 남았을 때를 위해"],
+          ["rest","\ud83d\ude34","그냥 좀 쉬고 싶어요","낮에 눈 붙이기"],
+          ["elder","\ud83e\uddd2","큰아이","등하원 · 돌봄"]] },
+  { k:"want", multi:true, q:"어떤 관리사님이 오시면 좋겠어요?",
+    sub:"여러 개 고르셔도 됩니다 \u2014 배정할 때 그대로 봅니다",
+    opts:[["careful","\ud83d\udd0d","꼼꼼하신 분","놓치는 것 없이"],
+          ["baby","\ud83c\udf7c","아기를 잘 보시는 분","신생아 경험 많은"],
+          ["cook","\ud83c\udf72","요리를 잘하시는 분","산후 회복 식단"],
+          ["quiet","\ud83e\udd2b","조용하고 편한 분","말 많지 않은"],
+          ["exp","\ud83c\udf96\ufe0f","경력이 많으신 분","오래 하신 분"],
+          ["clean","\ud83e\uddf9","정리를 잘하시는 분",""]] },
+  { k:"choose", multi:true, q:"업체를 고르실 때 뭘 가장 중요하게 보세요?",
+    sub:"여러 개 고르셔도 됩니다 \u2014 솔직하게 말씀해 주세요",
+    opts:[["skill","\ud83c\udfc5","관리사님 실력과 경력",""],
+          ["backup","\ud83d\udd01","문제 생겼을 때 대응",""],
+          ["price","\ud83d\udcb0","금액과 지원금",""],
+          ["size","\ud83c\udfe2","회사 규모와 신뢰도",""],
+          ["edu","\ud83c\udf93","교육을 제대로 받은 분인지",""],
+          ["review","\u2b50","후기와 평판",""]] },
+  { k:"fear", multi:true, q:"반대로, 업체 고를 때 뭐가 제일 걱정되세요?",
+    sub:"걱정되는 걸 먼저 말씀해 주시면 그 부분부터 풀어드립니다",
+    opts:[["mismatch","\ud83d\ude13","관리사님이 안 맞으면 어쩌지",""],
+          ["absent","\ud83d\udea8","갑자기 못 오시면 어쩌지",""],
+          ["skill","\ud83d\ude22","아기를 잘 못 보시면 어쩌지",""],
+          ["hygiene","\ud83e\uddfc","위생과 안전이 걱정돼요",""],
+          ["talk","\ud83d\udde3\ufe0f","말이 잘 안 통하면 어쩌지",""],
+          ["money","\ud83d\udcb8","돈이 얼마나 나갈지 모르겠어요",""],
+          ["privacy","\ud83d\udd10","집을 보여드리는 게 부담돼요",""]] },
+  { k:"how", q:"며칠 정도 생각하고 계세요?", sub:"기간에 따라 금액이 달라집니다",
+    opts:[["short","\u23f1\ufe0f","짧게, 딱 필요한 만큼",""],
+          ["mid","\ud83d\udcc5","보통 정도로",""],
+          ["long","\ud83d\uddd3\ufe0f","넉넉하게 길게",""],
+          ["idk","\u2753","아직 모르겠어요","금액 보고 정할게요"]] }
+];
+var TF = {};
+var tfIdx = 0;
+
+function tfLabel(k, v){
+  var q = TFQ.filter(function(x){ return x.k === k; })[0];
+  if (!q) return v;
+  var o = q.opts.filter(function(x){ return x[0] === v; })[0];
+  return o ? o[2] : v;
+}
+function tfWants(){ return (TF.want || []); }
+
+/* 고르신 내용을 요금 계산 상태에 반영 */
+function tfApply(){
+  var b = TF.birth;
+  if (b === "first"){ S.fetus = "single"; S.order = 1; }
+  else if (b === "second"){ S.fetus = "single"; S.order = 2; }
+  else if (b === "third"){ S.fetus = "single"; S.order = 3; }
+  else if (b === "twin"){ S.fetus = "twin"; }
+  else if (b === "triplet"){ S.fetus = "triplet"; }
+  if (TF.how === "short") S.period = 0;
+  else if (TF.how === "mid") S.period = 1;
+  else if (TF.how === "long") S.period = 2;
+}
+function tfDone(){
+  return TFQ.every(function(q){
+    return q.multi ? (TF[q.k] && TF[q.k].length) : TF[q.k];
+  });
+}
+
+function tfResult(){
+  var w = (TF.focus || [])[0], h = TF.help, j = TF.jori, hw = TF.how;
+  var R = {
+    body:  ["회복 우선형", "\ud83d\udc97", "산모님 몸이 잘 회복될지가 가장 걱정이십니다.",
+            "산후풍, 부종, 수유 문제는 <b>초기 2주</b>가 가장 중요합니다. 관리사님이 매일 신체상태를 확인하고 유방 관리 · 부종 관리 · 좌욕 · 산후 체조까지 도와드립니다."],
+    baby:  ["신생아 집중형", "\ud83d\udc76", "아기를 잘 볼 수 있을지가 가장 걱정이십니다.",
+            "첫 아기면 목욕 한 번 시키는 것도 무섭습니다. 관리사님이 <b>목욕 · 배꼽 관리 · 수유 · 예방접종 · 응급상황 대응</b>까지 옆에서 알려드리면서 해주십니다."],
+    house: ["살림 부담형", "\ud83e\uddfa", "집안일을 어떻게 감당할지가 가장 걱정이십니다.",
+            "산모님 식사 준비, 산모님과 아기 공간 청소, 산모님과 아기 세탁물까지 해드립니다. 다만 <b>집 전체 대청소나 다른 가족 빨래는 포함되지 않습니다</b> \u2014 미리 아셔야 서운하지 않으십니다."],
+    elder: ["둘째맘형", "\ud83e\uddd2", "큰아이를 어떻게 할지가 가장 큰 걱정이십니다.",
+            "큰아이 돌보기는 기본 서비스가 아니라 <b>추가 계약</b> 항목입니다. 등하원이나 식사 준비를 도와드릴 수 있고, 어린이집에 가는지 · 몇 명인지에 따라 금액이 달라집니다."],
+    rest: ["체력 걱정형", "\ud83d\ude34", "밤에 잠을 못 자실까 봐 가장 걱정이십니다.",
+            "관리사님은 <b>낮 시간(09~18시)</b>에 오십니다. 낮에 아기를 봐드리는 동안 산모님이 <b>눈을 붙이실 수 있는 것</b>이 가장 큰 차이입니다. 밤에 못 잔 잠을 낮에 보충하시는 분들이 많습니다."],
+    feed:  ["수유 고민형", "\ud83c\udf7c", "모유수유가 가장 걱정이십니다.",
+            "젖몸살, 수유 자세, 양이 부족한 것 같은 불안 — 초기에 가장 많이 힘들어하시는 부분입니다. 관리사님이 <b>유방 관리와 수유 지원</b>을 매일 도와드립니다."],
+    learn: ["배우고 싶은 마음형", "\ud83d\udcda", "관리사님이 가신 뒤에 혼자 잘할 수 있을지가 걱정이십니다.",
+            "그래서 저희는 <b>정서적 지지 및 산모 교육</b>을 서비스에 포함합니다. 해드리기만 하는 게 아니라 <b>옆에서 알려드리면서</b> 함께 합니다. 나중에 혼자 남으셨을 때가 진짜입니다."],
+  }[w] || ["맞춤 상담형","\ud83c\udf38","산모님 상황에 맞춰 안내해 드리겠습니다.","어떤 부분이 걱정되시는지 편하게 말씀해 주세요."];
+
+  var recos = [];
+  if (h === "mom" || h === "mil"){
+    recos.push(["가족 산후관리사 \u2014 꼭 보셔야 합니다",
+      (h==="mom"?"친정어머니":"시어머니")+"께서 저희 소속 관리사로 등록하시면 <b>국가지원을 받으면서</b> 돌봐주실 수 있습니다. 교육부터 등록까지 저희가 대행합니다."]);
+  } else if (h === "none"){
+    recos.push(["기간을 넉넉히 보세요",
+      "도와주실 분이 없으면 짧게 잡으셨다가 힘들어하시는 경우가 많습니다. 표준 이상으로 권해 드립니다."]);
+  } else {
+    recos.push(["남편분과 함께 들으시면 좋습니다",
+      "관리사님이 오시는 시간과 해주시는 범위를 두 분이 같이 아셔야 서로 편합니다."]);
+  }
+  if (j === "center"){
+    recos.push(["조리원 나오신 다음이 진짜입니다",
+      "조리원에서 2주 계시다 집에 오시면 그때부터가 시작입니다. 바우처는 <b>출산일부터 90일</b> 안에 쓰시면 되니, 그 시기에 맞춰 쓰시는 분들이 많습니다."]);
+  } else if (j === "home"){
+    recos.push(["집에서 하실 거면 기간이 중요합니다",
+      "조리원을 안 가시면 관리사님과 보내는 시간이 산후조리 그 자체입니다. 기간을 넉넉히 보시는 걸 권합니다."]);
+  }
+  if (hw === "long"){
+    recos.push(["15일 상한을 꼭 확인하세요",
+      "창원시 환급은 15일까지만 적용됩니다. 그 이상은 전액 본인 부담이라 금액이 크게 올라갑니다."]);
+  } else if (hw === "idk"){
+    recos.push(["금액을 보고 정하시면 됩니다",
+      "잠시 뒤 단축 · 표준 · 연장 세 가지 금액을 나란히 보여드릴게요. 보시고 정하셔도 늦지 않습니다."]);
+  } else {
+    recos.push(["산모교실은 예약과 무관합니다",
+      "저희 예약을 안 하셔도 신청하실 수 있습니다. 부담 없이 참여해 보세요."]);
+  }
+  return {name:R[0], em:R[1], line:R[2], desc:R[3], recos:recos};
+}
+
+function s_typefinder(){
+  tfApply();
+  var h = head("산모님이 먼저", "산모님께 딱 맞는 방향부터 같이 찾아볼게요",
+    "제가 일방적으로 설명드리는 게 아니라, <b>산모님이 고르신 것</b>을 보고 그 부분을 중심으로 말씀드립니다.");
+
+  if (tfIdx < TFQ.length){
+    var q = TFQ[tfIdx];
+    var picked = q.multi ? (TF[q.k] || []) : TF[q.k];
+    h += '<div class="onequestion">' +
+      '<span class="qcount">'+(tfIdx+1)+' / '+TFQ.length+'</span>' +
+      '<div class="qhead big">'+q.q+'</div><p class="qsub">'+q.sub+'</p><div class="pick big">';
+    q.opts.forEach(function(o){
+      var sel = q.multi ? (picked.indexOf(o[0]) >= 0) : (picked === o[0]);
+      h += '<button class="pk'+(sel?" sel":"")+'" type="button" data-tf="'+q.k+'" data-tv="'+o[0]+'"' +
+        (q.multi ? ' data-multi="1"' : '') + '>' +
+        '<span class="em">'+o[1]+'</span><span class="tl2">'+o[2]+'</span>' +
+        (o[3] ? '<span class="sb">'+o[3]+'</span>' : '') + '</button>';
+    });
+    h += '</div>';
+    if (q.multi) h += '<p class="qsub" style="margin-top:14px;">여러 개 고르시고 <b>다음</b>을 눌러주세요.</p>';
+    h += '</div>';
+  }
+
+  if (tfIdx >= TFQ.length && tfDone()){
+    var r = tfResult();
+    h += '<div class="result-card"><div class="rl">산모님은</div>' +
+      '<div class="rt">'+r.em+' '+r.name+'</div>' +
+      '<div class="rd">'+r.line+'<br><br>'+r.desc+'</div>' +
+      '<div class="reco">' + r.recos.map(function(x){
+        return '<div class="r"><h5>'+x[0]+'</h5><p>'+x[1]+'</p></div>'; }).join("") +
+      '</div></div>';
+  } else if (tfIdx >= TFQ.length){
+    h += '<div class="note w"><span class="ic">?</span><span>아직 안 고르신 항목이 있습니다. 왼쪽 아래 <b>이전</b>으로 돌아가 채워주세요.</span></div>';
+  }
+
+  return h + script([
+    "본격적으로 설명드리기 전에요, 산모님께 딱 맞는 것부터 같이 찾아볼까요? 여섯 개만 골라주시면 돼요.",
+    "몇째 아기세요? 조리는 어디서 하실 계획이세요? 집에서 도와주실 분은 계세요?",
+    "그리고 이게 제일 중요한데요, 관리사님께 뭘 가장 바라세요? 여러 개 고르셔도 돼요.",
+    "육아 생각하시면 지금 뭐가 제일 걱정되세요?",
+    "아 그러시구나. 저도 그 말씀 정말 많이 들어요. 그러면 그 부분을 중심으로 말씀드릴게요."
+  ], "여기가 <b>라포를 만드는 자리</b>입니다. 설명하지 말고 <b>같이 골라보는 시간</b>으로 쓰세요. " +
+     "고르실 때마다 &ldquo;아 그러시구나&rdquo;, &ldquo;그 말씀 많이 하세요&rdquo; 하고 받아주시면 산모님이 편해지십니다. " +
+     "<b>&lsquo;도와주실 분&rsquo;에서 친정엄마·시어머니가 나오면 가족 산후관리사를 꼭 꺼내세요.</b>") +
+  checklist("tf", [
+    "산모님이 직접 누르시게 하기 (대신 눌러주지 않기)",
+    "고르실 때마다 공감으로 받아주기 \u2014 라포가 여기서 생깁니다",
+    "결과 카드를 소리 내어 읽어드리기",
+    "고르신 항목을 뒤 설명에서 다시 언급하기"
+  ]);
+}
+
+
+/* ═══════════ 걱정 · 선택 기준 해소 ═══════════ */
+var FEAR_ANSWER = {
+  mismatch:["관리사님이 안 맞으면 어쩌지",
+    "<b>바꾸실 수 있습니다.</b> 저희는 소속 관리사님이 244명이라, 즉시 투입 가능한 분이 있으면 바로 교체해 드립니다. 인력이 적은 곳은 이때 며칠씩 서비스가 비어버립니다."],
+  absent:["갑자기 못 오시면 어쩌지",
+    "<b>대기 인력이 있습니다.</b> 경남에서 관리사님이 가장 많다는 건, 한 분이 아프시거나 사정이 생겨도 다른 분이 이어받을 수 있다는 뜻입니다. 산후조리 기간에 며칠 공백은 굉장히 큽니다."],
+  skill:["아기를 잘 못 보시면 어쩌지",
+    "<b>저희는 교육기관을 직접 운영합니다.</b> 경남 유일 도지정 교육기관입니다. 신규 관리사님 양성부터 기존 관리사님 보수교육까지 저희 안에서 합니다. 다른 곳은 외부 기관에 위탁합니다."],
+  hygiene:["위생과 안전이 걱정돼요",
+    "<b>정부가 직접 점검한 부분입니다.</b> 보건복지부 품질평가 8개 영역에 <b>안전 관리</b>가 들어 있고, 저희는 A등급을 받았습니다. 관리사님은 출근하시면 손 씻기부터 시작하십니다."],
+  talk:["말이 잘 안 통하면 어쩌지",
+    "<b>이건 저희가 교육으로 다룹니다.</b> 실제 보수교육 내용에 <b>대화 마음가짐 · 경청과 공감</b>이 들어 있습니다. 그래도 불편하시면 교체하실 수 있습니다."],
+  money:["돈이 얼마나 나갈지 모르겠어요",
+    "<b>지금 이 자리에서 정확히 계산해 드립니다.</b> 총 서비스 가격, 정부지원금, 본인부담금, 창원시 환급, 최종 부담액까지 숫자로 보여드립니다. 추가 요금이 생기는 경우도 미리 다 말씀드립니다."],
+  privacy:["집을 보여드리는 게 부담돼요",
+    "<b>그 마음 정말 많이들 말씀하십니다.</b> 두 가지 방법이 있습니다 \u2014 친정어머니·시어머니가 <b>직접 관리사로 등록</b>하시거나, 오신 분이 불편하시면 <b>교체</b>하시는 방법입니다."]
+};
+var CHOOSE_ANSWER = {
+  skill:["관리사님 실력과 경력", "28년째 이 일만 해왔고, 경력 있는 관리사님을 <b>244명</b> 보유하고 있습니다."],
+  backup:["문제 생겼을 때 대응", "대기 인력이 있어 <b>즉시 교체</b>가 가능하고, 지점 담당자가 끝까지 붙습니다."],
+  price:["금액과 지원금", "가격은 <b>정부 고시라 어디나 같습니다.</b> 대신 창원시 <b>90% 환급</b>까지 저희가 안내해 드립니다."],
+  size:["회사 규모와 신뢰도", "경남 22개 기관 중 <b>이용자 수 · 제공인력 수 1위</b>. 보건복지부 품질평가 <b>A등급</b>."],
+  edu:["교육을 제대로 받은 분인지", "경남 <b>유일 도지정 교육기관을 직접 운영</b>합니다. 양성교육부터 보수 · 심화교육까지."],
+  review:["후기와 평판", "누적 이용 산모님 <b>7,668명</b>. 정부 전자바우처 사이트에서 직접 확인하실 수 있습니다."]
+};
+
+function s_relief(){
+  var fears = TF.fear || [], chooses = TF.choose || [];
+  var h = head("산모님 먼저", "걱정하시는 부분부터 풀어드릴게요",
+    "산모님이 고르신 것만 골라서 답해 드립니다. <b>나머지 이야기는 필요하시면 그때 하겠습니다.</b>");
+
+  if (!fears.length && !chooses.length){
+    return h + '<div class="note w"><span class="ic">?</span><span>앞 단계에서 <b>중요하게 보시는 것</b>과 <b>걱정되시는 것</b>을 고르시면 여기에 답이 나옵니다.</span></div>' +
+      script(["앞에서 골라주신 걸로 답해 드릴게요."], "먼저 유형 찾기를 마쳐주세요.");
+  }
+
+  if (fears.length){
+    h += '<div class="qhead" style="margin-bottom:12px;">걱정되신다고 하신 것</div><div class="cards c2">';
+    fears.forEach(function(k){
+      var a = FEAR_ANSWER[k];
+      if (!a) return;
+      h += '<div class="box relief"><h3>\u201c' + a[0] + '\u201d</h3><p>' + a[1] + '</p></div>';
+    });
+    h += '</div>';
+  }
+  if (chooses.length){
+    h += '<div class="qhead" style="margin:18px 0 12px;">중요하게 보신다고 하신 것</div><div class="cards c3">';
+    chooses.forEach(function(k){
+      var a = CHOOSE_ANSWER[k];
+      if (!a) return;
+      h += '<div class="box soft"><h3>' + a[0] + '</h3><p>' + a[1] + '</p></div>';
+    });
+    h += '</div>';
+  }
+
+  return h + script([
+    "산모님이 걱정된다고 하신 부분부터 먼저 말씀드릴게요.",
+    "이게 저희가 제일 자신 있는 부분이거든요.",
+    "혹시 더 궁금하시거나 걱정되시는 게 있으면 편하게 말씀해 주세요. 그것부터 답해 드릴게요."
+  ], "<b>산모님이 고른 것만</b> 화면에 나옵니다. 우리 자랑을 전부 늘어놓는 게 아니라 " +
+     "<b>산모님 걱정에 하나씩 답하는 자리</b>로 쓰세요. 다 답한 뒤 &ldquo;또 걱정되시는 거 있으세요?&rdquo;로 한 번 더 열어주세요.") +
+  checklist("relief", [
+    "고르신 걱정을 그대로 소리 내어 읽고 시작하기",
+    "하나씩 답하고 &ldquo;해결되셨어요?&rdquo; 확인하기",
+    "화면에 없는 걱정이 나오면 F키로 질문 패널 찾기",
+    "다 답한 뒤 &ldquo;또 걱정되시는 거 있으세요?&rdquo; 한 번 더 묻기"
+  ]);
+}
+
+/* ═══════════ 맞춤 배정 \u2014 산모님 답을 이렇게 씁니다 ═══════════ */
+function s_matching(){
+  var wants = tfWants();
+  var chips = "";
+  if (TF.birth) chips += chip(tfLabel("birth", TF.birth));
+  if (TF.jori) chips += chip(tfLabel("jori", TF.jori));
+  if (TF.help) chips += chip(tfLabel("help", TF.help));
+  wants.forEach(function(v){ chips += chip(tfLabel("want", v), true); });
+  (TF.focus || []).forEach(function(v){ chips += chip("신경 — " + tfLabel("focus", v)); });
+  (TF.fear || []).forEach(function(v){ chips += chip("걱정 — " + tfLabel("fear", v)); });
+
+  var wantTxt = wants.length
+    ? wants.map(function(v){ return tfLabel("want", v); }).join(" · ")
+    : "산모님께 맞는";
+
+  var h = head("산모님이 먼저", "방금 고르신 것, 그냥 물어본 게 아닙니다",
+    "이 내용이 담당자에게 그대로 전달돼서 <b>관리사님을 배정할 때 실제로 봅니다.</b>");
+
+  if (chips){
+    h += '<div class="box" style="margin-bottom:18px;"><h3>산모님이 고르신 것</h3>' +
+      '<div class="chips">'+chips+'</div>' +
+      '<p style="margin-top:13px;">이걸 그대로 들고 <b>'+wantTxt+'</b> 관리사님을 찾습니다.</p></div>';
+  } else {
+    h += '<div class="note w"><span class="ic">?</span><span>앞 단계에서 먼저 골라주시면 여기에 정리돼서 나옵니다.</span></div>';
+  }
+
+  h += '<div class="punch"><div class="lab">이게 가능한 이유</div>' +
+    '<div class="txt">저희는 소속 관리사님이 <b>244명</b>입니다. 경남에서 가장 많습니다. ' +
+    '<b>사람이 많아야 고를 수 있습니다.</b></div></div>' +
+
+  '<div class="cards c3">' +
+    '<div class="box"><h3>인력이 적은 곳은</h3>' +
+      '<p>지금 <b>비어 있는 분</b>을 보낼 수밖에 없습니다. 산모님이 어떤 분을 원하시는지 물어봐도 반영할 여지가 없습니다.</p></div>' +
+    '<div class="box" style="border-color:var(--brand);border-width:2px;background:var(--brand-soft);">' +
+      '<h3>참사랑은</h3><p>244명 중에서 <b>산모님이 말씀하신 조건에 맞는 분</b>을 찾습니다. ' +
+      '아기를 잘 보시는 분, 요리 잘하시는 분, 조용한 분 \u2014 실제로 성향이 다 다르십니다.</p></div>' +
+    '<div class="box"><h3>그래도 안 맞으면</h3>' +
+      '<p><b>교체하실 수 있습니다.</b> 즉시 투입 가능한 분이 있으면 바로 바꿔드립니다. ' +
+      '인력이 적은 곳은 이때 며칠씩 서비스가 비게 됩니다.</p></div>' +
+  '</div>' +
+
+  '<div class="box soft"><h3>배정할 때 함께 보는 것들</h3>' +
+    '<ul><li>산모님이 바라시는 관리사님 성향</li>' +
+    '<li>가장 걱정하시는 부분 (몸 회복 · 아기 · 살림 · 큰아이 · 체력)</li>' +
+    '<li>큰아이나 반려동물이 있는지</li>' +
+    '<li>조리원 이후인지, 집에서 바로 시작인지</li>' +
+    '<li>집 위치와 이동 시간</li></ul>' +
+    '<p style="margin-top:10px;color:var(--text-3);font-size:14.5px;">' +
+    '실제 배정 절차와 반영 항목은 지점 기준으로 확정 필요<span class="tbd">담당자 확인</span></p></div>' +
+
+  script([
+    "방금 고르신 거, 그냥 재미로 물어본 게 아니에요. 이게 담당자한테 그대로 전달돼서 관리사님 배정할 때 실제로 봐요.",
+    "그런데 이게 아무 데서나 되는 게 아니에요. 저희는 소속 관리사님이 244분 계세요. 경남에서 제일 많아요.",
+    "사람이 많아야 고를 수 있거든요. 관리사님이 몇 분 안 계신 곳은 지금 비어 있는 분을 보낼 수밖에 없어요. 산모님이 어떤 분 원하시는지 물어봐도 반영할 방법이 없는 거죠.",
+    "그리고 혹시 오신 분이 안 맞으시면 교체도 가능해요. 저희는 대기 인력이 있어서 바로 바꿔드릴 수 있어요."
+  ], "<b>이 장이 이번 상담의 핵심입니다.</b> 산모님이 방금 직접 고른 것과 &lsquo;244명&rsquo;이 여기서 만납니다. " +
+     "숫자만 자랑하면 안 들리지만, <b>&lsquo;산모님이 고르신 걸 반영하려면 사람이 많아야 한다&rsquo;</b>로 풀면 바로 이해하십니다.") +
+  checklist("matching", [
+    "고르신 항목을 하나씩 짚으면서 읽어드리기",
+    "&ldquo;이게 배정에 실제로 반영된다&rdquo;고 분명히 말하기",
+    "244명 \u2192 고를 수 있다 \u2192 맞춤 배정이 가능하다 순서로",
+    "인력 적은 곳은 있는 사람을 보낼 수밖에 없다는 대비",
+    "안 맞으면 교체 가능 + 대기 인력이 있다"
+  ]);
+  return h;
+}
+function chip(t, strong){
+  return '<span class="cp'+(strong?" st":"")+'">'+t+'</span>';
+}
+
+/* ═══════════ O · X 퀴즈 ═══════════ */
+var QUIZ = [
+  { q:"관리사님이 산모님 손발톱을 깎아주실 수 있다", a:false,
+    x:"관리사님은 <b>의료인이 아니십니다.</b> 손발톱 깎기, 투약, 의료행위는 지원되지 않습니다. 이건 나중에 가장 많이 부딪히는 부분이라 미리 아셔야 합니다." },
+  { q:"집 전체 대청소도 해주신다", a:false,
+    x:"가사 지원은 <b>산모님과 아기가 지내는 공간 위주</b>입니다. 묵은 때 청소나 집 전체 대청소, 다른 가족분 세탁물은 포함되지 않습니다." },
+  { q:"큰아이 돌보기는 기본 서비스에 포함된다", a:false,
+    x:"큰아이 돌보기는 <b>추가 계약 항목</b>입니다. 등하원이나 식사 준비를 도와드릴 수 있고 <b>추가 요금</b>이 발생합니다. 큰아이가 어린이집에 가는지, 몇 명인지에 따라 금액이 달라집니다." },
+  { q:"관리사님이 잘 안 맞으면 교체할 수 있다", a:true,
+    x:"교체하실 수 있습니다. 참사랑은 소속 관리사님이 <b>244명</b>이라 즉시 투입 가능한 분이 있으면 바로 바꿔드립니다. 인력이 적은 곳은 이때 며칠씩 비게 됩니다." },
+  { q:"본인부담금은 나중에 90%를 돌려받는다", a:true,
+    x:"창원시가 본인부담금의 <b>90%</b>를 돌려드립니다. 다만 <b>먼저 전액 결제하시고</b>, 서비스가 끝난 뒤 90일 이내에 보건소에 신청하셔야 합니다. 최대 15일까지, 중위소득 180% 이하 가정이 대상입니다." }
+];
+var QA_STATE = {};
+var qzIdx = 0;
+
+function s_quiz(){
+  var answered = Object.keys(QA_STATE).length;
+  var right = 0;
+  Object.keys(QA_STATE).forEach(function(k){ if (QA_STATE[k] === QUIZ[k].a) right++; });
+
+  var h = head("함께 해보기", "이건 될까요, 안 될까요?",
+    "산모님이 직접 맞춰보세요. <b>여기서 틀리시는 것들이 나중에 제일 많이 부딪히는 부분</b>입니다.");
+
+  if (answered === QUIZ.length && qzIdx >= QUIZ.length-1){
+    h += '<div class="qscore">'+QUIZ.length+'문제 중 <b>'+right+'개</b> 맞히셨습니다. ' +
+      (right >= 4 ? '이미 잘 알고 계시네요!' : '이래서 미리 알고 계셔야 합니다. 하나씩 다시 짚어드릴게요.') + '</div>';
+  }
+
+  [QUIZ[Math.min(qzIdx, QUIZ.length-1)]].forEach(function(q){
+    var i = Math.min(qzIdx, QUIZ.length-1);
+    var ans = QA_STATE[i];
+    var oCls = "", xCls = "";
+    if (ans !== undefined){
+      oCls = q.a === true ? " right" : (ans === true ? " wrong" : "");
+      xCls = q.a === false ? " right" : (ans === false ? " wrong" : "");
+    }
+    h += '<div class="quiz"><span class="qn">Q'+(i+1)+'</span><div class="qt">'+q.q+'</div>' +
+      '<div class="ox"><button type="button" data-qz="'+i+'" data-qv="1" class="'+oCls.trim()+'">O</button>' +
+      '<button type="button" data-qz="'+i+'" data-qv="0" class="'+xCls.trim()+'">X</button></div>';
+    if (ans !== undefined){
+      var ok = (ans === q.a);
+      h += '<div class="qans '+(q.a ? "o" : "x")+'"><b>정답은 '+(q.a?"O":"X")+'입니다'+(ok?" — 맞히셨어요!":"")+'</b><br>'+q.x+'</div>';
+    }
+    h += '</div>';
+  });
+
+  return h + script([
+    "잠깐 재미있게 하나 해볼까요? 이건 될까요, 안 될까요? 산모님이 맞춰보세요.",
+    "관리사님이 손톱 깎아주실 수 있을까요? … 아쉽게도 안 돼요. 관리사님은 의료인이 아니셔서 의료행위는 못 하세요.",
+    "이런 것들을 미리 아셔야 나중에 서운하지 않으세요. 그래서 일부러 퀴즈로 내드리는 거예요."
+  ], "주의사항을 <b>그냥 읽으면 잔소리</b>가 되지만, 문제로 내면 산모님이 기억하십니다. 틀리셔도 &ldquo;대부분 이렇게 아세요&rdquo;라고 편하게 받아주세요.") +
+  checklist("quiz", [
+    "산모님이 직접 O/X를 누르시게 하기",
+    "의료행위 제외 — 반드시 짚기",
+    "큰아이 추가 요금 — 반드시 짚기",
+    "교체 가능 → 244명 인력으로 연결",
+    "90% 환급 → 먼저 결제 후 나중에 받는 순서"
+  ]);
+}
+
+/* ═══════════ 금액 맞춰보기 ═══════════ */
+var GUESS = null;
+function s_guess(){
+  var q = quote();
+  var h = head("함께 해보기", "산모님이 실제로 내시는 돈, 얼마일까요?",
+    "먼저 한번 맞춰보세요. <b>대부분 실제보다 훨씬 비싸게 생각하십니다.</b>");
+
+  if (q.unavailable || !q.inc.entered){
+    return h + '<div class="note w"><span class="ic">?</span><span>' +
+      '<b>먼저 1단계에서 산모님 상황을 입력해 주세요.</b> 소득 구간까지 들어가야 실제 금액으로 맞춰볼 수 있습니다.</span></div>' +
+      script(["잠깐만요, 산모님 상황을 먼저 여쭤볼게요."], "1단계로 돌아가 소득까지 입력하고 오세요.");
+  }
+
+  var p = S.period, r = q.all[p], days = q.days[p];
+  var opts = [
+    [r.price, "총 서비스 가격"],
+    [r.self,  "정부지원 뺀 금액"],
+    [Math.round(r.self/2/1000)*1000, "그 절반쯤"],
+    [r.final, "정답"]
+  ].sort(function(a,b){ return b[0]-a[0]; });
+
+  h += '<div class="box" style="margin-bottom:20px;"><h3>' +
+    situation() + ' · ' + PNAME[p] + ' ' + days + '일 기준</h3>' +
+    '<p>이 서비스의 <b>총 가격은 ' + won(r.price) + '</b>입니다. ' +
+    '그럼 산모님이 <b>최종적으로 주머니에서 나가는 돈</b>은 얼마일까요?</p></div>';
+
+  h += '<div class="guess">';
+  opts.forEach(function(o,i){
+    var cls = "";
+    if (GUESS !== null){
+      if (o[0] === r.final) cls = " answer";
+      else if (o[0] === GUESS) cls = " picked";
+    }
+    var mark = "";
+    if (GUESS !== null){
+      if (o[0] === r.final) mark = '<span class="mk">← 실제 금액</span>';
+      else if (o[0] === GUESS) mark = '<span class="mk">고르신 금액</span>';
+    }
+    h += '<button class="gk'+cls+'" type="button" data-guess="'+o[0]+'">' +
+      '<span class="amt">'+won(o[0])+'</span>'+mark+'</button>';
+  });
+  h += '</div>';
+
+  if (GUESS !== null){
+    var diff = GUESS - r.final;
+    h += '<div class="reveal"><div class="rv-l">실제로 산모님 주머니에서 나가는 돈은</div>' +
+      '<div class="rv-big">'+won(r.final)+'</div>' +
+      '<div class="rv-s">' +
+      (diff > 0 ? '생각하신 금액보다 <b>'+won(diff)+' 적습니다.</b><br>' : '') +
+      '총 '+won(r.price)+' 중에 정부가 <b>'+won(r.gov)+'</b>을 대주고, ' +
+      '창원시가 <b>'+won(r.refund)+'</b>을 돌려주기 때문입니다.<br>' +
+      '<b>'+days+'일 기준 하루당 '+won(r.final/days)+'</b>입니다.</div></div>';
+    h += '<div class="note w"><span class="ic">!</span><span>' +
+      '<b>다만 순서가 있습니다.</b> 처음에는 <b>'+won(r.self)+'</b>을 결제하셔야 하고, ' +
+      '서비스가 끝난 뒤 보건소에 신청하셔야 <b>'+won(r.refund)+'</b>을 돌려받습니다. ' +
+      '이 순서를 모르시면 결제할 때 놀라십니다.</span></div>';
+  }
+
+  return h + script([
+    "산모님, 이거 한번 맞춰보실래요? 이 서비스 총 가격이 " + won(r.price) + "이에요.",
+    "그런데 산모님이 실제로 내시는 돈은 얼마일 것 같으세요? 네 개 중에 골라보세요.",
+    "정답은 " + won(r.final) + "이에요. 정부에서 " + won(r.gov) + " 대주고, 창원시에서 " + won(r.refund) + " 돌려주거든요.",
+    "다만 순서가 있어요. 처음에는 " + won(r.self) + " 내셔야 하고, 서비스 끝나고 보건소에 신청하시면 돌려받으시는 거예요."
+  ], "<b>가격 앵커링</b>입니다. 큰 금액을 먼저 보여주고 최종 금액으로 착지시키면 체감이 완전히 달라집니다. " +
+     "산모님이 직접 고르시게 해야 효과가 납니다. 고르시기 전에 정답을 말하지 마세요.") +
+  checklist("guess", [
+    "총 가격을 먼저 말하고 산모님이 직접 고르시게 하기",
+    "정답 공개 후 &lsquo;정부 + 창원시&rsquo; 구조 설명",
+    "하루당 얼마인지로 한 번 더 체감시키기",
+    "먼저 결제 → 나중에 환급 순서 반드시 안내"
+  ]);
+}
+
+/* ═══════════ 1. 회사 소개 ═══════════ */
+function s_company(){
+  return head("업체소개", "28년, 경남에서 가장 많은 산모님을 만났습니다",
+    "1998년부터 산모·신생아 건강관리만 해온 기관입니다. 창원 · 김해 · 양산 지점을 운영합니다.") +
+  '<div class="punch"><div class="lab">이 페이지에서 반드시 남길 한 문장</div>' +
+    '<div class="txt">경남 22개 기관 중 이용자 수 · 제공인력 수 <b>모두 1위</b>입니다.</div></div>' +
+  '<div class="cards c4">' +
+    '<div class="box stat hero"><div class="v">7,668</div><div class="k">누적 이용 산모님</div>' +
+      '<div class="why">경남 1위 · 정부 전자바우처 사이트 공식 집계</div></div>' +
+    '<div class="box stat hero"><div class="v">244</div><div class="k">소속 관리사님</div>' +
+      '<div class="why">경남 1위 · 대기 인력이 있다는 뜻입니다</div></div>' +
+    '<div class="box stat"><div class="v">28</div><div class="k">년째 운영</div>' +
+      '<div class="why">1998년부터 이 일만 해왔습니다</div></div>' +
+    '<div class="box stat"><div class="v">A</div><div class="k">보건복지부 품질평가</div>' +
+      '<div class="why">2025년도 최고 등급</div></div>' +
+  '</div>' +
+  '<div class="note g"><span class="ic">✓</span><span><b>244명이 산모님께 좋은 이유 — 이 문장을 꼭 붙이세요.</b><br>' +
+    '관리사님이 가장 많다는 건, 갑자기 관리사님이 아프시거나 잘 안 맞아서 교체가 필요할 때 ' +
+    '<b>바로 투입할 수 있는 다른 관리사님이 대기하고 있다</b>는 뜻입니다. 인력이 적은 곳은 이때 며칠씩 비게 됩니다.</span></div>' +
+  '<div class="cards c2">' + photo("voucher.jpg","정부 사회서비스 전자바우처 검색 결과 — 이용자 수 7,668 / 제공인력 244") +
+    '<div class="box soft"><h3>이 사진을 짚으면서 말씀하세요</h3>' +
+    '<p>&ldquo;이건 저희가 만든 자료가 아니라 <b>정부 공식 사이트에서 그대로 검색한 결과</b>예요.&rdquo;</p>' +
+    '<p>산모님이 직접 확인하고 싶어하시면 <b>www.socialservice.or.kr</b>을 알려드리세요. ' +
+    '직접 검색해 보시게 하는 게 어떤 설명보다 강합니다.</p></div></div>' +
+  '<div class="note w"><span class="ic">!</span><span><b>지점 수 표기 확인 필요</b><span class="tbd">담당자 확인</span><br>' +
+    '기존 자료에 전국 50개 지점과 21개 지점이 같이 있습니다. 전체 지점 수와 A등급 획득 지점 수를 구분해서 확정해 주세요. ' +
+    '양산지점 포함 여부도 통일이 필요합니다.</span></div>' +
+  script([
+    "저희 참사랑어머니회는 올해로 28년째, 산모·신생아 건강관리 서비스만 전문으로 해온 기관이에요.",
+    "이건 저희가 만든 자료가 아니라 정부 공식 사회서비스 전자바우처 사이트에서 그대로 검색한 결과예요. 창원지점 이용자 수만 7,668명, 제공인력이 244명입니다.",
+    "이게 왜 중요하냐면요, 관리사님이 많다는 건 혹시라도 관리사님이 갑자기 못 오시거나 잘 안 맞아서 바꾸고 싶으실 때 바로 다른 분이 투입될 수 있다는 뜻이에요. 인력 적은 곳은 이럴 때 며칠씩 비어요."
+  ], "산모님이 직접 확인하고 싶어하시면 <b>www.socialservice.or.kr</b> 안내. 숫자만 말하고 넘어가지 마시고 <b>반드시 &lsquo;그래서 산모님께 좋은 점&rsquo;까지</b> 붙이세요.") +
+  checklist("company", [
+    "이용자 수 · 제공인력 수 경남 1위라고 못박기",
+    "244명 → 즉시 대체 투입 가능 → 서비스가 끊기지 않는다로 연결",
+    "정부 공식 사이트 집계라는 점 (우리가 만든 자료 아님)"
+  ]);
+}
+
+/* ═══════════ 2. A등급 ═══════════ */
+function s_grade(){
+  var areas = ["서비스 품질","고객 만족도","인력 관리","교육 훈련","전문성","안전 관리","기관 운영","권익 보장"];
+  return head("업체강점 ①", "정부가 직접 점검해서 준 최고 등급입니다",
+    "보건복지부 <b>2025년도 사회서비스 품질평가 A등급</b>. 우리가 주장하는 게 아니라 정부가 평가한 결과입니다.") +
+  '<div class="punch"><div class="lab">A등급이 산모님께 뜻하는 것</div>' +
+    '<div class="txt">서비스 품질만이 아니라 <b>관리사님 인력관리 · 교육훈련 · 안전관리까지</b> 정부가 직접 들여다보고 준 최고 등급입니다.</div></div>' +
+  '<div class="box"><h3>평가받은 8개 영역</h3><div class="cards c4" style="margin:0;">' +
+    areas.map(function(a){ return '<div style="background:var(--brand);color:#fff;border-radius:10px;' +
+      'padding:11px 8px;text-align:center;font-size:15px;font-weight:600;">'+a+'</div>'; }).join("") +
+  '</div></div>' +
+  photo("grade.jpg","보건복지부 2025년도 사회서비스 품질평가 A등급 인증") +
+  '<div class="note g"><span class="ic">✓</span><span>지금 상담해 드리는 <b>창원지점</b>과 <b>김해지점</b> 모두 A등급을 받았습니다.' +
+    '<span class="tbd">양산지점 포함 여부 확인</span></span></div>' +
+  script([
+    "이건 저희가 자체적으로 주장하는 게 아니라 보건복지부에서 직접 평가한 결과예요. 2025년도 사회서비스 품질평가에서 A등급을 받았습니다.",
+    "평가 항목이 굉장히 까다로워요. 서비스 품질, 고객 만족도, 인력관리, 교육훈련, 전문성, 안전관리까지 8개 영역을 다 보거든요.",
+    "그러니까 이건 상장 하나가 아니라, 관리사님을 어떻게 뽑고 어떻게 교육하고 안전은 어떻게 관리하는지까지 정부가 다 확인하고 준 최고 등급이라고 보시면 돼요."
+  ], "&ldquo;A등급 받았습니다&rdquo;에서 끝내면 산모님께는 그냥 상장입니다. <b>인력관리·교육훈련까지 점검받았다</b>는 해석을 붙여야 다음 장(교육원)과 이어집니다.") +
+  checklist("grade", [
+    "우리 주장이 아니라 보건복지부 평가 결과라는 점",
+    "8개 영역에 인력관리 · 교육훈련 · 안전관리가 포함된다는 점",
+    "창원 · 김해지점 모두 A등급"
+  ]);
+}
+
+/* ═══════════ 3. 교육기관 ═══════════ */
+function s_edu(){
+  return head("업체강점 ②", "경상남도에서 유일하게 교육기관을 직접 운영합니다",
+    "다른 업체는 관리사님을 <b>외부 교육기관에 보냅니다.</b> 저희는 창원참사랑평생교육원을 직접 운영합니다.") +
+  '<div class="cards c4">' +
+    '<div class="box"><h3>① 교육원 자체 운영</h3><p>창원참사랑평생교육원. 경상남도 지정 교육기관입니다.</p></div>' +
+    '<div class="box"><h3>② 양성교육</h3><p>산모 · 신생아 건강관리사를 직접 양성합니다. 현장에서 실제로 생긴 케이스를 바로 커리큘럼에 넣습니다.</p></div>' +
+    '<div class="box"><h3>③ 보수 · 심화교육</h3><p>이미 일하고 계신 관리사님 대상 상시 운영 — <b>영유아 교육 · 정리수납 교육 · AI 교육</b></p></div>' +
+    '<div class="box"><h3>④ 정기 간담회</h3><p>관리사님 이야기를 듣고 운영에 반영합니다. 교육이 입력이라면 간담회는 피드백입니다.</p></div>' +
+  '</div>' +
+  '<div class="punch"><div class="lab">이 페이지의 결론</div>' +
+    '<div class="txt">교육 + 정기 간담회 — <b>경상남도에서 관리사 인력관리 체계가 가장 잘 갖춰진 회사</b>입니다.</div></div>' +
+  '<div class="note w"><span class="ic">!</span><span><b>여기에 들어가야 할 자료</b><span class="tbd">조성은 선생님 · 담당자 확인</span><br>' +
+    '교육 일정표(과정명 · 기수 · 일자), 교육 사진, 간담회 사진 · 일자 · 참석 인원, ' +
+    '연간 보수교육 횟수와 간담회 횟수. <b>&ldquo;연 O회 정기 운영&rdquo;</b>이라는 횟수가 있어야 1회성 행사로 안 보입니다.</span></div>' +
+  '<div class="box soft"><h3>실제 사례 — 2026. 6. 23. 소속 산후관리사 전원 보수교육</h3>' +
+    '<ul><li>대화 마음가짐</li><li>경청과 공감</li><li>고객 감동으로 이어지는 서비스 품질</li></ul>' +
+    '<p style="margin-top:9px;color:var(--text-3);font-size:14.5px;">이론만이 아니라 실습까지 함께 진행했습니다.</p></div>' +
+  '<div class="cards c3">' + photo("edu-1.jpg","보수교육 현장 — 소속 관리사님 전원 참석") +
+    photo("edu-2.jpg","실습 세션 — 이론만이 아니라 몸으로 익히는 교육") +
+    photo("meeting-1.jpg","정기 간담회 — 관리사님 의견을 듣고 반영합니다") + '</div>' +
+  script([
+    "고객님, 이 부분이 저희가 다른 업체와 가장 크게 다른 점이에요. 저희는 경상남도에서 유일하게 도지정 교육기관을 직접 운영하고 있어요.",
+    "보통 다른 업체는 관리사님을 외부 교육기관에 보내요. 저희는 직접 운영하다 보니, 현장에서 실제로 생긴 상황들 — 산모님이 자주 물어보시는 것, 신생아 돌봄 중 생기는 특수한 상황 — 을 바로바로 교육 내용에 넣을 수 있어요.",
+    "게다가 산모·신생아 교육만 하는 게 아니라 영유아 교육, 정리수납 교육, AI 교육까지 이어서 운영하고 있고요, 정기 간담회로 관리사님 의견도 계속 듣고 반영해요.",
+    "결국 고객님이 만나시는 관리사님의 실력이 계속 올라갈 수밖에 없는 구조인 거죠."
+  ], "이 장이 <b>가장 강한 차별점</b>입니다. 다른 업체와 비교 질문이 나오면 여기부터 꺼내세요. 뒤의 &lsquo;가족 산후관리사&rsquo; 장과도 이어집니다.") +
+  checklist("edu", [
+    "경남 유일 도지정 교육기관을 직접 운영",
+    "다른 업체는 외부에 보낸다 — 비교로 말하기",
+    "영유아 · 정리수납 · AI 교육까지 이어진다는 점",
+    "정기 간담회 = 관리사님 의견을 반영하는 체계"
+  ]);
+}
+
+/* ═══════════ 4. 자문기관 ═══════════ */
+function s_advisor(){
+  return head("업체강점 ③", "경상남도를 대표해 정부 사업 자문에 참여합니다",
+    "한국사회보장정보원 <b>사회서비스 전자바우처 제8기 지역 자문기관</b>으로 위촉되었습니다. (2025. 9. ~ 2028. 9.)") +
+  '<div class="punch"><div class="lab">산모님 언어로 바꾸면</div>' +
+    '<div class="txt">정부가 이 사업을 어떻게 운영할지 <b>의견을 물어보는 기관</b>이라는 뜻입니다.</div></div>' +
+  '<div class="cards c3">' +
+    '<div class="box"><h3>제도가 바뀌면 가장 먼저 압니다</h3><p>지원 기준이나 금액이 바뀌면 산모님께 가장 빨리 안내해 드릴 수 있습니다.</p></div>' +
+    '<div class="box"><h3>바우처 · 환급 문제에 정확히 대응합니다</h3><p>문제가 생겨도 어디에 어떻게 처리해야 하는지 경로를 정확히 알고 있습니다.</p></div>' +
+    '<div class="box"><h3>정부와 직접 소통합니다</h3><p>경남 지역 사업 운영에 대해 정부와 직접 이야기하는 기관입니다.</p></div>' +
+  '</div>' +
+  photo("advisor.jpg","한국사회보장정보원 지역 자문기관 위촉장 (2025.9 ~ 2028.9)") +
+  '<div class="note g"><span class="ic">✓</span><span>품질평가 A등급 · 자체 교육기관 · 지역 자문기관 — ' +
+    '<b>이 세 가지를 모두 갖춘 곳은 경남에서 참사랑이 유일합니다.</b></span></div>' +
+  script([
+    "마지막으로 하나 더 말씀드리면, 저희가 한국사회보장정보원이라는 정부 산하기관에서 지역 자문기관으로 공식 위촉을 받았어요.",
+    "쉽게 말씀드리면, 정부가 이 사업을 어떻게 운영할지 저희한테 의견을 물어보는 기관이라는 뜻이에요.",
+    "그래서 산모님께 좋은 점이 뭐냐면요, 제도나 지원 기준이 바뀌면 저희가 가장 먼저 알고 안내해 드릴 수 있고요, 바우처나 환급 관련해서 문제가 생겨도 어디에 어떻게 처리해야 하는지 정확히 알고 대응해요.",
+    "품질평가 A등급, 저희만의 교육기관, 그리고 지역 자문기관 — 이 세 가지를 다 갖춘 곳은 경남에서 저희가 유일합니다."
+  ], "&lsquo;한국사회보장정보원&rsquo;은 업계 용어입니다. <b>기관 이름부터 말하지 말고</b> &ldquo;정부가 의견을 물어보는 기관&rdquo;으로 먼저 풀어주세요. 위촉장은 근거로 옆에 보여주기만 하면 됩니다.") +
+  checklist("advisor", [
+    "기관 이름보다 &lsquo;정부가 의견을 묻는 기관&rsquo;으로 먼저 설명",
+    "산모님께 좋은 점 3가지로 착지 (제도 변화 · 문제 대응 · 정부 소통)",
+    "세 가지를 다 갖춘 곳은 경남 유일이라고 마무리"
+  ]);
+}
+
+/* ═══════════ 4-B. 다른 업체와 뭐가 다른가 ═══════════ */
+function s_compare(){
+  return head("업체 비교", "가격은 어디를 가셔도 똑같습니다",
+    "산모·신생아 건강관리 지원사업은 <b>서비스 가격이 정부 고시</b>입니다. " +
+    "그래서 업체마다 다른 건 가격이 아니라 <b>사람과 대응</b>입니다.") +
+  '<div class="punch"><div class="lab">부스를 돌아보실 때 이 한 문장만 기억하세요</div>' +
+    '<div class="txt">가격은 정부가 정해서 다 같습니다. <b>다른 건 &lsquo;어떤 관리사님이 오시느냐&rsquo;와 &lsquo;문제가 생겼을 때 어떻게 되느냐&rsquo;뿐입니다.</b></div></div>' +
+
+  '<div class="box"><h3>다른 부스에서도 이 세 가지만 물어보세요</h3>' +
+    '<p style="margin-bottom:14px;">저희 답을 미리 알려드릴 테니, 다른 곳에도 똑같이 물어보시고 비교해 보세요.</p>' +
+    '<div class="qa">' +
+      qa("① 관리사님이 몇 분 계세요? 안 맞아서 바꾸고 싶으면 며칠 걸려요?",
+         "참사랑은 <b>244명</b>입니다. 경남에서 가장 많습니다.",
+         "인력이 많다는 건 대기 인력이 있다는 뜻입니다. 관리사님이 갑자기 못 오시거나 잘 안 맞으실 때 <b>바로 다른 분이 투입</b>될 수 있습니다. 인력이 적은 곳은 이때 며칠씩 서비스가 비게 됩니다. 산후조리 기간에 며칠 공백은 굉장히 큽니다.") +
+      qa("② 관리사님 교육은 어디서 하세요? 직접 하세요, 외부에 보내세요?",
+         "참사랑은 <b>경상남도 지정 교육기관을 직접 운영</b>합니다.",
+         "대부분은 외부 교육기관에 위탁합니다. 저희는 창원참사랑평생교육원을 직접 운영해서, 현장에서 실제로 생긴 상황을 <b>바로 교육에 반영</b>합니다. 게다가 영유아 · 정리수납 · AI 교육까지 이어서 운영하고, 정기 간담회로 관리사님 의견도 반영합니다.") +
+      qa("③ 친정엄마가 관리사 하시려면요? 교육부터 등록까지 다 해주세요?",
+         "참사랑은 <b>교육 접수 → 이수 → 제공인력 등록 → 바우처 신청까지 한 줄로</b> 대행합니다.",
+         "교육기관을 함께 운영하기 때문에 가능한 일입니다. 다른 곳은 교육은 외부에 가서 들으셔야 하고, 등록 행정도 각자 알아서 하셔야 합니다.") +
+    '</div></div>' +
+
+  
+  script([
+    "혹시 다른 부스도 둘러보셨어요? 그러면 이것부터 말씀드릴게요.",
+    "이 사업은 서비스 가격이 정부에서 정해놓은 고시 가격이에요. 그래서 어느 업체를 가셔도 같은 조건이면 금액이 똑같아요. 가격으로 비교하실 필요가 없어요.",
+    "그럼 뭐가 다르냐면요, 어떤 관리사님이 오시느냐, 그리고 문제가 생겼을 때 어떻게 되느냐예요.",
+    "그래서 다른 부스 가시면 이 세 가지만 물어보세요. 관리사님이 몇 분 계신지, 교육은 직접 하시는지, 친정어머니 관리사 등록까지 도와주시는지. 이 세 개 물어보시면 차이가 확실히 보이실 거예요."
+  ], "경쟁사를 <b>깎아내리지 마세요.</b> 산모님이 직접 물어보고 스스로 판단하시게 하는 게 훨씬 강합니다. &ldquo;저희 답은 이겁니다, 다른 곳에도 물어보세요&rdquo;가 가장 세련된 비교입니다.") +
+  checklist("compare", [
+    "가격은 정부 고시라 어디나 같다는 점 (가격 경쟁 프레임에서 빠져나오기)",
+    "차이는 &lsquo;사람&rsquo;과 &lsquo;문제 생겼을 때 대응&rsquo;이라는 프레임 세우기",
+    "다른 부스에서 물어볼 질문 3개 드리기",
+    "경쟁사 비방하지 않기"
+  ]);
+}
+function qa(q, a, why){
+  return '<div class="qa-item"><div class="qa-q">'+q+'</div>' +
+         '<div class="qa-a">'+a+'</div><div class="qa-w">'+why+'</div></div>';
+}
+
+/* ═══════════ 5. 서비스 3대 영역 ═══════════ */
+function s_service(){
+  return head("서비스 내용", "관리사님이 해주시는 일 — 크게 세 가지입니다",
+    "정부 <b>산모·신생아 건강관리 지원사업</b>의 표준 서비스 영역 그대로입니다.") +
+  '<div class="cards c3">' +
+    '<div class="box"><h3>① 산모 케어</h3><ul>' +
+      '<li>산모 신체상태 확인</li><li>유방 관리 · 수유 지원</li><li>부종 관리 · 좌욕 지원</li>' +
+      '<li>영양 관리 (산후 회복 식단)</li><li>산후 체조 지원</li><li>정서적 지지 및 산모 교육</li></ul></div>' +
+    '<div class="box"><h3>② 신생아 케어</h3><ul>' +
+      '<li>아기 건강상태 확인</li><li>수유 지원</li><li>목욕 · 청결 · 위생 관리</li>' +
+      '<li>배꼽 관리</li><li>예방접종 관리</li><li>응급상황 대응</li></ul></div>' +
+    '<div class="box"><h3>③ 가사 지원</h3><ul>' +
+      '<li>산모 식사 준비</li><li>산모 · 신생아 생활공간 청소</li><li>산모 · 신생아 세탁물</li></ul>' +
+      '<p style="margin-top:10px;color:var(--text-3);font-size:14.5px;">산모님과 아기 공간 중심입니다. 다른 가족 세탁물이나 집 전체 대청소는 포함되지 않습니다.</p></div>' +
+  '</div>' +
+  '<div class="box soft" style="border-left:6px solid var(--gold);">' +
+    '<h3 style="color:var(--gold);">큰아이 돌보기 — 추가 계약 시 별도 지원</h3>' +
+    '<p>기본 서비스가 아닙니다. 등하원 도움, 식사 준비 등으로 <b>따로 계약</b>하시면 지원해 드립니다. ' +
+    '<b>추가 요금이 발생</b>하며 금액은 큰아이가 어린이집·유치원에 가는지, 몇 명인지에 따라 달라집니다.</p></div>' +
+  '<div class="note w"><span class="ic">!</span><span><b>큰아이 추가요금 구간표 필요</b><span class="tbd">담당자 확인</span><br>' +
+    '등원 여부별 · 인원별 · 1일 금액 구간표가 있어야 현장에서 상담자마다 답이 달라지지 않습니다.</span></div>' +
+  script([
+    "그럼 관리사님이 실제로 어떤 일을 해주시는지 말씀드릴게요. 정부 사업 기준으로 크게 세 가지예요.",
+    "첫째는 산모 케어예요. 매일 산모님 몸 상태를 확인하고, 유방 관리랑 수유 지원, 부종 관리와 좌욕, 산후 회복에 맞는 식사, 산후 체조까지 도와드려요. 힘드실 때 옆에서 말벗이 되어드리는 정서적 지지도 여기 들어갑니다.",
+    "둘째는 신생아 케어예요. 아기 건강상태 확인, 수유 지원, 목욕이랑 청결 관리, 배꼽 관리, 예방접종 챙기기, 그리고 응급상황 대응까지요.",
+    "셋째는 가사 지원인데요, 산모님과 아기 공간 중심으로 식사 준비, 청소, 세탁을 도와드려요. 다만 다른 가족분 세탁물이나 집 전체 대청소는 기본 서비스에 포함이 안 돼요.",
+    "큰아이 돌보기는 기본 서비스가 아니고 따로 계약하시는 항목이에요. 추가 요금이 붙습니다."
+  ], "5가지가 아니라 <b>3대 영역</b>으로 말씀하세요. 정부 지원사업 기준과 같아야 나중에 &ldquo;들은 것과 다르다&rdquo;는 이야기가 안 나옵니다. 큰아이 돌보기는 <b>반드시 한 단 낮춰서</b> 별도 항목으로 설명하세요.") +
+  checklist("service", [
+    "3대 영역(산모 · 신생아 · 가사)이 정부 사업 기준이라는 점",
+    "가사는 산모님과 아기 공간 중심 — 대청소 · 다른 가족 세탁물 제외",
+    "큰아이 돌보기는 기본 서비스 아님 + 추가 요금 발생"
+  ]);
+}
+
+/* ═══════════ 6. 표준 일정 ═══════════ */
+function s_day(){
+  var rows = [
+    ["09:00", [["b","손 씻기 · 위생 준비"],["m","산모님 · 아기 체온 확인"]], "출근 후 가장 먼저 위생부터 챙기고, 산모님과 아기 상태를 확인합니다."],
+    ["오전", [["m","산모 아침 식사 준비"],["m","모유수유 지원"],["b","아기 수유 · 트림 · 기저귀"]], "산모님 아침을 차려드리고 수유를 돕습니다."],
+    ["오전 중", [["h","산모 · 아기 공간 정리"],["h","세탁물 처리"]], "산모님과 아기가 지내는 공간 위주로 정리합니다."],
+    ["점심", [["m","산모 점심 식사 준비"],["b","관리사 휴게시간"]], "관리사님도 식사 겸 휴게시간을 가집니다."],
+    ["오후", [["b","아기 목욕 · 배꼽 관리"],["m","산모 부종 관리 · 좌욕 지원"]], "하루 중 가장 손이 많이 가는 시간입니다."],
+    ["오후 늦게", [["m","산후 체조 지원"],["m","정서적 지지 · 산모 교육"]], "몸 회복과 마음 회복을 함께 돕습니다."],
+    ["18:00", [["m","저녁 식사 준비"],["b","서비스 기록 작성"],["h","마무리 정리"]], "기록을 남기고 퇴근합니다."]
+  ];
+  var tl = '<div class="tl">';
+  rows.forEach(function(r){
+    tl += '<div class="tl-row"><div class="tl-t">'+r[0]+'</div><div class="tl-b">' +
+      r[1].map(function(t){ return '<span class="tag '+t[0]+'">'+t[1]+'</span>'; }).join("") +
+      '<div class="txt">'+r[2]+'</div></div></div>';
+  });
+  tl += '</div>';
+
+  return head("표준 일정", "관리사님의 하루는 이렇게 흘러갑니다",
+    "평일 <b>09:00 ~ 18:00</b>. 색깔로 <span style=\"color:var(--brand-d);font-weight:600;\">산모 케어</span> · " +
+    "<span style=\"color:#0E4E86;font-weight:600;\">신생아 케어</span> · " +
+    "<span style=\"color:var(--good);font-weight:600;\">가사 지원</span>이 구분됩니다.") +
+  tl +
+  '<div class="note c"><span class="ic">!</span><span><b>이건 꼭 짚고 넘어가셔야 합니다 — 나중에 분쟁이 가장 많은 부분입니다.</b><br>' +
+    '관리사님은 <b>의료인이 아닙니다.</b> 투약, 의료행위, 손발톱 깎기 등은 지원되지 않습니다.</span></div>' +
+  '<div class="note w"><span class="ic">!</span><span><b>회사 표준일정표로 교체 필요</b><span class="tbd">담당자 확인</span><br>' +
+    '위 일정은 상담대본 기준으로 정리한 것입니다. 회사가 보유한 실제 표준일정표 내용으로 채워 주세요.</span></div>' +
+  script([
+    "관리사님 하루 일과를 간단히 보여드릴게요. 아침 9시에 오셔서 손 씻고, 산모님이랑 아기 체온 체크부터 시작하세요.",
+    "오전에는 산모님 아침 식사 준비하고 모유수유 도와드리고, 산모님이랑 아기 공간 정리랑 세탁도 해드려요.",
+    "점심시간에는 관리사님도 식사 겸 휴게시간을 가지시고, 오후에는 아기 목욕이랑 배꼽 관리, 산모님 부종 관리랑 좌욕 지원을 해드려요.",
+    "그리고 하나 꼭 말씀드릴 게 있어요. 관리사님은 의료인이 아니세요. 그래서 투약이나 의료행위, 손발톱 깎아드리는 것 같은 건 지원이 안 돼요. 이건 미리 아셔야 나중에 서운하지 않으세요."
+  ], "의료행위 제외는 <b>반드시 소리 내어 말하고 넘어가세요.</b> 여기서 짚어야 나중에 &ldquo;못 들었다&rdquo;는 말이 안 나옵니다.") +
+  checklist("day", [
+    "시간대별로 산모 케어 · 신생아 케어 · 가사가 어떻게 들어가는지 짚기",
+    "관리사님도 휴게시간이 있다는 점",
+    "의료행위 · 투약 · 손발톱 깎기 제외 — 반드시 말로 확인"
+  ]);
+}
+
+/* ═══════════ 7. 이용 안내 ═══════════ */
+function s_rules(){
+  return head("이용 안내", "미리 아시면 서로 편한 여섯 가지",
+    "현장에서 가장 질문이 많은 것들만 모았습니다.") +
+  '<div class="cards c3">' +
+    '<div class="box"><h3>근무 시간</h3><p>평일 <b>09:00 ~ 18:00</b>. 주말 · 공휴일 근무는 추가 요금이 발생합니다.' +
+      '<span class="tbd">주말 근무 가능 조건 · 관리사 동의 필요 여부 확인</span></p></div>' +
+    '<div class="box"><h3>호칭</h3><p>&lsquo;이모님&rsquo;, &lsquo;아주머니&rsquo;가 아니라 <b>관리사님</b>이라고 불러 주세요. ' +
+      '가사도우미가 아니라 <b>전문 건강관리사</b>이십니다. 서로 예의 있게 소통하는 시작입니다.</p></div>' +
+    '<div class="box"><h3>가사 지원 범위</h3><p>산모님과 아기 공간 위주입니다. ' +
+      '묵은 때 청소, 집 전체 대청소, 다른 가족 세탁물은 <b>포함되지 않습니다.</b></p></div>' +
+    '<div class="box"><h3>추가 요금이 생기는 경우</h3>' +
+      '<ul><li>큰아이 등 다른 가족 관련 업무</li><li>주말 · 공휴일 근무</li></ul>' +
+      '<p style="margin-top:8px;">큰아이 요금은 <b>어린이집·유치원에 가는지, 몇 명인지</b>에 따라 달라집니다.' +
+      '<span class="tbd">구간표 · 1일 금액 확인</span></p></div>' +
+    '<div class="box"><h3>관리사 교체</h3>' +
+      '<p>잘 맞지 않으시면 교체할 수 있습니다.</p>' +
+      '<ul><li>원칙적으로 <b>최대 1~2회</b>까지<span class="tbd">기준 확인</span></li>' +
+      '<li>즉시 투입 가능한 관리사님이 있으면 바로 교체</li>' +
+      '<li>없으면 며칠 여유가 필요할 수 있습니다</li></ul>' +
+      '<p style="margin-top:8px;">교체 요청은 지점 담당자에게 연락 주세요.<span class="tbd">접수 방법 · 연락처 확인</span></p></div>' +
+    '<div class="box"><h3>반려동물</h3><p>반려동물이 있는 경우 미리 알려 주세요. 관리사님 배정 시 참고합니다.' +
+      '<span class="tbd">실제 운영 기준 확인</span></p></div>' +
+  '</div>' +
+  '<div class="note g"><span class="ic">✓</span><span>미리 안내해 두면 실제 상황이 생겼을 때 불만이 훨씬 줄어듭니다. ' +
+    '특히 <b>추가 요금</b>과 <b>교체 기준</b>은 이 자리에서 명확하게 말씀드리는 게 좋습니다.</span></div>' +
+  script([
+    "근무시간은 평일 9시부터 6시까지고요, 주말이나 공휴일에 근무를 원하시면 추가 요금이 붙어요.",
+    "그리고 관리사님을 이모님이나 아주머니가 아니라 관리사님이라고 불러주시면 좋아요. 가사도우미가 아니라 전문 건강관리사시거든요. 서로 더 편하게 소통하실 수 있어요.",
+    "가사 지원은 산모님이랑 아기 공간 위주로 해드리는 거라, 묵은 때 청소나 대청소는 포함이 안 되고요. 큰아이 관련해서 도움이 필요하시면 별도 요금으로 신청하실 수 있어요.",
+    "혹시 관리사님이 잘 안 맞으시면 교체도 가능해요. 즉시 투입 가능한 분이 계시면 바로 바꿔드리고, 없으면 며칠 여유가 필요할 수 있어요. 저희는 관리사님이 244분이라 대기 인력이 있는 편이에요."
+  ], "교체 이야기가 나오면 <b>244명 인력 이야기와 자연스럽게 연결</b>하세요. 이 장이 상담에서 가장 실용적인 장입니다.") +
+  checklist("rules", [
+    "근무시간 + 주말·공휴일 추가 요금",
+    "&lsquo;관리사님&rsquo; 호칭 안내",
+    "가사 범위 — 대청소 · 다른 가족 세탁물 제외",
+    "추가 요금 발생 조건 명확히",
+    "교체 기준 미리 안내 (244명 대기 인력과 연결)"
+  ]);
+}
+
+/* ═══════════ 8. 요금 유형 이해 ═══════════ */
+function s_feeintro(){
+  return head("이용요금", "요금은 네 가지로 정해집니다",
+    "표를 먼저 보여드리면 산모님이 자기 줄을 못 찾습니다. <b>기준부터 하나씩</b> 짚어드리세요.") +
+  '<div class="flow">' +
+    '<div class="fstep"><div class="n">1</div><h4>태아 유형</h4><p>단태아 / 쌍태아 / 삼태아 이상<br><b>→ A · B · C형</b></p></div>' +
+    '<div class="fstep"><div class="n">2</div><h4>출산 순위</h4><p>첫째 / 둘째 / 셋째 이상<br><b>→ ① ② ③</b></p></div>' +
+    '<div class="fstep"><div class="n">3</div><h4>소득 구간</h4><p>수급자·차상위 / 150% 이하 / 150% 초과<br><b>→ 가 · 통합 · 라형</b></p></div>' +
+    '<div class="fstep"><div class="n">4</div><h4>이용 일수</h4><p>단축 / 표준 / 연장<br><b>→ 유형마다 일수가 다릅니다</b></p></div>' +
+  '</div>' +
+  '<div class="punch"><div class="lab">가장 많은 경우 — 이것만 외워두세요</div>' +
+    '<div class="txt">첫째아 · 단태아 · 중위소득 150% 이하 → <b>A-통합-①형</b>, 표준 10일 기준 ' +
+    '본인부담금 <b class="num">462,000원</b> → 창원시 환급 후 <b class="num">46,200원</b></div></div>' +
+  '<div class="cards c2">' +
+    '<div class="box"><h3>일수는 유형마다 다릅니다</h3>' +
+      '<div class="scrollx"><table class="ref"><thead><tr><th>유형</th><th>단축</th><th>표준</th><th>연장</th></tr></thead><tbody>' +
+      '<tr><td>단태아 첫째아</td><td>5일</td><td>10일</td><td>15일</td></tr>' +
+      '<tr><td>단태아 둘째아 이상</td><td>10일</td><td>15일</td><td>20일</td></tr>' +
+      '<tr><td>쌍태아</td><td>10일</td><td>15일</td><td>20일</td></tr>' +
+      '<tr><td>삼태아 이상</td><td>15일</td><td>25일</td><td>40일</td></tr>' +
+      '</tbody></table></div></div>' +
+    '<div class="box"><h3>소득 구간은 무엇으로 정해지나요</h3>' +
+      '<p>보건소는 <b>신청일 기준으로 최근 고지된 월 건강보험료 본인부담금</b>을 봅니다. 작년 소득이나 연봉이 아니라 <b>지금 내고 있는 보험료</b>입니다.</p>' +
+      '<ul><li>장기요양보험료는 뺍니다</li><li>맞벌이면 낮은 쪽 보험료를 절반으로 깎아 합산</li><li>가구원 수에 <b>태아도 포함</b> (쌍둥이면 2명)</li></ul>' +
+      '<p style="margin-top:9px;">정확한 확인은 <b>복지로(bokjiro.go.kr)</b>나 <b>보건소</b>에서 하시면 됩니다.</p></div>' +
+  '</div>' +
+  script([
+    "이제 가장 궁금해하시는 요금이에요. 요금은 네 가지로 정해져요.",
+    "첫째는 단태아인지 쌍태아인지, 둘째는 첫째아인지 둘째아인지, 셋째는 소득 구간, 넷째는 며칠 이용하시는지예요.",
+    "소득 구간은 작년 연봉이 아니라 지금 내고 계신 건강보험료로 봐요. 신청하시는 날 기준으로 최근에 고지된 보험료를 보거든요.",
+    "그럼 지금 고객님 상황으로 실제 금액이 얼마인지 바로 계산해서 보여드릴게요."
+  ], "여기서 표를 통째로 보여주지 마세요. <b>기준 4개를 먼저 설명하고</b> 바로 다음 장 계산기로 넘어가는 게 훨씬 빠릅니다.") +
+  checklist("feeintro", [
+    "요금을 정하는 기준 4가지 설명",
+    "일수가 유형마다 다르다는 점",
+    "소득은 최근 고지된 건강보험료 기준 (연봉 아님)",
+    "정확한 확인은 복지로 · 보건소로 안내"
+  ]);
+}
+
+/* ═══════════ 9. 계산기 ═══════════ */
+function s_calc(){
+  return head("이용요금", "산모님 금액입니다",
+    "일수를 바꿔보시면 <b>최종적으로 내시는 돈</b>이 어떻게 달라지는지 바로 보입니다.") +
+  '<div class="calc"><div>' +
+    '<div class="box"><h3>며칠 이용하시겠어요? <span style="font-weight:400;font-size:14px;color:var(--text-3);">— 금액은 최종 부담액입니다</span></h3>' +
+      '<div class="pchoose">' + pcard(0) + pcard(1) + pcard(2) + '</div>' +
+      '<div class="hintline">작은 글씨는 <b>처음에 결제하는 본인부담금</b>입니다. 창원시 환급은 <b>15일까지만</b> 적용됩니다.</div>' +
+    '</div>' +
+  '</div>' +
+  '<div><div class="resbox" id="resBox"></div></div></div>' +
+
+  script([
+    "지금 고객님 상황으로 계산해 볼게요. 총 서비스 금액이 이만큼이고 정부에서 이만큼 지원돼요.",
+    "그래서 고객님이 업체에 결제하시는 본인부담금이 이 금액이에요. 그런데 여기서 끝이 아니에요.",
+    "창원시에서 이 본인부담금의 90%를 다시 돌려줘요. 그래서 최종적으로 고객님 돈이 나가는 건 이 금액이에요.",
+    "일수를 바꿔서 보여드릴 수도 있어요. 며칠로 하실지 편하게 골라보세요."
+  ], "산모님이 <b>&lsquo;내 금액&rsquo;</b>으로 보시게 하는 게 핵심입니다. 라형이 나오면 <b>환급 대상 여부를 반드시 짚고</b> 넘어가세요.") +
+  checklist("calc", [
+    "총 서비스 금액 → 정부지원금 → 본인부담금 → 환급 → 최종 순서로 설명",
+    "처음 결제하는 돈과 최종으로 내 돈이 되는 돈이 다르다는 점",
+    "15일 넘으면 초과분은 환급 안 된다는 점",
+    "라형이면 환급 대상 여부를 보건소에서 확인하시라고 안내"
+  ]);
+}
+
+/* ═══ 소득 구간 확인 ═══ */
+function s_income(){
+  return head("이용요금", "산모님이 어느 구간인지 같이 볼까요",
+    "이걸로 <b>가형 · 통합형 · 라형</b>이 갈리고, 금액이 크게 달라집니다.") +
+  '<div class="cards c2"><div class="box"><h3>입력</h3><div class="form">' +
+    '<label class="chkbox"><input type="checkbox" data-s="basic"' + (S.basic?" checked":"") + '>' +
+      '<span class="t"><b>기초생활수급자 · 차상위계층이세요?</b><em>해당하면 소득과 무관하게 가형 — 가장 적게 내십니다</em></span></label>' +
+    '<div id="incWrap">' +
+      '<div><span class="lab">무엇으로 볼까요?</span><div class="seg">' +
+        seg("mode","income","월 소득으로","빠르게") + seg("mode","fee","건강보험료로","정확하게") + '</div></div>' +
+      '<div style="margin-top:12px;"><span class="lab">가구원 수 <span class="tip">— 태아 포함 (쌍둥이면 2명)</span></span>' +
+        select("fam",[2,3,4,5,6,7,8].map(function(x){return [x,x+"인 가구"];})) + '</div>' +
+      '<div id="modeIncome" style="margin-top:12px;"><span class="lab">부부 월 소득 <span class="tip">(세전)</span></span>' +
+        '<div class="form f2">' + numin("incA","산모") + numin("incB","배우자") + '</div></div>' +
+      '<div id="modeFee" style="margin-top:12px;" hidden>' +
+        '<span class="lab">가입 형태</span><div class="seg">' + seg("ins","office","직장") + seg("ins","region","지역") + seg("ins","mixed","혼합") + '</div>' +
+        '<div style="margin-top:10px;"><span class="lab">월 건강보험료</span>' +
+        '<div class="form f2">' + numin("feeA","산모") + numin("feeB","배우자") + '</div></div>' +
+        '<label class="chkbox" style="margin-top:10px;"><input type="checkbox" data-s="dual"' + (S.dual?" checked":"") + '>' +
+        '<span class="t"><b>맞벌이</b><em>낮은 쪽 보험료를 절반으로 깎아 합산합니다</em></span></label></div>' +
+    '</div></div></div>' +
+    '<div><div id="intakeVerdict"></div>' +
+    '<div class="box soft" style="margin-top:14px;"><h3>보건소는 이렇게 봅니다</h3>' +
+    '<p><b>신청일 기준으로 최근 고지된 월 건강보험료</b>를 봅니다. 작년 연봉이 아니라 지금 내고 계신 보험료입니다.</p>' +
+    '<p>장기요양보험료는 빼고, 가구원 수에는 <b>태아도 포함</b>합니다.</p>' +
+    '<p style="color:var(--text-3);font-size:14.5px;margin-top:8px;">정확한 확인은 <b>복지로</b>나 <b>보건소</b>에서 하시면 됩니다.</p></div></div>' +
+  '</div>' +
+  script([
+    "요금을 정확히 보려면 소득 구간을 알아야 해요. 부담스러우시면 대략만 말씀해 주셔도 돼요.",
+    "혹시 수급자나 차상위에 해당되세요? 아니시면 부부 합쳐서 세전 월 소득이 대략 어느 정도 되세요?",
+    "네, 그러면 통합형이시네요. 이 구간이면 창원시 환급도 받으실 수 있어요."
+  ], "소득은 민감합니다. <b>&lsquo;대략만&rsquo;</b>이라고 먼저 말씀드리세요. 정확한 건 복지로·보건소로 넘기면 부담이 사라집니다.") +
+  checklist("income", [
+    "&lsquo;대략만 말씀해 주셔도 된다&rsquo;고 먼저 안심시키기",
+    "가구원 수에 태아 포함",
+    "판정 결과와 환급 대상 여부를 소리 내어 읽기",
+    "정확한 확인은 복지로 · 보건소로 안내"
+  ]);
+}
+
+function pcard(i){
+  var on = (S.period === i) ? " checked" : "";
+  return '<label><input type="radio" name="period" value="'+i+'"'+on+'>' +
+    '<span class="pcard"><span class="pn">'+PNAME[i]+'</span><span class="pd" id="pd'+i+'">–</span>' +
+    '<span class="pf num" id="pf'+i+'">–</span><span class="pl">최종 내 부담</span>' +
+    '<span class="ps num" id="ps'+i+'">–</span></span></label>';
+}
+
+/* ═══════════ 10. 환급 ═══════════ */
+function s_refund(){
+  return head("본인부담금 환급", "창원시가 본인부담금의 90%를 돌려드립니다",
+    "산모님들이 가장 많이 놓치시는 부분입니다. <b>신청하셔야 받으실 수 있습니다.</b>") +
+  '<div class="flow">' +
+    '<div class="fstep"><div class="n">1</div><h4>바우처 신청</h4><p>보건소 · 복지로 · 정부24<br>국민행복카드에 정부지원금이 들어옵니다</p></div>' +
+    '<div class="fstep"><div class="n">2</div><h4>본인부담금 결제</h4><p>서비스 이용할 때<br><b>전액을 먼저 냅니다</b></p></div>' +
+    '<div class="fstep"><div class="n">3</div><h4>서비스 종료</h4><p>이용이 끝나면<br>환급 신청이 가능해집니다</p></div>' +
+    '<div class="fstep"><div class="n">4</div><h4>창원시 환급</h4><p>보건소 방문 신청<br><b>90%를 돌려받습니다</b></p></div>' +
+  '</div>' +
+  '<div class="cards c2">' +
+    '<div class="box"><h3>환급 조건</h3><ul>' +
+      '<li>대상 — <b>기준중위소득 180% 이하</b> 가정 (신청일 기준 판정)</li>' +
+      '<li>금액 — 본인부담금의 <b>90%</b></li>' +
+      '<li>기간 — <b>최대 15일까지</b>. 15일을 넘겨 이용하면 초과 일수분은 환급 없이 전액 본인 부담</li>' +
+      '<li>횟수 — 임신 <b>1회당 1번</b></li></ul></div>' +
+    '<div class="box"><h3>언제 · 어디에 신청하나요</h3><ul>' +
+      '<li>시기 — <b>서비스 종료 후 90일 이내</b></li>' +
+      '<li>장소 — <b>산모 주소지 관할 보건소</b> 방문</li></ul>' +
+      '<p style="margin-top:10px;">신청 방법은 저희가 끝까지 안내해 드리니 걱정 안 하셔도 됩니다.</p>' +
+      '<p style="color:var(--text-3);font-size:14.5px;">필요 서류는 보건소 기준으로 확정 필요<span class="tbd">담당자 확인</span></p></div>' +
+  '</div>' +
+  '<div class="cards c2">' +
+    '<div class="box"><h3>바우처 신청 기간 — 놓치면 지원 자체를 못 받습니다</h3><ul>' +
+      '<li>기본 — <b>출산예정일 40일 전(임신 34주 2일)</b>부터 <b>출산 후 60일 이내</b></li>' +
+      '<li>임신 16주 이후 유산 · 사산 — 확인일부터 30일 이내 (의사 소견서)</li>' +
+      '<li>미숙아 · 선천성 이상아 입원 — 퇴원일부터 30일 이내 (입원확인서)</li>' +
+      '<li>바우처 사용 기간 — <b>출산일부터 90일</b> 이내에 서비스를 끝내야 합니다</li></ul></div>' +
+    '<div class="box soft"><h3>산모님 달력에 표시해 드릴 두 날짜</h3>' +
+      '<p><b>① 출산 후 60일</b> — 바우처 신청 마감</p>' +
+      '<p><b>② 서비스 종료 후 90일</b> — 환급 신청 마감</p>' +
+      '<p style="margin-top:10px;">이 두 개만 기억하시면 됩니다.</p></div>' +
+  '</div>' +
+  script([
+    "그리고 이게 정말 중요한데요, 창원시에서는 본인부담금의 90%를 다시 돌려줘요.",
+    "다만 순서가 있어요. 서비스 이용하실 때는 본인부담금을 먼저 다 내셔야 해요. 그리고 서비스가 다 끝난 다음에 보건소에 신청하시면 90%를 돌려받으시는 거예요.",
+    "신청 기한이 서비스 끝나고 90일 이내예요. 이걸 놓치시는 분들이 은근히 많으세요. 저희가 그때 연락드려서 안내해 드릴게요.",
+    "그리고 최대 15일까지만 지원돼요. 15일 넘겨서 이용하시면 넘는 날짜만큼은 환급이 안 되니까 이건 미리 아셔야 해요."
+  ], "&ldquo;<b>먼저 내고 나중에 돌려받는다</b>&rdquo;는 순서를 반드시 설명하세요. 이걸 모르시면 결제할 때 놀라십니다. 15일 상한도 같이 짚어주세요.") +
+  checklist("refund", [
+    "먼저 결제 → 나중에 환급이라는 순서",
+    "환급은 90%, 최대 15일까지",
+    "서비스 종료 후 90일 이내 보건소 신청",
+    "출산 후 60일 / 종료 후 90일 두 날짜 안내"
+  ]);
+}
+
+/* ═══════════ 11. 이용 절차 ═══════════ */
+function s_process(){
+  return head("이용 절차", "오늘은 접수만 해두셔도 됩니다",
+    "박람회장에서 바로 결정하지 않으셔도 됩니다. <b>접수만 해두시면 담당자가 연락드립니다.</b>") +
+  '<div class="punch"><div class="lab">현장 접수 흐름</div>' +
+    '<div class="txt">간편예약 접수 → 지점 담당자 확인 → 상세 상담 → 예약 확정</div></div>' +
+  '<div class="flow">' +
+    '<div class="fstep"><div class="n">1</div><h4>오늘 · 간편 접수</h4><p>성함과 연락처, 출산예정일만 남겨주세요</p></div>' +
+    '<div class="fstep"><div class="n">2</div><h4>담당자 연락</h4><p>지점 담당자가 확인 후 연락드립니다</p></div>' +
+    '<div class="fstep"><div class="n">3</div><h4>상세 상담 · 예약 확정</h4><p>일정을 정하고 예약금 <b>10%</b>를 넣으시면 확정됩니다</p></div>' +
+    '<div class="fstep"><div class="n">4</div><h4>관리사 매칭</h4><p>상담 내용을 바탕으로 매칭해 드립니다</p></div>' +
+    '<div class="fstep"><div class="n">5</div><h4>서비스 시작</h4><p>시작 <b>3일 전</b>까지 잔금 · 전날 관리사님이 직접 전화 · 계약서는 카카오톡으로</p></div>' +
+    '<div class="fstep"><div class="n">6</div><h4>환급 신청</h4><p>종료 후 <b>90일 이내</b> · 저희가 안내해 드립니다</p></div>' +
+  '</div>' +
+  '<div class="note w"><span class="ic">!</span><span><b>접수 후 문자 자동 발송 · 후속 예약 링크</b><span class="tbd">개발 · 운영 확인</span><br>' +
+    '접수하시면 예약 내용과 절차가 문자로 가고, 나중에 마음이 정해졌을 때 그 링크로 바로 예약하는 흐름이 있어야 ' +
+    '박람회 상담이 실제 계약으로 이어집니다.</span></div>' +
+  script([
+    "전체 절차는 이렇게 진행돼요. 오늘 바로 결정 안 하셔도 전혀 괜찮아요.",
+    "오늘은 성함이랑 연락처, 출산예정일만 남겨주시면 저희 담당자가 확인하고 연락드려요. 그때 자세히 상담받으시고 결정하시면 돼요.",
+    "예약하시게 되면 전체 금액의 10%만 예약금으로 먼저 넣어주시고, 출산 후에 정확한 시작일을 정해요.",
+    "서비스 시작 3일 전까지 잔금 넣어주시면 되고, 시작 전날에 관리사님이 직접 전화로 인사드려요. 계약서도 카카오톡으로 간편하게 하실 수 있고요."
+  ], "박람회 현장에서 <b>&ldquo;오늘 결정하세요&rdquo;는 역효과</b>입니다. &ldquo;접수만 해두시면 연락드린다&rdquo;로 부담을 낮춰야 연락처를 받을 수 있습니다.") +
+  checklist("process", [
+    "오늘은 접수만 하면 된다는 점을 먼저 말하기",
+    "예약금 10% · 잔금 3일 전",
+    "계약서는 카카오톡으로 간편하게",
+    "환급 신청까지 우리가 안내한다는 점"
+  ]);
+}
+
+/* ═══════════ 12. 산모교실 ═══════════ */
+function s_class(){
+  return head("산모교실 · 이벤트", "예약 안 하셔도 신청하실 수 있습니다",
+    "계약을 권하는 자리가 아니라 <b>혜택을 드리는 자리</b>입니다. 부담 없이 안내해 주세요.") +
+  '<div class="punch"><div class="lab">이 한 문장으로 시작하세요</div>' +
+    '<div class="txt">저희 예약 안 하셔도 <b>산모교실은 신청하실 수 있어요.</b></div></div>' +
+  '<div class="flow">' +
+    '<div class="fstep"><div class="n">1</div><h4>접수</h4><p>오늘 이 자리에서 바로 신청</p></div>' +
+    '<div class="fstep"><div class="n">2</div><h4>추첨</h4><p><b>20명</b>을 추첨해 모십니다</p></div>' +
+    '<div class="fstep"><div class="n">3</div><h4>산모교실 참여</h4><p>태어날 아기에게 선물하는 첫 번째 동화 — <b>AI 태교 동화</b></p></div>' +
+    '<div class="fstep"><div class="n">4</div><h4>사은품 증정</h4><p>참여하신 분께 드립니다</p></div>' +
+  '</div>' +
+  '<div class="cards c2">' + photo("class-poster.jpg","「태어날 우리 아기에게 선물하는 첫 번째 동화」 산모교실 포스터") +
+    photo("class-1.jpg","지난 산모교실 진행 모습") + '</div>' +
+  '<div class="cards c2">' +
+    '<div class="box"><h3>왜 이걸 먼저 권하나요</h3>' +
+      '<p>산후관리 계약은 산모님께 큰 결정입니다. 그런데 산모교실은 <b>부담이 없습니다.</b> ' +
+      '이 자리에서 자연스럽게 연락처를 남기실 수 있고, 저희는 산모님과 계속 이어질 수 있습니다.</p>' +
+      '<p><b>AI 태교 동화</b>라는 소재 자체가 다른 부스와 확실히 다릅니다.</p></div>' +
+    '<div class="box"><h3>준비해야 할 자료</h3>' +
+      '<ul><li>「태어날 우리 아기에게 선물하는 첫 번째 동화」 포스터<span class="tbd">삽입 필요</span></li>' +
+      '<li>지난 산모교실 진행 사진<span class="tbd">담당자 확인</span></li>' +
+      '<li>연간 운영 횟수 — &ldquo;정기적으로 하는 회사&rdquo;라는 신뢰가 생깁니다<span class="tbd">담당자 확인</span></li></ul>' +
+      '<p style="margin-top:9px;">접수는 간편예약 · 카카오채널과 같은 경로로 묶으면 관리가 편합니다.</p></div>' +
+  '</div>' +
+  script([
+    "그리고 하나 더 안내드릴 게 있어요. 저희가 산모교실을 정기적으로 운영하고 있는데요, 저희 예약 안 하셔도 신청하실 수 있어요.",
+    "이번에는 태어날 우리 아기에게 선물하는 첫 번째 동화라는 주제로, AI로 태교 동화를 만들어보는 시간이에요.",
+    "신청해 주시면 추첨으로 20분을 모시고, 참여하시는 분들께는 사은품도 드려요.",
+    "부담 없이 신청만 해두셔도 되니까 연락처만 남겨주시면 돼요."
+  ], "계약이 부담스러워 보이시는 산모님께 <b>먼저 꺼내는 카드</b>로 쓰세요. 연락처를 받는 가장 자연스러운 방법입니다.") +
+  checklist("class", [
+    "예약 안 해도 신청 가능하다는 점을 먼저",
+    "AI 태교 동화 — 다른 부스와 다른 점",
+    "접수 → 추첨 20명 → 참여 → 사은품 흐름",
+    "연락처 남기기로 자연스럽게 연결"
+  ]);
+}
+
+/* ═══════════ 13. 가족 산후관리사 ═══════════ */
+function s_family(){
+  return head("가족 산후관리사", "친정엄마 · 시어머니가 관리사로 오실 수 있습니다",
+    "남의 손이 불편하신 산모님께 결정적인 대안입니다. <b>국가지원을 받으면서</b> 어머니가 돌봐주십니다.") +
+  '<div class="punch"><div class="lab">참사랑만의 차별점 — 여기가 가장 중요합니다</div>' +
+    '<div class="txt">저희는 경상남도 지정 교육기관을 함께 운영하기 때문에, ' +
+    '<b>교육 접수 → 이수 → 제공인력 등록 → 바우처 신청까지 한 줄로 대행</b>해 드립니다.</div></div>' +
+  photo("family.jpg","가족 산후관리사 안내 리플릿") +
+  '<div class="cards c2">' +
+    '<div class="box"><h3>다른 업체는 이렇습니다</h3>' +
+      '<ul><li>교육은 <b>외부 기관</b>에 따로 가서 들어야 합니다</li>' +
+      '<li>제공인력 등록도 <b>각자 알아서</b> 해야 합니다</li>' +
+      '<li>중간에 막히면 물어볼 곳이 없습니다</li></ul></div>' +
+    '<div class="box"><h3>참사랑은 이렇습니다</h3>' +
+      '<ul><li>교육 접수부터 <b>저희 교육원에서</b></li>' +
+      '<li>이수 후 제공인력 등록까지 <b>저희가 대행</b></li>' +
+      '<li>바우처 신청까지 <b>한 담당자가</b> 안내</li></ul></div>' +
+  '</div>' +
+  '<div class="cards c2">' +
+    '<div class="box soft"><h3>어머니께 더 매력적인 이야기</h3>' +
+      '<p>산모·신생아 교육을 마치신 뒤 <b>영유아 교육 · 정리수납 교육 · AI 교육</b>까지 이어서 들으실 수 있습니다.</p>' +
+      '<p>손주를 더 잘 돌보시기 위한 역량을 갖추시게 됩니다. 어머니 입장에서 굉장히 반가운 제안입니다.</p>' +
+      '<p style="margin-top:9px;"><b>내일배움카드</b>로 교육비 지원을 받아 수강하실 수 있는 과정도 있습니다.<span class="tbd">대상 과정 확인</span></p></div>' +
+    '<div class="box"><h3 style="color:var(--crit);">타이밍 — 이 한 줄이 현장 접수를 만듭니다</h3>' +
+      '<p>교육 이수와 제공인력 등록에는 <b>시간이 필요합니다.</b></p>' +
+      '<p style="font-size:18px;color:var(--ink);font-weight:600;margin-top:10px;">출산 전에 미리 준비하셔야 합니다.</p>' +
+      '<p style="margin-top:9px;">출산하고 나서 알아보시면 이미 늦습니다. 오늘 접수해 두시는 게 좋습니다.</p></div>' +
+  '</div>' +
+  script([
+    "혹시 친정어머니나 시어머니께서 산후조리를 도와주실 계획 있으세요?",
+    "그러면 이거 꼭 아셔야 해요. 어머니가 저희 회사 소속 관리사로 등록하시면, 국가지원을 받으면서 근무하실 수 있어요. 남의 손이 불편하신 분들께는 정말 좋은 방법이에요.",
+    "그런데 여기서 저희가 다른 업체랑 완전히 달라요. 저희는 경상남도 지정 교육기관을 직접 운영하거든요. 그래서 교육 접수부터 이수, 제공인력 등록, 바우처 신청까지 저희가 한 번에 다 도와드려요. 다른 데는 교육은 외부에 가서 들어야 하고 행정도 알아서 하셔야 해요.",
+    "그리고 어머니께서 산모·신생아 교육 들으시고 나서 영유아 교육이나 정리수납, AI 교육까지 이어서 들으실 수도 있어요. 손주 돌보시는 데 훨씬 도움이 되실 거예요.",
+    "다만 교육 듣고 등록하는 데 시간이 걸려요. 그래서 출산 전에 미리 준비하셔야 해요."
+  ], "베이비페어는 <b>어머니와 함께 오시는 경우가 많습니다.</b> 어머니가 옆에 계시면 이 장을 꼭 꺼내세요. 마지막 &lsquo;출산 전에 미리&rsquo;가 오늘 접수를 만듭니다.") +
+  checklist("family", [
+    "어머니가 관리사로 등록해 국가지원 받으며 근무 가능",
+    "우리는 교육 → 등록 → 바우처까지 원라인 대행 (다른 업체와 결정적 차이)",
+    "영유아 · 정리수납 · AI 교육까지 이어진다는 점",
+    "출산 전에 미리 준비해야 한다는 타이밍 강조"
+  ]);
+}
+
+/* ═══════════ 14. 왜 참사랑인가 ═══════════ */
+function s_why(){
+  var items = [
+    ["28년 운영", "1998년부터 이 일만 해왔습니다. 경력 있는 관리사님을 그만큼 많이 보유하고 있습니다."],
+    ["경남 최다 인력 244명", "문제가 생겨도 <b>하루 이틀 안에 다른 관리사님이 오실 수 있습니다.</b> 인력이 적은 곳은 이때 서비스가 비어버립니다."],
+    ["자체 교육원 운영", "경남 유일 도지정 교육기관. 양성교육부터 보수 · 심화교육(영유아 · 정리수납 · AI)까지 직접 합니다."],
+    ["정기 간담회", "관리사님 의견을 듣고 반영하는 인력관리 체계가 있습니다."],
+    ["보건복지부 품질평가 A등급", "서비스 품질뿐 아니라 인력관리 · 교육훈련 · 안전관리까지 정부가 점검했습니다."],
+    ["경남 대표 자문기관", "제도가 바뀌면 가장 먼저 알고 가장 빨리 대응합니다."]
+  ];
+  var h = '<div class="cards c2">';
+  items.forEach(function(it,i){
+    var hero = (i === 1) ? ' style="border-color:var(--brand);border-width:2px;background:var(--brand-soft);"' : '';
+    h += '<div class="box"'+hero+'><h3>'+(i+1)+'. '+it[0]+'</h3><p>'+it[1]+'</p></div>';
+  });
+  h += '</div>';
+
+  return head("마무리", "왜 참사랑이어야 하는지, 한 장으로 정리하면",
+    "여섯 가지입니다. 이 중 <b>2번이 산모님께 가장 와닿는 실질 혜택</b>입니다.") + h +
+  '<div class="punch"><div class="lab">이 자리에서 남길 마지막 한 문장</div>' +
+    '<div class="txt">&ldquo;관리사님이 많다&rdquo;가 아니라 &mdash; <b>문제가 생겨도 하루 이틀 안에 다른 분이 오실 수 있습니다.</b></div></div>' +
+  script([
+    "오늘 설명 들어보시니 어떠세요?",
+    "저희가 왜 다른지 한 번에 말씀드리면요. 28년 됐고, 경남에서 관리사님이 244분으로 가장 많고, 교육원을 직접 운영하고, 정기 간담회로 관리사님 의견을 반영하고, 정부 품질평가 A등급 받았고, 경남 대표 자문기관이에요.",
+    "이 중에서 산모님께 제일 와닿으실 만한 건 두 번째예요. 관리사님이 많다는 게, 혹시 문제가 생겨도 하루 이틀 안에 다른 분이 오실 수 있다는 뜻이거든요."
+  ], "강점이 앞에서 흩어져 있었으니 <b>여기서 한 번 모아주는 것</b>이 목적입니다. 길게 말하지 말고 2번만 강조하고 넘어가세요.") +
+  checklist("why", [
+    "여섯 가지를 빠르게 훑기",
+    "244명 → 즉시 대체 투입을 마지막으로 한 번 더 강조"
+  ]);
+}
+
+/* ═══════════ 15. 마무리 / 요약 ═══════════ */
+function s_summary(){
+  var q = quote();
+  var sum = '<div class="sum"><h3>오늘 상담 요약</h3>';
+  sum += row("상황", situation());
+  if (TF.jori) sum += row("산후조리 계획", tfLabel("jori", TF.jori));
+  if (TF.help) sum += row("도와주실 분", tfLabel("help", TF.help));
+  if (tfWants().length) sum += row("바라시는 관리사", tfWants().map(function(v){ return tfLabel("want", v); }).join(" · "));
+  if ((TF.focus||[]).length) sum += row("중점 케어", TF.focus.map(function(v){ return tfLabel("focus", v); }).join(" · "));
+  if ((TF.choose||[]).length) sum += row("중요하게 보는 것", TF.choose.map(function(v){ return tfLabel("choose", v); }).join(" · "));
+  if ((TF.fear||[]).length) sum += row("걱정하신 부분", TF.fear.map(function(v){ return tfLabel("fear", v); }).join(" · "));
+  if (!q.unavailable && q.inc.entered) {
+    var r = q.all[S.period];
+    sum += row("유형", q.code + " · " + PNAME[S.period] + " " + q.days[S.period] + "일");
+    sum += row("본인부담금", won(r.self) + "  (먼저 결제)");
+    sum += row("창원시 환급", "− " + won(r.refund));
+    sum += '<div class="sum-row big"><span class="k">최종 부담액</span><span class="v num">'+won(r.final)+'</span></div>';
+  } else {
+    sum += row("요금", "소득 정보 미입력 — 계산 안 됨");
+  }
+  sum += '</div>';
+
+  return head("마무리", "오늘 나눈 이야기, 이렇게 정리됩니다",
+    "이 내용이 <b>담당자에게 그대로 전달</b>되고, 관리사님 배정에도 반영됩니다.") + sum +
+  script([
+    "오늘 나눈 이야기 한번 정리해 드릴게요.",
+    "고객님은 이런 상황이시고, 이런 부분을 걱정하고 계시고, 이런 관리사님을 바라신다고 하셨어요.",
+    "금액은 최종적으로 이만큼 나가시게 돼요.",
+    "이 내용 그대로 담당자한테 전달돼서, 나중에 연락드릴 때 처음부터 다시 여쭤보지 않아도 돼요."
+  ], "요약을 <b>소리 내어 읽어드리세요.</b> &ldquo;내 이야기를 다 들었구나&rdquo;가 느껴져야 연락처를 주십니다. " +
+     "<b>인쇄</b>해서 드리면 집에 가서도 우리 회사가 후보에 남습니다.") +
+  checklist("summary", [
+    "요약을 소리 내어 읽어드리기",
+    "&ldquo;다시 여쭤보지 않아도 된다&rdquo;고 말하기",
+    "인쇄해서 손에 들려 보내기"
+  ]);
+}
+
+function s_close(){
+  return head("마무리", "출산 전에 한 번, 미리 준비해 두세요",
+    "오늘 바로 결정하지 않으셔도 됩니다. <b>성함과 연락처만 남겨주시면</b> 출산 예정일에 맞춰 연락드립니다.") +
+  '<div class="cards c2">' +
+    '<div class="box"><h3>오늘 접수 — 이것만 남겨주시면 됩니다</h3>' +
+      '<div class="form f2" style="margin-bottom:0;">' +
+        '<div><span class="lab">성함</span><input type="text" data-s="name" value="'+esc(S.name)+'" placeholder="산모님 성함"></div>' +
+        '<div><span class="lab">연락처</span><input type="text" data-s="phone" value="'+esc(S.phone)+'" placeholder="010-0000-0000"></div>' +
+        '<div><span class="lab">출산 예정일</span><input type="date" data-s="due" value="'+esc(S.due)+'"></div>' +
+      '</div>' +
+      '<p style="margin-top:12px;">함께 권해 보세요 — <b>산모교실 신청</b>(예약과 무관), <b>가족 산후관리사 상담</b>.' +
+      '<span class="tbd">문자 발송 연동 확인</span></p></div>' +
+    '<div class="box"><h3>QR로 바로 신청</h3>' +
+      '<p>산모님이 <b>그 자리에서 찍고 가시게</b> 하는 것이 가장 확실합니다.</p>' +
+      '<div class="cards c2" style="margin-top:12px;">' + photo("qr-booking.png","간편예약 QR") + photo("qr-kakao.png","카카오채널 QR") + '</div></div>' +
+  '</div>' +
+  '<div class="box"><h3>연락처</h3><div class="tel">' +
+      '<div class="t"><div class="nm">창원지점</div><div class="no">055-293-5008</div></div>' +
+      '<div class="t"><div class="nm">김해지점</div><div class="no">055-329-3579</div></div>' +
+      '<div class="t"><div class="nm">양산지점</div><div class="no">055-384-5008</div></div>' +
+      '<div class="t"><div class="nm">산모교실</div><div class="no">010-9940-9673</div></div>' +
+    '</div></div>' +
+  '<div class="note w"><span class="ic">!</span><span>리플릿 기준 번호입니다. 노출할 대표 번호를 확정해 주세요.<span class="tbd">담당자 확인</span></span></div>' +
+  '<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;">' +
+    '<button class="btn pri lg" onclick="window.print()">상담 요약 인쇄</button>' +
+    '<button class="btn lg" id="newBtn2" type="button">새 상담 시작</button></div>' +
+  script([
+    "오늘 바로 결정 안 하셔도 괜찮아요. 저희는 예약이 빠르게 차는 편이라 오늘은 일자만 봐두신다고 생각하시고, 성함이랑 연락처만 남겨주시면 출산 예정일에 맞춰서 다시 연락드릴게요.",
+    "그때 정확한 본인부담금까지 계산해서 안내해 드릴게요.",
+    "아, 그리고 산모교실은 저희 예약이랑 상관없이 신청하실 수 있어요. 이것만이라도 신청해 두실래요?",
+    "오늘 방문해 주셔서 정말 감사합니다!"
+  ], "연락처를 받으면 <b>리드 관리 시트에 기록</b>하고 출산예정일 기준 팔로업을 등록하세요. " +
+     "망설이시면 <b>산모교실</b>로 전환 — 연락처를 받는 가장 자연스러운 방법입니다.") +
+  checklist("close", [
+    "오늘 결정 안 해도 된다는 점을 먼저",
+    "성함 · 연락처 · 출산예정일 받기",
+    "산모교실 권하기",
+    "QR 찍고 가시게 하기",
+    "리드 시트 기록 + 팔로업 등록"
+  ]);
+}
+
+function row(k,v){ return '<div class="sum-row"><span class="k">'+k+'</span><span class="v">'+v+'</span></div>'; }
+function situation(){
+  var f = {single:"단태아", twin:"쌍태아", triplet:"삼태아 이상"}[S.fetus];
+  var o = ["","첫째아","둘째아","셋째아 이상"][S.order];
+  var i = S.basic ? "수급자·차상위" : incomeOf().label;
+  return f + " · " + o + " · " + i;
+}
+
+/* ═══════════ 입력 조각 ═══════════ */
+function esc(s){ return String(s == null ? "" : s).replace(/"/g,"&quot;"); }
+function seg(key, val, label, sub){
+  var on = (String(S[key]) === String(val)) ? " checked" : "";
+  return '<label><input type="radio" name="'+key+'" data-s="'+key+'" value="'+val+'"'+on+'>' +
+    '<span>'+label+(sub?'<small>'+sub+'</small>':'')+'</span></label>';
+}
+function select(key, opts){
+  var h = '<select data-s="'+key+'">';
+  opts.forEach(function(o){ h += '<option value="'+o[0]+'"'+(String(S[key])===String(o[0])?" selected":"")+'>'+o[1]+'</option>'; });
+  return h + '</select>';
+}
+function numin(key, ph){
+  return '<div><input type="number" data-s="'+key+'" min="0" step="100000" inputmode="numeric" ' +
+    'placeholder="'+ph+'" value="'+esc(S[key])+'"><div class="hintline">'+ph+'</div></div>';
+}
+
+/* ═══════════ 렌더 ═══════════ */
+var showScript = false;
+
+function renderNav(){
+  var v = visible(), pos = v.indexOf(cur), h = "", lastG = null;
+  v.forEach(function(i, n){
+    var s = STEPS[i];
+    if (s.group !== lastG){ h += '<div class="sgroup">'+s.group+'</div>'; lastG = s.group; }
+    var cls = "snav" + (i === cur ? " on" : (n < pos ? " done" : ""));
+    h += '<button class="'+cls+'" data-go="'+i+'" type="button">' +
+         '<span class="sn">'+(n < pos ? "✓" : (n+1))+'</span><span class="st">'+s.nav+'</span></button>';
+  });
+  document.getElementById("stepNav").innerHTML = h;
+
+  var pct = v.length > 1 ? Math.round(pos / (v.length - 1) * 100) : 0;
+  document.getElementById("progBar").style.width = pct + "%";
+  document.getElementById("progTxt").textContent = (pos + 1) + " / " + v.length + " · " + STEPS[cur].nav;
+  var bm = document.getElementById("barMid");
+  if (bm) bm.innerHTML = '<b>' + STEPS[cur].nav + '</b> <span class="pg">' + (pos+1) + ' / ' + v.length + '</span>';
+}
+
+function render(){
+  var fb = document.getElementById("fitbox");
+  fb.innerHTML = STEPS[cur].render();
+
+  /* 대본 · 체크리스트는 본문에서 빼내 아래 서랍으로 — 화면을 비웁니다 */
+  var dr = document.getElementById("drawerIn");
+  dr.innerHTML = "";
+  fb.querySelectorAll(".note").forEach(function(n){ if (n.querySelector(".tbd")) n.setAttribute("data-staff",""); });
+  fb.querySelectorAll("[data-script], .chk, [data-staff]").forEach(function(el){
+    el.hidden = false;
+    dr.appendChild(el);
+  });
+  document.getElementById("drawer").classList.toggle("open", showScript);
+  document.getElementById("scriptBtn").textContent = showScript ? "상담자 화면 닫기" : "상담자 화면 열기";
+  document.getElementById("scriptBtn").classList.toggle("on", showScript);
+  document.getElementById("scriptBtn2").classList.toggle("on", showScript);
+
+  var v = visible(), pos = v.indexOf(cur);
+  var inner = (STEPS[cur].render === s_typefinder && tfIdx > 0) ||
+              (STEPS[cur].render === s_quiz && qzIdx > 0);
+  var atStart = (pos <= 0) && !inner;
+  document.getElementById("prevBtn").disabled = atStart;
+  document.getElementById("prevBtn").style.opacity = atStart ? ".4" : "1";
+  document.getElementById("nextBtn").textContent = (pos === v.length - 1) ? "처음으로" : "다음 →";
+
+  renderNav();
+  refresh();
+  loadPhotos();
+
+  var sl = document.getElementById("slide");
+  sl.scrollTop = 0;
+  fb.classList.remove("slide-anim");
+  void fb.offsetWidth;
+  fb.classList.add("slide-anim");
+  fitScreen();
+
+  var st = document.querySelector(".snav.on");
+  if (st) st.scrollIntoView({block:"nearest"});
+}
+
+/* 화면 높이에 맞춰 자동으로 줄여 한 화면에 담습니다 */
+function fitScreen(){
+  var sl = document.getElementById("slide"), fb = document.getElementById("fitbox");
+  fb.style.transform = "";
+  sl.classList.remove("scrolls");
+  var avail = sl.clientHeight - 8;
+  var need = fb.scrollHeight;
+  if (need <= avail || need === 0) return;
+  var k = avail / need;
+  if (k < 0.62){ sl.classList.add("scrolls"); return; }   /* 너무 작아지면 스크롤 허용 */
+  fb.style.transform = "scale(" + k.toFixed(3) + ")";
+}
+var fitTimer;
+window.addEventListener("resize", function(){
+  clearTimeout(fitTimer); fitTimer = setTimeout(fitScreen, 120);
+});
+
+/* 동적 부분 갱신 (계산기 · 판정 · 체크리스트 카운트) */
+function refresh(){
+  var L = letterOf();
+
+  var sw = document.getElementById("staffWrap");
+  if (sw){
+    sw.hidden = !(L === "B" || L === "C");
+    var s1 = document.querySelector('input[name="staff"][value="1"]');
+    if (s1){
+      if (L === "C"){ S.staff = 2; var s2 = document.querySelector('input[name="staff"][value="2"]');
+        if (s2) s2.checked = true; s1.disabled = true; }
+      else s1.disabled = false;
+    }
+  }
+  var on = document.getElementById("orderNote");
+  if (on) on.textContent = (L === "A") ? "" : (L + "형은 출산 순위와 관계없이 금액이 같습니다.");
+
+  var mi = document.getElementById("modeIncome"), mf = document.getElementById("modeFee");
+  if (mi) mi.hidden = (S.mode !== "income");
+  if (mf) mf.hidden = (S.mode !== "fee");
+  var iw = document.getElementById("incWrap");
+  if (iw){ iw.style.opacity = S.basic ? ".4" : "1"; iw.style.pointerEvents = S.basic ? "none" : "auto"; }
+
+  var q = quote();
+  var iv = document.getElementById("intakeVerdict");
+  if (iv) iv.innerHTML = verdictHTML(q.inc);
+  var rb = document.getElementById("resBox");
+  if (rb) rb.innerHTML = resultHTML(q);
+
+  if (!q.unavailable) {
+    for (var i=0;i<3;i++){
+      var pd = document.getElementById("pd"+i);
+      if (!pd) break;
+      pd.textContent = q.days[i] + "일";
+      document.getElementById("pf"+i).textContent = won(q.all[i].final);
+      document.getElementById("ps"+i).textContent = "결제 " + won(q.all[i].self);
+    }
+  } else {
+    for (var j=0;j<3;j++){
+      var e = document.getElementById("pd"+j);
+      if (!e) break;
+      e.textContent = "–"; document.getElementById("pf"+j).textContent = "–";
+      document.getElementById("ps"+j).textContent = "";
+    }
+  }
+
+  document.querySelectorAll(".chk").forEach(function(box){
+    var ins = box.querySelectorAll("input[data-chk]");
+    var done = 0;
+    ins.forEach(function(x){ if (x.checked) done++; });
+    var c = box.querySelector(".cnt");
+    if (c) c.textContent = done + " / " + ins.length;
+  });
+}
+
+function verdictHTML(inc){
+  if (!inc.entered && inc.code !== "가")
+    return '<div class="verdict warn"><span class="nm">소득 미입력</span>값을 넣으면 <b>통합형인지 라형인지</b> 바로 나옵니다.</div>';
+  var nm, why, cls, ref;
+  if (inc.code === "가"){
+    nm = "가형"; cls = "ok"; why = "수급자 · 차상위 — 본인부담금이 가장 적은 구간입니다.";
+    ref = "<b>창원시 90% 환급 대상입니다.</b>";
+  } else if (inc.mode === "income"){
+    nm = inc.code === "통합" ? "통합형" : "라형";
+    why = "부부 합산 <span class='num'>" + inc.formula + "</span> · " + inc.fam + "인 가구 150% 기준선 <span class='num'>" +
+          won(inc.limit) + "</span> " + (inc.code === "통합" ? "이하" : "초과");
+    if (inc.band === "under150"){ cls = "ok"; ref = "<b>창원시 90% 환급 대상입니다.</b>"; }
+    else if (inc.band === "between"){ cls = "ok";
+      ref = "<b>환급 대상으로 보입니다.</b> 180% 참고선 <span class='num'>"+won(inc.limit180)+"</span> 이하입니다. 최종 확인은 보건소에서."; }
+    else { cls = "no";
+      ref = "<b>환급을 못 받으실 수 있습니다.</b> 180% 참고선 <span class='num'>"+won(inc.limit180)+"</span>을 넘습니다. 복지로 · 보건소에서 꼭 확인하세요."; }
+  } else {
+    var insN = {office:"직장", region:"지역", mixed:"혼합"}[inc.ins];
+    nm = inc.code === "통합" ? "통합형" : "라형";
+    why = "판정 보험료 <span class='num'>" + inc.formula + "</span> · " + inc.fam + "인 " + insN +
+          " 기준선 <span class='num'>" + won(inc.limit) + "</span> " + (inc.code === "통합" ? "이하" : "초과");
+    if (inc.band === "under150"){ cls = "ok"; ref = "<b>창원시 90% 환급 대상입니다.</b>"; }
+    else { cls = "warn"; ref = "<b>환급 대상인지 보건소 확인이 필요합니다.</b> 창원시 환급은 중위소득 180% 이하까지인데, 180% 건강보험료 기준표는 공개 자료로 확인되지 않습니다."; }
+  }
+  return '<div class="verdict '+cls+'"><span class="nm">'+nm+'</span>'+why+'<div style="margin-top:8px;">'+ref+'</div></div>';
+}
+
+function resultHTML(q){
+  if (q.unavailable){
+    return '<div class="res-h"><span class="code">D형 · 별도 확인</span>' +
+      '<div class="desc">중증장애 산모가 삼태아 이상을 출산한 경우입니다.</div></div>' +
+      '<div class="verdict no" style="margin:16px 18px;"><b>창원시 공고표에 금액이 없습니다.</b> 산모 주소지 관할 보건소에 문의해 주세요.</div>';
+  }
+  var p = S.period, r = q.all[p], inc = q.inc;
+  var h = '<div class="res-h"><span class="chip">'+PNAME[p]+' '+q.days[p]+'일</span>' +
+    '<span class="code">'+q.code+'</span>' +
+    '<div class="desc">'+situation()+'</div></div>' +
+    '<div class="lines">' +
+      line("총 서비스 가격","정부가 정한 가격", won(r.price), "") +
+      line("정부지원금 (바우처)","국민행복카드로 자동 결제", "− "+won(r.gov), "g") +
+      line("본인부담금","산모님이 업체에 먼저 결제", won(r.self), "") +
+      line("창원시 환급 (90%)", r.capped ? "15일치까지만 지원 (상한 적용)" : "서비스 끝난 뒤 보건소에서", "− "+won(r.refund), "r") +
+    '</div>' +
+    '<div class="final"><div class="cap">최종적으로 내 돈이 나가는 금액</div>' +
+    '<div class="big num">'+won(r.final)+'</div>' +
+    '<div class="per num">하루당 '+won(r.final/q.days[p])+' · '+q.days[p]+'일 기준</div></div>' +
+    '<div class="prepay">먼저 <b>'+won(r.self)+'</b>을 결제하시고, 서비스가 끝난 뒤 보건소에 신청하면 ' +
+    '<b>'+won(r.refund)+'</b>을 돌려받습니다.</div>';
+
+  if (r.capped){
+    h += '<div class="verdict warn" style="margin:0 18px 16px;"><b>'+q.days[p]+'일 중 '+(q.days[p]-DAYCAP)+'일은 환급 대상이 아닙니다.</b> ' +
+      '환급은 15일치 본인부담금 <span class="num">'+won(q.capSelf)+'</span>의 90%에서 멈춥니다. ' +
+      '나머지 <span class="num">'+won(r.self-q.capSelf)+'</span>은 전액 본인 부담입니다.</div>';
+  }
+  if (inc.band === "over180"){
+    h += '<div class="verdict no" style="margin:0 18px 16px;"><b>환급을 못 받으시면</b> 최종 부담은 ' +
+      '<span class="num">'+won(r.self)+'</span>이 됩니다. 보건소 확인이 꼭 필요합니다.</div>';
+  } else if (inc.code === "라"){
+    h += '<div class="verdict warn" style="margin:0 18px 16px;"><b>라형입니다.</b> 창원시 환급은 중위소득 180% 이하까지입니다. ' +
+      '대상이 아니면 <span class="num">'+won(r.self)+'</span>을 그대로 부담하게 됩니다.</div>';
+  }
+  if (inc.mode === "income" && inc.entered){
+    h += '<div class="verdict warn" style="margin:0 18px 16px;"><b>월 소득으로 본 참고치입니다.</b> ' +
+      '보건소는 신청일 기준 최근 고지된 건강보험료로 판정합니다. 정확한 금액은 복지로 · 보건소에서 확인하세요.</div>';
+  }
+  return h;
+}
+function line(k, sub, v, cls){
+  return '<div class="ln '+cls+'"><span class="k">'+k+'<em>'+sub+'</em></span><span class="v num">'+v+'</span></div>';
+}
+
+/* ═══════════ 자주 묻는 질문 · 반론 대응 ═══════════ */
+var FAQ = [
+["여기가 다른 곳보다 뭘 더 해주나요?",
+ "<b>서비스 가격은 정부 고시라 어느 업체나 똑같습니다.</b> 그래서 차이는 사람과 대응에서 납니다.<br><br>" +
+ "① <b>관리사님 244명 — 경남 최다.</b> 안 맞아서 바꾸실 때 바로 다른 분이 투입됩니다. 인력 적은 곳은 며칠씩 비어요.<br>" +
+ "② <b>경남 유일 도지정 교육기관을 직접 운영.</b> 다른 곳은 외부에 위탁합니다. 영유아·정리수납·AI 교육까지 이어서 합니다.<br>" +
+ "③ <b>친정엄마·시어머니 관리사 등록을 교육부터 바우처까지 원라인 대행.</b><br>" +
+ "④ 보건복지부 품질평가 A등급 · 경남 대표 자문기관 · 28년 · 누적 7,668명."],
+["그래서 제가 얼마 내는 거예요?",
+ "유형과 일수에 따라 다릅니다. <b>계산기 화면에서 바로 보여드리세요.</b><br><br>" +
+ "가장 흔한 경우 — 첫째아 · 단태아 · 중위소득 150% 이하 · 표준 10일이면 " +
+ "총 가격 1,464,000원 → 본인부담금 462,000원 → 창원시 환급 415,800원 → <b>최종 46,200원</b>."],
+["환급은 언제, 어떻게 받아요?",
+ "<b>서비스가 끝난 뒤 90일 이내</b>에 산모 주소지 관할 보건소에 방문 신청하시면 됩니다. " +
+ "본인부담금의 <b>90%</b>를 돌려받으십니다. 임신 1회당 1번이고, <b>기준중위소득 180% 이하</b> 가정이 대상입니다.<br><br>" +
+ "주의 — <b>먼저 전액 결제하시고 나중에 돌려받는 순서</b>입니다."],
+["15일 넘게 쓰면 어떻게 돼요?",
+ "창원시 지원은 <b>최대 15일까지</b>입니다. 15일을 넘겨 이용하시면 초과 일수분은 환급 없이 <b>전액 본인 부담</b>입니다.<br><br>" +
+ "예 — 둘째아 연장 20일이면 본인부담금 1,161,000원인데 환급은 15일치 기준 603,900원에서 멈춥니다. 최종 557,100원."],
+["다른 데가 더 싸다던데요?",
+ "<b>서비스 가격은 정부 고시라 모든 업체가 동일합니다.</b> 더 싸다면 서비스 기간이 짧거나 유형이 다른 겁니다. " +
+ "같은 조건(같은 유형 · 같은 일수)으로 비교하시면 금액이 같습니다. 같은 값이면 <b>어떤 관리사님이 오시는지</b>를 보셔야 합니다."],
+["제가 어느 유형인지 어떻게 알아요?",
+ "네 가지로 정해집니다 — ① 태아 유형(단태아/쌍태아/삼태아) ② 출산 순위 ③ 소득 구간 ④ 이용 일수.<br><br>" +
+ "소득 구간은 <b>신청일 기준으로 최근 고지된 월 건강보험료 본인부담금</b>으로 봅니다. 작년 연봉이 아닙니다. " +
+ "장기요양보험료는 빼고, 맞벌이면 낮은 쪽을 절반으로 깎아 합산합니다. 가구원 수에는 <b>태아도 포함</b>합니다.<br><br>" +
+ "정확한 확인은 <b>복지로(bokjiro.go.kr)</b> 또는 보건소."],
+["언제 신청해요? 지금 해도 되나요?",
+ "<b>출산예정일 40일 전(임신 34주 2일)부터 출산 후 60일 이내</b>에 신청하시면 됩니다.<br><br>" +
+ "· 임신 16주 이후 유산·사산 — 확인일부터 30일 이내 (의사 소견서)<br>" +
+ "· 미숙아·선천성 이상아 입원 — 퇴원일부터 30일 이내 (입원확인서)<br><br>" +
+ "바우처 사용 기간은 <b>출산일부터 90일</b>입니다."],
+["어디서 신청해요?",
+ "보건소 방문, 또는 온라인으로 <b>복지로(bokjiro.go.kr)</b> · <b>정부24(gov.kr)</b>에서 신청하실 수 있습니다."],
+["관리사님이 정확히 뭘 해주세요?",
+ "정부 사업 기준 <b>세 가지 영역</b>입니다.<br><br>" +
+ "<b>① 산모 케어</b> — 신체상태 확인, 유방 관리·수유 지원, 부종 관리·좌욕, 영양 관리, 산후 체조, 정서적 지지·교육<br>" +
+ "<b>② 신생아 케어</b> — 건강상태 확인, 수유 지원, 목욕·청결·위생, 배꼽 관리, 예방접종 관리, 응급상황 대응<br>" +
+ "<b>③ 가사 지원</b> — 산모 식사 준비, 산모·신생아 생활공간 청소, 산모·신생아 세탁물"],
+["밥은 누구 것까지 해주세요?",
+ "<b>산모님 식사</b>입니다. 다른 가족분 식사는 기본 서비스에 포함되지 않습니다."],
+["청소는 어디까지 해주세요?",
+ "<b>산모님과 아기가 지내는 생활공간</b> 위주입니다. 집 전체 대청소, 묵은 때 청소, 다른 가족분 세탁물은 포함되지 않습니다."],
+["큰아이도 봐주세요?",
+ "큰아이 돌보기는 <b>추가 계약 항목</b>입니다. 기본 서비스가 아닙니다. 등하원 도움, 식사 준비 등으로 별도 계약하실 수 있고 <b>추가 요금</b>이 발생합니다.<br><br>" +
+ "<span class='warn'>금액은 큰아이가 어린이집·유치원에 가는지, 몇 명인지에 따라 달라집니다. 구간표 확인 필요.</span>"],
+["몇 시부터 몇 시까지 오세요?",
+ "평일 <b>09:00 ~ 18:00</b>입니다. 주말·공휴일 근무는 추가 요금이 발생합니다.<br><br>" +
+ "<span class='warn'>주말 근무 가능 조건과 관리사님 동의 필요 여부는 확인 필요.</span>"],
+["관리사님이 안 맞으면 바꿀 수 있어요?",
+ "바꾸실 수 있습니다. 참사랑은 소속 관리사님이 <b>244명</b>이라 즉시 투입 가능한 분이 있으면 바로 교체해 드립니다. 없으면 며칠 여유가 필요할 수 있습니다.<br><br>" +
+ "<span class='warn'>교체 최대 횟수, 접수 방법, 담당자 연락처 확인 필요.</span>"],
+["관리사님이 의료행위도 해주세요?",
+ "<b>안 됩니다.</b> 관리사님은 의료인이 아니십니다. 투약, 의료행위, 손발톱 깎기 등은 지원되지 않습니다. 이건 미리 아셔야 나중에 부딪히지 않습니다."],
+["친정엄마가 관리사 하실 수 있어요?",
+ "<b>가능합니다.</b> 친정어머니나 시어머니가 저희 소속 관리사로 등록하시면 국가지원을 받으면서 근무하실 수 있습니다.<br><br>" +
+ "참사랑은 경상남도 지정 교육기관을 함께 운영해서 <b>교육 접수 → 이수 → 제공인력 등록 → 바우처 신청까지 한 줄로 대행</b>합니다. 다른 업체는 교육을 외부에 보내고 행정도 각자 해야 합니다.<br><br>" +
+ "<b>교육과 등록에 시간이 걸리니 출산 전에 미리 준비하셔야 합니다.</b>"],
+["쌍둥이도 되나요?",
+ "됩니다. 쌍태아는 B형이 적용되고 <b>관리사 1명 또는 2명</b>을 선택하실 수 있습니다. 삼태아 이상은 C형, 관리사 2명이며 최대 40일까지 가능합니다."],
+["둘째도 지원돼요?",
+ "됩니다. 출산 순위에 따라 유형이 달라지고, <b>둘째아부터는 기간이 더 깁니다</b> (첫째아 5·10·15일 → 둘째아 이상 10·15·20일)."],
+["예약금은 얼마예요?",
+ "전체 금액의 <b>10%</b>를 예약금으로 먼저 넣으시고, 서비스 시작 <b>3일 전</b>까지 잔금을 넣으시면 됩니다. 계약서는 카카오톡으로 간편하게 하실 수 있습니다.<br><br>" +
+ "<span class='warn'>취소·환불 규정은 확인 필요.</span>"],
+["오늘 꼭 결정해야 하나요?",
+ "<b>아닙니다.</b> 오늘은 성함과 연락처, 출산예정일만 남겨주시면 담당자가 확인 후 연락드립니다. 그때 자세히 상담받으시고 결정하시면 됩니다."]
+];
+
+var OBJ = [
+["“좀 더 생각해볼게요”",
+ "밀어붙이지 마세요. <b>부담을 낮추는 게 정답</b>입니다.<br><br>" +
+ "→ &ldquo;네, 오늘 결정 안 하셔도 전혀 괜찮아요. 성함이랑 연락처만 남겨주시면 출산예정일에 맞춰서 연락드릴게요. 그때 정확한 본인부담금까지 계산해서 알려드릴게요.&rdquo;<br><br>" +
+ "→ 그래도 부담스러워하시면 <b>산모교실</b>로 전환하세요. &ldquo;예약 안 하셔도 산모교실은 신청하실 수 있어요.&rdquo;"],
+["“다른 데도 좀 보고 올게요”",
+ "붙잡지 말고 <b>질문 세 개를 드리세요.</b> 다른 부스에 가서 물어보실수록 우리가 유리합니다.<br><br>" +
+ "→ &ldquo;네, 꼭 비교해 보세요. 대신 세 가지만 물어보세요. 관리사님이 몇 분 계신지, 교육은 직접 하시는지, 친정어머니 관리사 등록까지 도와주시는지. 저희 답은 244명, 직접 운영, 전부 대행이에요.&rdquo;"],
+["“여기가 더 비싼 거 아니에요?”",
+ "→ &ldquo;아니에요. 이 사업은 서비스 가격이 <b>정부에서 정한 고시 가격</b>이라 어느 업체를 가셔도 같은 조건이면 금액이 똑같아요. 더 싸다고 하면 기간이 짧거나 유형이 다른 거예요.&rdquo;<br><br>" +
+ "→ 이어서 &ldquo;그러면 같은 값에 <b>어떤 관리사님이 오시느냐</b>를 보셔야죠&rdquo;로 프레임을 옮기세요."],
+["“친정엄마가 해주신대요”",
+ "<b>가장 좋은 기회입니다.</b> 놓치지 마세요.<br><br>" +
+ "→ &ldquo;어머, 잘됐네요. 그런데 이거 아세요? 어머니가 저희 소속 관리사로 등록하시면 <b>국가지원 받으시면서</b> 돌봐주실 수 있어요.&rdquo;<br>" +
+ "→ &ldquo;저희는 교육기관을 직접 운영해서 교육부터 등록, 바우처 신청까지 다 도와드려요. 다른 데는 교육 따로 받으러 가셔야 해요.&rdquo;<br>" +
+ "→ &ldquo;다만 교육 듣고 등록하는 데 시간이 걸려요. <b>출산 전에 미리</b> 준비하셔야 해요.&rdquo;"],
+["“조리원 갈 거라 필요 없을 것 같아요”",
+ "→ &ldquo;조리원 2주 계시고 집에 오시면, <b>그때부터가 진짜 시작</b>이에요. 조리원에서는 다 해주시다가 집에 오면 갑자기 혼자거든요.&rdquo;<br>" +
+ "→ &ldquo;바우처가 <b>출산일부터 90일</b>까지 쓸 수 있어서, 조리원 나오신 다음에 이어서 쓰시는 분들이 제일 많으세요.&rdquo;"],
+["“남이 집에 오는 게 좀 불편해요”",
+ "→ &ldquo;그 마음 정말 많이들 말씀하세요.&rdquo; (공감 먼저)<br>" +
+ "→ &ldquo;그래서 <b>친정어머니나 시어머니가 관리사로 등록</b>하시는 방법도 있어요.&rdquo;<br>" +
+ "→ &ldquo;그리고 혹시 관리사님이 불편하시면 <b>교체도 가능</b>해요. 저희는 244분이 계셔서 바로 바꿔드릴 수 있어요.&rdquo;"],
+["“사은품 더 주는 데가 있던데요”",
+ "→ &ldquo;사은품은 며칠이면 끝나지만, <b>관리사님은 산모님 댁에 매일 오세요.</b> 열흘이든 보름이든 매일이요.&rdquo;<br>" +
+ "→ &ldquo;그래서 사은품보다 어떤 분이 오시는지, 문제가 생기면 어떻게 되는지를 보시는 게 훨씬 남는 거예요.&rdquo;"],
+["“나중에 연락드릴게요”",
+ "이대로 보내면 대부분 안 옵니다. <b>가벼운 것 하나를 남기게 하세요.</b><br><br>" +
+ "→ &ldquo;네 좋아요. 그런데 <b>산모교실</b>은 예약이랑 상관없이 신청하실 수 있어요. 추첨해서 20분 모시고 사은품도 드려요. 이것만 신청해 두실래요?&rdquo;<br><br>" +
+ "→ 연락처를 받는 가장 자연스러운 방법입니다."],
+["“얼마인지만 알려주세요” (급한 분)",
+ "설명 다 건너뛰고 <b>계산기 화면으로 바로 가세요.</b><br><br>" +
+ "→ 첫째아/둘째아, 소득만 여쭤보고 바로 금액을 보여드립니다.<br>" +
+ "→ 금액 보시고 나면 대부분 &ldquo;근데 여기는 뭐가 달라요?&rdquo;를 물으십니다. 그때 비교 화면으로."]
+];
+
+var faqTab = "faq";
+function renderFaq(){
+  var kw = (document.getElementById("faqSearch").value || "").trim();
+  var list = (faqTab === "faq") ? FAQ : OBJ;
+  var h = "";
+  list.forEach(function(it, i){
+    if (kw && (it[0]+it[1]).replace(/<[^>]+>/g,"").indexOf(kw) < 0) return;
+    h += '<div class="fq" data-fq="'+i+'"><div class="q">'+it[0]+'</div><div class="a">'+it[1]+'</div></div>';
+  });
+  document.getElementById("faqBody").innerHTML = h ||
+    '<p style="color:var(--text-3);padding:20px 0;">검색 결과가 없습니다.</p>';
+}
+
+/* ═══════════ 이벤트 ═══════════ */
+document.addEventListener("change", function(e){
+  var t = e.target;
+  if (t.dataset && t.dataset.s){
+    var k = t.dataset.s;
+    if (t.type === "checkbox") S[k] = t.checked;
+    else if (k === "order" || k === "staff" || k === "fam") S[k] = parseInt(t.value,10);
+    else S[k] = t.value;
+    refresh();
+  }
+  if (t.name === "period"){ S.period = parseInt(t.value,10); refresh(); }
+  if (t.dataset && t.dataset.chk){ checks[t.dataset.chk] = t.checked; refresh(); }
+});
+document.addEventListener("input", function(e){
+  var t = e.target;
+  if (t.dataset && t.dataset.s && (t.type === "number" || t.type === "text" || t.type === "date")){
+    S[t.dataset.s] = t.value; refresh();
+  }
+});
+document.addEventListener("click", function(e){
+  var b = e.target.closest("[data-go]");
+  if (b){ cur = parseInt(b.dataset.go,10); menu(false); render(); }
+  if (e.target.id === "newBtn2") reset();
+
+  var tf = e.target.closest("[data-tf]");
+  if (tf){
+    var k = tf.dataset.tf, v = tf.dataset.tv;
+    if (tf.dataset.multi){
+      var arr = TF[k] || [];
+      var at = arr.indexOf(v);
+      if (at >= 0) arr.splice(at,1); else arr.push(v);
+      TF[k] = arr;
+    } else {
+      TF[k] = v;
+    }
+    if (!tf.dataset.multi && STEPS[cur].render === s_typefinder && tfIdx < TFQ.length){
+      tfIdx++;
+    }
+    render(); return;
+  }
+
+  var qz = e.target.closest("[data-qz]");
+  if (qz){ QA_STATE[qz.dataset.qz] = (qz.dataset.qv === "1"); render(); return; }
+
+  var gs = e.target.closest("[data-guess]");
+  if (gs){ GUESS = parseInt(gs.dataset.guess,10); render(); return; }
+
+  var fq = e.target.closest(".fq");
+  if (fq){ fq.classList.toggle("open"); return; }
+
+  var tb = e.target.closest("[data-tab]");
+  if (tb){
+    faqTab = tb.dataset.tab;
+    document.querySelectorAll("[data-tab]").forEach(function(x){ x.classList.toggle("on", x === tb); });
+    renderFaq(); return;
+  }
+});
+
+/* 자주 묻는 질문 패널 */
+function openFaq(on){
+  document.getElementById("faqSheet").classList.toggle("open", on);
+  if (on){ renderFaq(); document.getElementById("faqSearch").focus(); }
+}
+document.getElementById("faqFab").addEventListener("click", function(){ openFaq(true); });
+document.getElementById("faqX").addEventListener("click", function(){ openFaq(false); });
+document.getElementById("faqSheet").addEventListener("click", function(e){
+  if (e.target === this) openFaq(false);
+});
+document.getElementById("faqSearch").addEventListener("input", renderFaq);
+function step(d){
+  /* 유형 찾기와 퀴즈는 한 화면에 한 문제씩 — 단계 안에서 먼저 이동 */
+  var nm = STEPS[cur] && STEPS[cur].render;
+  if (nm === s_typefinder){
+    if (d > 0 && tfIdx < TFQ.length){ tfIdx++; render(); return; }
+    if (d < 0 && tfIdx > 0){ tfIdx--; render(); return; }
+  }
+  if (nm === s_quiz){
+    if (d > 0 && qzIdx < QUIZ.length-1){ qzIdx++; render(); return; }
+    if (d < 0 && qzIdx > 0){ qzIdx--; render(); return; }
+  }
+  var v = visible(), pos = v.indexOf(cur);
+  if (pos < 0) pos = 0;
+  var np = pos + d;
+  if (np >= v.length) np = 0;
+  else if (np < 0) return;
+  cur = v[np]; render();
+}
+document.getElementById("nextBtn").addEventListener("click", function(){ step(1); });
+document.getElementById("prevBtn").addEventListener("click", function(){ step(-1); });
+document.getElementById("scriptBtn").addEventListener("click", function(){
+  showScript = !showScript;
+  document.getElementById("drawer").classList.toggle("open", showScript);
+  this.textContent = showScript ? "상담자 화면 닫기" : "상담자 화면 열기";
+  this.classList.toggle("on", showScript);
+  document.getElementById("scriptBtn2").classList.toggle("on", showScript);
+  setTimeout(fitScreen, 280);
+});
+
+/* 터치 — 좌우로 쓸어서 넘기기 */
+(function(){
+  var x0 = null, y0 = null;
+  var sl = document.getElementById("slide");
+  sl.addEventListener("touchstart", function(e){
+    if (e.touches.length !== 1) return;
+    x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
+  }, {passive:true});
+  sl.addEventListener("touchend", function(e){
+    if (x0 === null) return;
+    var t = e.changedTouches[0];
+    var dx = t.clientX - x0, dy = t.clientY - y0;
+    x0 = null;
+    if (Math.abs(dx) < 70 || Math.abs(dy) > Math.abs(dx)) return;
+    if (e.target.closest("button, input, select, a, label")) return;
+    step(dx < 0 ? 1 : -1);
+  }, {passive:true});
+})();
+
+/* 전체화면으로 시작 — 화면 전체가 상담 내용이 됩니다 */
+document.getElementById("startBtn").addEventListener("click", function(){
+  document.getElementById("cover").classList.add("hide");
+  document.body.classList.add("presenting");
+  var el = document.documentElement;
+  if (el.requestFullscreen) el.requestFullscreen().catch(function(){});
+  setTimeout(fitScreen, 320);
+});
+
+/* 목차 여닫기 */
+function menu(on){
+  document.body.classList.toggle("menu", on);
+}
+document.getElementById("menuBtn").addEventListener("click", function(){
+  menu(!document.body.classList.contains("menu"));
+});
+document.getElementById("railveil").addEventListener("click", function(){ menu(false); });
+document.getElementById("scriptBtn2").addEventListener("click", function(){
+  document.getElementById("scriptBtn").click();
+});
+function reset(){
+  S = {name:"",phone:"",due:"",fetus:"single",order:1,staff:1,disability:false,preemie:false,
+       basic:false,mode:"income",fam:3,ins:"office",incA:"",incB:"",feeA:"",feeB:"",dual:false,period:1};
+  checks = {}; TF = {}; tfIdx = 0; QA_STATE = {}; qzIdx = 0; GUESS = null; cur = 0; render();
+}
+document.getElementById("resetBtn").addEventListener("click", reset);
+
+document.addEventListener("keydown", function(e){
+  var tag = (e.target.tagName || "").toLowerCase();
+  if (tag === "input" || tag === "select" || tag === "textarea") return;
+  if (e.key === "Escape"){ openFaq(false); menu(false); return; }
+  if (e.key === "ArrowRight"){ step(1); }
+  else if (e.key === "ArrowLeft"){ step(-1); }
+  else if (e.key === "n" || e.key === "N"){ document.getElementById("scriptBtn").click(); }
+  else if (e.key === "f" || e.key === "F"){ openFaq(true); }
+});
+
+render();
+</script>
+</body>
+</html>
