@@ -194,6 +194,10 @@ figure.shot figcaption{font-size:13px;color:var(--text-3);margin-top:5px;line-he
 .cover{position:fixed;inset:0;z-index:90;background:linear-gradient(160deg,#FFF 0%,#FDF1F6 100%);
   display:grid;place-items:center;text-align:center;padding:30px;}
 .cover.hide{display:none;}
+.cover-in{max-width:620px;}
+.cover-ph{margin-bottom:22px;}
+.cover-ph img{max-height:230px;object-fit:cover;}
+.cover-ph figcaption{display:none;}
 .cover .lg{font-family:"Gowun Batang",serif;font-size:44px;font-weight:700;color:var(--brand-d);
   letter-spacing:-.025em;line-height:1.25;}
 @media (max-width:640px){.cover .lg{font-size:31px;}}
@@ -425,7 +429,9 @@ table.ref td{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-
 <body>
 
 <div class="cover" id="cover">
-  <div>
+  <div class="cover-in">
+    <figure class="shot cover-ph" data-ph="hero-consult.jpg" data-cap="">
+      <div class="ph"><div class="pt">상담 첫 화면 사진<span class="pf">images / hero-consult.jpg</span></div></div></figure>
     <div class="lg">참사랑어머니회<br>베이비페어 상담</div>
     <div class="sb">산모님과 함께 보면서 진행합니다.<br>버튼 하나로 시작해 <b>다음</b>만 누르시면 됩니다.</div>
     <button class="btn pri go" id="startBtn" type="button">상담 시작하기</button>
@@ -712,9 +718,13 @@ function s_typefinder(){
     if (q.multi) h += '<p class="pickinfo"><b>'+(TF[q.k]||[]).length+' / '+MAXPICK+'</b>개 — 2개를 고르시면 다음으로 넘어갑니다.</p>';
   } else if (tfDone()){
     var r = tfResult();
-    h += '<div class="result-card"><div class="rl">산모님은</div><div class="rt">'+r.em+' '+r.name+'</div>' +
-      '<div class="rd">'+r.line+(r.desc?'<br><br>'+r.desc:'')+'</div><div class="reco">' +
-      r.recos.map(function(x){ return '<div class="r"><h5>'+x[0]+'</h5><p>'+x[1]+'</p></div>'; }).join("") + '</div></div>';
+    h += '<div class="split" style="margin-bottom:12px;">' +
+      photo("type-"+((TF.focus||[])[0]||"body")+".jpg", r.name) +
+      '<div class="result-card" style="margin-bottom:0;"><div class="rl">산모님은</div>' +
+      '<div class="rt">'+r.em+' '+r.name+'</div>' +
+      '<div class="rd">'+r.line+(r.desc?'<br><br>'+r.desc:'')+'</div></div></div>' +
+      '<div class="cards c3">' +
+      r.recos.map(function(x){ return '<div class="box soft"><h3 style="font-size:15.5px;">'+x[0]+'</h3><p class="sm">'+x[1]+'</p></div>'; }).join("") + '</div>';
   } else {
     h += '<div class="note w"><span class="ic">?</span><span>아직 안 고르신 항목이 있습니다. <b>이전</b>으로 돌아가 채워주세요.</span></div>';
   }
@@ -742,8 +752,9 @@ function s_matching(){
   if (chips)
     h += '<div class="box" style="margin-bottom:14px;"><h3>산모님이 고르신 것</h3><div class="chips">'+chips+'</div>' +
       '<p style="margin-top:11px;">이걸 들고 <b>'+wantTxt+'</b> 관리사님을 찾습니다.</p></div>';
-  h += '<div class="punch"><div class="lab">이게 가능한 이유</div>' +
-    '<div class="txt">소속 관리사님 <b>244명</b> — 경남 최다. <b>사람이 많아야 고를 수 있습니다.</b></div></div>' +
+  h += '<div class="split">' + photo("matching-team.jpg","244명 중에서 산모님께 맞는 분을 찾습니다") +
+    '<div><div class="punch" style="margin-bottom:0;"><div class="lab">이게 가능한 이유</div>' +
+    '<div class="txt">소속 관리사님 <b>244명</b> — 경남 최다.<br><b>사람이 많아야 고를 수 있습니다.</b></div></div></div></div>' +
   '<div class="cards c3">' +
     '<div class="box"><h3>인력이 적은 곳은</h3><p>지금 <b>비어 있는 분</b>을 보낼 수밖에 없습니다.</p></div>' +
     '<div class="box hi"><h3>참사랑은</h3><p>244명 중 <b>말씀하신 조건에 맞는 분</b>을 찾습니다.</p></div>' +
@@ -876,16 +887,18 @@ function s_compare(){
     "정부 고시 가격입니다. <b>다른 건 사람과 대응뿐입니다.</b>") +
   '<div class="punch"><div class="lab">다른 부스에서 이 세 가지만 물어보세요</div>' +
     '<div class="txt">저희 답을 미리 알려드릴 테니 비교해 보세요.</div></div>' +
+  '<div class="gal g3" style="margin-bottom:10px;">' +
+    photo("compare-people.jpg","관리사님 244명") + photo("compare-edu.jpg","교육을 직접") + photo("compare-family.jpg","가족 등록 대행") + '</div>' +
   '<div class="cards c3">' +
-    '<div class="box"><h3>① 관리사님이 몇 분이세요?</h3>' +
-      '<p style="font-size:24px;color:var(--brand);font-weight:700;">244명</p>' +
-      '<p class="sm">교체가 필요할 때 바로 오십니다.</p></div>' +
+    '<div class="box"><h3>① 몇 분 계세요?</h3>' +
+      '<p style="font-size:23px;color:var(--brand);font-weight:700;">244명</p>' +
+      '<p class="sm">교체가 필요할 때 바로.</p></div>' +
     '<div class="box"><h3>② 교육은 직접 하세요?</h3>' +
-      '<p style="font-size:24px;color:var(--brand);font-weight:700;">직접 합니다</p>' +
-      '<p class="sm">교육원을 함께 운영해 정기 교육.</p></div>' +
-    '<div class="box"><h3>③ 친정엄마 등록도 되나요?</h3>' +
-      '<p style="font-size:24px;color:var(--brand);font-weight:700;">전부 대행</p>' +
-      '<p class="sm">교육 → 등록 → 바우처까지.</p></div></div>' +
+      '<p style="font-size:23px;color:var(--brand);font-weight:700;">직접 합니다</p>' +
+      '<p class="sm">교육원을 함께 운영.</p></div>' +
+    '<div class="box"><h3>③ 친정엄마 등록도?</h3>' +
+      '<p style="font-size:23px;color:var(--brand);font-weight:700;">전부 대행</p>' +
+      '<p class="sm">교육 → 등록 → 바우처.</p></div></div>' +
   script([
     "혹시 다른 부스도 둘러보셨어요? 이 사업은 서비스 가격이 정부 고시 가격이라 어느 업체를 가셔도 같은 조건이면 금액이 똑같아요.",
     "그럼 뭐가 다르냐면요, 어떤 관리사님이 오시느냐, 문제가 생겼을 때 어떻게 되느냐예요.",
@@ -924,25 +937,26 @@ function s_service(){
 /* ══════════ 9. 관리사님의 하루 ══════════ */
 function s_day(){
   var rows = [
-    ["09:00",[["b","손 씻기 · 위생"],["m","산모 · 아기 체온 확인"]],""],
-    ["오전",[["m","산모 아침 식사"],["m","모유수유 지원"],["b","수유 · 트림 · 기저귀"]],""],
-    ["오전 중",[["h","산모 · 아기 공간 정리"],["h","세탁물"]],""],
-    ["점심",[["m","산모 점심 식사"],["b","관리사 휴게"]],""],
-    ["오후",[["b","아기 목욕 · 배꼽 관리"],["m","부종 관리 · 좌욕"]],"하루 중 손이 가장 많이 가는 시간"],
-    ["오후 늦게",[["m","산후 체조"],["m","정서적 지지 · 교육"]],""],
-    ["18:00",[["m","저녁 식사 준비"],["b","서비스 기록"],["h","마무리 정리"]],""]
+    ["09:00",[["b","손 씻기 · 위생"],["m","산모 · 아기 체온 확인"]]],
+    ["오전",[["m","산모 아침 식사"],["m","모유수유 지원"],["b","수유 · 트림 · 기저귀"],["h","공간 정리 · 세탁"]]],
+    ["점심",[["m","산모 점심 식사"],["b","관리사 휴게"]]],
+    ["오후",[["b","아기 목욕 · 배꼽 관리"],["m","부종 관리 · 좌욕"],["m","산후 체조 · 정서적 지지"]]],
+    ["18:00",[["m","저녁 식사 준비"],["b","서비스 기록"],["h","마무리 정리"]]]
   ];
   var tl = '<div class="tl">';
   rows.forEach(function(r){
     tl += '<div class="tl-row"><div class="tl-t">'+r[0]+'</div><div class="tl-b">' +
-      r[1].map(function(t){ return '<span class="tag '+t[0]+'">'+t[1]+'</span>'; }).join("") +
-      (r[2]?'<div class="txt">'+r[2]+'</div>':'') + '</div></div>';
+      r[1].map(function(t){ return '<span class="tag '+t[0]+'">'+t[1]+'</span>'; }).join("") + '</div></div>';
   });
   tl += '</div>';
   return head("표준 일정", "관리사님의 하루",
     "평일 <b>09:00 ~ 18:00</b> · <span style=\"color:var(--brand-d);font-weight:600;\">산모</span> · " +
     "<span style=\"color:#0E4E86;font-weight:600;\">신생아</span> · " +
-    "<span style=\"color:var(--good);font-weight:600;\">가사</span>") + tl +
+    "<span style=\"color:var(--good);font-weight:600;\">가사</span>") +
+  '<div class="gal g3" style="margin-bottom:12px;">' +
+    photo("day-morning.jpg","오전 — 체온 확인과 수유") +
+    photo("day-afternoon.jpg","오후 — 목욕과 부종 관리") +
+    photo("day-evening.jpg","저녁 — 식사 준비와 기록") + '</div>' + tl +
   '<div class="note c"><span class="ic">!</span><span>관리사님은 <b>의료인이 아닙니다.</b> 투약 · 의료행위 · 손발톱 깎기는 지원되지 않습니다.</span></div>' +
   '<div class="note w"><span class="ic">!</span><span>회사 보유 표준일정표로 교체 필요<span class="tbd">담당자 확인</span></span></div>' +
   script([
@@ -950,7 +964,7 @@ function s_day(){
     "오전엔 아침 식사랑 수유 도와드리고 공간 정리랑 세탁도 해드려요. 점심엔 관리사님도 휴게시간 가지시고요.",
     "오후엔 아기 목욕이랑 배꼽 관리, 부종 관리랑 좌욕 해드려요. 여기가 제일 손이 많이 가요.",
     "그리고 하나 꼭 말씀드릴게요. 관리사님은 의료인이 아니셔서 투약이나 손발톱 깎아드리는 건 안 돼요."
-  ], "의료행위 제외는 <b>반드시 소리 내어</b> 말하고 넘어가세요.") +
+  ], "사진을 짚어가며 설명하세요. 의료행위 제외는 <b>반드시 소리 내어</b> 말하고 넘어가세요.") +
   checklist("day", ["시간대별 산모·신생아·가사","관리사님도 휴게시간","의료행위 제외 — 반드시 확인"]);
 }
 
@@ -1109,8 +1123,9 @@ function s_refund(){
     '<div class="box soft"><h3>대상</h3><p>기준중위소득 <b>180% 이하</b></p></div>' +
     '<div class="box soft"><h3>기간</h3><p><b>최대 15일</b> · 초과분은 전액 본인 부담</p></div>' +
     '<div class="box soft"><h3>횟수</h3><p>임신 <b>1회당 1번</b></p></div></div>' +
-  '<div class="punch"><div class="lab">달력에 표시해 드릴 두 날짜</div>' +
-    '<div class="txt">① 출산 후 <b>60일</b> — 바우처 신청 &nbsp; ② 종료 후 <b>90일</b> — 환급 신청</div></div>' +
+  '<div class="split">' + photo("refund-money.jpg","서비스가 끝난 뒤 90% 환급") +
+    '<div><div class="punch" style="margin-bottom:0;"><div class="lab">달력에 표시해 드릴 두 날짜</div>' +
+    '<div class="txt">① 출산 후 <b>60일</b> — 바우처 신청<br>② 종료 후 <b>90일</b> — 환급 신청</div></div></div></div>' +
   script([
     "창원시에서 본인부담금의 90%를 돌려줘요. 다만 순서가 있어요.",
     "이용하실 때는 먼저 다 내셔야 하고, 끝난 다음에 보건소에 신청하시면 돌려받으시는 거예요. 기한은 끝나고 90일 이내예요.",
@@ -1122,8 +1137,12 @@ function s_refund(){
 /* ══════════ 16. 추가 요금 ══════════ */
 function s_extra(){
   return head("추가 요금", "이런 경우에는 요금이 더 붙습니다", "미리 아시면 나중에 부딪히지 않습니다.") +
+  '<div class="split">' + photo("elder-care.jpg","큰아이 돌보기 — 추가 계약 항목") +
+    '<div class="box hi" style="margin:0;"><h3>큰아이 돌보기</h3>' +
+      '<p>기본 서비스가 <b>아닙니다.</b> 따로 계약하시면 등하원 도움, 식사 준비 등을 지원해 드립니다.</p>' +
+      '<p>금액은 <b>어린이집·유치원에 가는지</b>, <b>몇 명인지</b>에 따라 달라집니다.<span class="tbd">구간표 확인</span></p></div></div>' +
   '<div class="cards c2">' +
-    '<div class="box hi"><h3>큰아이 돌보기</h3>' +
+    '<div class="box" style="display:none;"><h3>큰아이 돌보기</h3>' +
       '<p>기본 서비스가 <b>아닙니다.</b> 따로 계약하시면 등하원 도움, 식사 준비 등을 지원해 드립니다.</p>' +
       '<p>금액은 큰아이가 <b>어린이집·유치원에 가는지</b>, <b>몇 명인지</b>에 따라 달라집니다.<span class="tbd">구간표 확인</span></p></div>' +
     '<div class="box"><h3>주말 · 공휴일 근무</h3>' +
@@ -1150,6 +1169,7 @@ function s_class(){
     '<div class="txt">참가비 <b>무료</b> · 추첨 <b>20명</b> · 사은품</div></div>' +
     '<p class="lede" style="margin:0 0 12px;">저희 예약을 <b>안 하셔도</b> 신청하실 수 있습니다.</p>' +
     photo("poster-monthly.jpg","월간 산모교실 — 매월 마지막 주") + '</div></div>' +
+  '<div class="gal g2">' + photo("class-scene.jpg","산모교실 진행 모습") + photo("class-gift.jpg","참여하신 분께 드리는 사은품") + '</div>' +
   script([
     "그리고 하나 더 안내드릴 게 있어요. 산모교실을 정기적으로 운영하는데요, 저희 예약 안 하셔도 신청하실 수 있어요.",
     "이번에는 태어날 우리 아기에게 선물하는 첫 번째 동화라는 주제로, AI로 태교 동화를 만들어보는 시간이에요.",
@@ -1173,7 +1193,9 @@ function s_family(){
   '<div class="split rev">' +
     '<div><p class="lede" style="margin:0;">산모·신생아 교육을 마치신 뒤 <b>영유아 · 정리수납 · AI 교육</b>까지 이어서 들으실 수 있습니다.<br>' +
     '<span style="font-size:15.5px;">손주를 더 잘 돌보시기 위한 역량이 됩니다. 내일배움카드 지원 과정도 있습니다.</span></p></div>' +
-    photo("poster-extra.jpg","영유아 · 정리수납 · AI 실무 활용교육") + '</div>' +
+    photo("family-care.jpg","친정어머니가 손주를 돌보시는 시간") + '</div>' +
+  '<div class="gal g2">' + photo("poster-extra.jpg","영유아 · 정리수납 · AI 실무 활용교육") +
+    photo("family-edu.jpg","가족 산후관리사 교육 현장") + '</div>' +
   script([
     "혹시 친정어머니나 시어머니께서 산후조리를 도와주실 계획 있으세요?",
     "그러면 이거 꼭 아셔야 해요. 어머니가 저희 소속 관리사로 등록하시면 국가지원을 받으면서 근무하실 수 있어요.",
@@ -1260,6 +1282,9 @@ function s_summary(){
 function s_close(){
   return head("마무리", "편안하게 듣고 가세요",
     "오늘 결정하지 않으셔도 됩니다. <b>충분히 고민해 보시고 정하셔도 늦지 않습니다.</b>") +
+  '<div class="split" style="margin-bottom:14px;">' + photo("closing-warm.jpg","엄마가 되는 순간, 참사랑이 곁에 있습니다") +
+    '<div><p class="lede" style="margin:0;">오늘은 <b>편안하게 듣고 가시는 자리</b>입니다.<br>' +
+    '결정은 천천히 하셔도 됩니다.</p></div></div>' +
   '<div class="cards c2">' +
     '<div class="box"><h3>바로 예약을 원하시면</h3>' +
       '<p>이 자리에서 도와드립니다. 예약금 10%로 날짜를 잡아드립니다.</p>' +
