@@ -107,7 +107,15 @@ p.lede b{color:var(--brand-d);font-weight:600;}
 .box .sm{font-size:13.5px;color:var(--text-3);}
 
 figure.shot{margin:0;}
-figure.shot img{width:100%;height:100%;object-fit:cover;border-radius:13px;border:1.5px solid var(--line);display:block;}
+figure.shot img{width:100%;max-height:300px;object-fit:cover;border-radius:13px;
+  border:1.5px solid var(--line);display:block;}
+/* 세로 포스터 — 잘리면 안 되므로 전체가 보이게 */
+figure.shot.tall img{max-height:330px;object-fit:contain;background:var(--surface-2);padding:6px;}
+/* QR — 작게 */
+figure.shot.qr img{max-height:150px;object-fit:contain;background:#fff;padding:6px;}
+/* 3칸 갤러리 안에서는 더 낮게 */
+.gal.g3 figure.shot img{max-height:210px;}
+.gal.g2 figure.shot img{max-height:250px;}
 figure.shot figcaption{font-size:13px;color:var(--text-3);margin-top:5px;line-height:1.4;}
 .ph{border:2px dashed var(--line-2);border-radius:13px;background:var(--surface-2);min-height:120px;
   display:grid;place-items:center;text-align:center;padding:14px;height:100%;}
@@ -375,6 +383,9 @@ table.ref td{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-
 .sum-row .v{font-weight:500;}
 .sum-row.big .v{font-size:20px;font-weight:700;color:var(--brand);}
 
+.telline{background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:12px 18px;
+  font-size:16px;color:var(--text-2);font-family:"IBM Plex Mono",monospace;margin-bottom:12px;text-align:center;}
+.telline b{font-family:"IBM Plex Sans KR",sans-serif;color:var(--brand-d);font-weight:600;margin-right:4px;}
 .tel{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;}
 .tel .t{background:var(--surface);border:1.5px solid var(--line);border-radius:13px;padding:13px 16px;}
 .tel .t .nm{font-size:14px;color:var(--text-3);}
@@ -410,6 +421,26 @@ table.ref td{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-
   border:1.5px solid var(--line-2);background:var(--surface);border-radius:10px;color:var(--text-2);cursor:pointer;}
 .sheet-tabs button.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600;}
 .sheet-b{flex:1;overflow-y:auto;padding:14px 24px 24px;}
+.sheet-f{padding:12px 24px;border-top:1.5px solid var(--line);display:flex;align-items:center;gap:12px;}
+.logcount{font-size:13.5px;color:var(--text-3);margin-left:auto;}
+.lg{border:1.5px solid var(--line);border-radius:12px;padding:13px 16px;margin-bottom:10px;background:var(--surface);}
+.lg-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
+.lg-no{font-family:"IBM Plex Mono",monospace;font-size:20px;font-weight:700;color:var(--brand);}
+.lg-nm{font-size:15.5px;font-weight:600;}
+.lg-dt{font-size:13px;color:var(--text-3);margin-left:auto;}
+.lg-sum{font-size:14px;color:var(--text-2);margin-top:7px;line-height:1.55;}
+.lg-sum b{color:var(--ink);}
+.lg-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
+.lg-chips span{font-size:12.5px;background:var(--surface-2);border:1px solid var(--line-2);
+  border-radius:99px;padding:2px 9px;color:var(--text-2);}
+.lg-chips span.hot{background:var(--brand-soft);border-color:var(--brand-line);color:var(--brand-d);font-weight:600;}
+.lg-btns{display:flex;gap:8px;margin-top:10px;}
+.lg-btns button{font-family:inherit;font-size:13.5px;padding:7px 13px;border-radius:9px;cursor:pointer;
+  border:1.5px solid var(--line-2);background:var(--surface);color:var(--text-2);}
+.lg-btns button.go{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600;}
+.lg-btns button.del{color:var(--crit);border-color:var(--crit-line);}
+.saved{background:var(--good-soft);border:1.5px solid var(--good-line);color:var(--good);
+  border-radius:12px;padding:13px 17px;font-size:15.5px;font-weight:600;margin-bottom:12px;}
 .sheet-s{padding:12px 24px 0;}
 .fq{border-bottom:1px solid var(--line);padding:12px 0;}
 .fq:last-child{border-bottom:0;}
@@ -456,6 +487,7 @@ table.ref td{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-
     </div>
     <div class="steps" id="stepNav"></div>
     <div class="rail-f">
+      <button class="btn" id="logBtn" type="button">상담 기록</button>
       <button class="btn" id="scriptBtn" type="button">상담자 화면 열기</button>
       <button class="btn" id="resetBtn" type="button">새 상담 시작</button>
     </div>
@@ -468,12 +500,31 @@ table.ref td{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-
     <div class="fabs"><button class="fab" id="faqFab" type="button">자주 묻는 질문</button></div>
     <div class="bar">
       <button class="btn" id="menuBtn" type="button">☰ 목차</button>
+      <button class="btn" id="logBtn2" type="button">기록</button>
       <button class="btn" id="prevBtn" type="button">← 이전</button>
       <span class="mid" id="barMid"></span>
       <button class="btn" id="scriptBtn2" type="button">대본</button>
       <button class="btn pri lg" id="nextBtn" type="button">다음 →</button>
     </div>
   </main>
+</div>
+
+<div class="sheet" id="logSheet">
+  <div class="sheet-in">
+    <button class="sheet-x" id="logX" type="button">✕</button>
+    <div class="sheet-h">
+      <h3>상담 기록</h3>
+      <p>이 노트북에 저장된 상담입니다. 뒷 네 자리로 찾으세요.</p>
+      <div class="sheet-s" style="padding-left:0;padding-right:0;">
+        <input type="text" id="logSearch" placeholder="뒷 네 자리 또는 성함으로 검색">
+      </div>
+    </div>
+    <div class="sheet-b" id="logBody"></div>
+    <div class="sheet-f">
+      <button class="btn" id="logCsv" type="button">엑셀로 내보내기</button>
+      <span class="logcount" id="logCount"></span>
+    </div>
+  </div>
 </div>
 
 <div class="sheet" id="faqSheet">
@@ -591,8 +642,9 @@ function checklist(id, items){
   });
   return h + '</div>';
 }
-function photo(file, caption){
-  return '<figure class="shot" data-ph="'+file+'" data-cap="'+esc(caption)+'">' +
+function photo(file, caption, kind){
+  var k = kind ? " " + kind : "";
+  return '<figure class="shot'+k+'" data-ph="'+file+'" data-cap="'+esc(caption)+'">' +
     '<div class="ph"><div class="pt">'+caption+'<span class="pf">images / '+file+'</span></div></div></figure>';
 }
 function loadPhotos(){
@@ -819,6 +871,7 @@ function s_company(){
     '<div class="box stat hero"><div class="v">7,668</div><div class="k">누적 이용 산모님</div><div class="why">경남 1위</div></div>' +
     '<div class="box stat hero"><div class="v">244</div><div class="k">소속 관리사님</div><div class="why">경남 1위</div></div>' +
     '<div class="box stat"><div class="v">28</div><div class="k">년째 운영</div><div class="why">1998년부터</div></div>' +
+    '<div class="box stat"><div class="v">5.0</div><div class="k">고객 만족도</div><div class="why">만점</div></div>' +
     '<div class="box stat"><div class="v">A</div><div class="k">품질평가</div><div class="why">2025년도 최고 등급</div></div></div>' +
   '<div class="split">' + photo("voucher.jpg","정부 사회서비스 전자바우처 검색 결과") +
     '<div><div class="punch" style="margin-bottom:0;"><div class="lab">이 숫자가 뜻하는 것</div>' +
@@ -1174,12 +1227,12 @@ function s_extra(){
 /* ══════════ 17. 산모교실 ══════════ */
 function s_class(){
   return head("더 드리는 것", "산모교실은 예약과 상관없이 신청하실 수 있습니다") +
-  '<div class="split">' + photo("poster-class.jpg","「태어날 우리 아기에게 선물하는 첫 번째 동화」") +
+  '<div class="split">' + photo("poster-class.jpg","「태어날 우리 아기에게 선물하는 첫 번째 동화」","tall") +
     '<div><div class="punch" style="margin-bottom:12px;"><div class="lab">AI와 함께 만드는 태교 동화</div>' +
     '<div class="txt">참가비 <b>무료</b> · 추첨 <b>20명</b> · 사은품</div></div>' +
     '<p class="lede" style="margin:0 0 12px;">저희 예약을 <b>안 하셔도</b> 신청하실 수 있습니다.</p>' +
-    photo("poster-monthly.jpg","월간 산모교실 — 매월 마지막 주") + '</div></div>' +
-  '<div class="gal g2">' + photo("class-scene.jpg","산모교실 진행 모습") + photo("class-gift.jpg","참여하신 분께 드리는 사은품") + '</div>' +
+    '<div class="gal g2" style="margin:0;">' + photo("poster-monthly.jpg","월간 산모교실","tall") +
+    photo("class-gift.jpg","참여하신 분께 드리는 사은품") + '</div></div></div>' +
   script([
     "그리고 하나 더 안내드릴 게 있어요. 산모교실을 정기적으로 운영하는데요, 저희 예약 안 하셔도 신청하실 수 있어요.",
     "이번에는 태어날 우리 아기에게 선물하는 첫 번째 동화라는 주제로, AI로 태교 동화를 만들어보는 시간이에요.",
@@ -1193,19 +1246,16 @@ function s_class(){
 function s_family(){
   return head("더 드리는 것", "친정엄마 · 시어머니가 관리사로 오실 수 있습니다",
     "<b>국가지원을 받으면서</b> 어머니가 돌봐주십니다.") +
-  '<div class="split">' + photo("poster-family.jpg","「딸과 며느리의 산후조리」 · 2026년 교육일정") +
+  '<div class="split">' + photo("poster-family.jpg","「딸과 며느리의 산후조리」 · 2026년 교육일정","tall") +
     '<div><div class="punch" style="margin-bottom:12px;"><div class="lab">참사랑만의 차이</div>' +
     '<div class="txt">교육 접수 → 이수 → 제공인력 등록 → 바우처 신청까지 <b>전부 대행</b></div></div>' +
     '<div class="cards c2" style="margin-bottom:12px;">' +
       '<div class="box" style="padding:12px 14px;"><h3 style="font-size:15.5px;">다른 업체</h3><p class="sm">교육은 외부에, 행정은 각자</p></div>' +
       '<div class="box hi" style="padding:12px 14px;"><h3 style="font-size:15.5px;">참사랑</h3><p class="sm">교육원을 함께 운영해 한 번에</p></div></div>' +
-    '<div class="note c" style="margin-bottom:0;"><span class="ic">!</span><span>교육과 등록에 시간이 걸립니다. <b>출산 전에 미리</b> 준비하셔야 합니다.</span></div></div></div>' +
-  '<div class="split rev">' +
-    '<div><p class="lede" style="margin:0;">산모·신생아 교육을 마치신 뒤 <b>영유아 · 정리수납 · AI 교육</b>까지 이어서 들으실 수 있습니다.<br>' +
-    '<span style="font-size:15.5px;">손주를 더 잘 돌보시기 위한 역량이 됩니다. 내일배움카드 지원 과정도 있습니다.</span></p></div>' +
-    photo("family-care.jpg","친정어머니가 손주를 돌보시는 시간") + '</div>' +
-  '<div class="gal g2">' + photo("poster-extra.jpg","영유아 · 정리수납 · AI 실무 활용교육") +
-    photo("family-edu.jpg","가족 산후관리사 교육 현장") + '</div>' +
+    '<div class="gal g2" style="margin:0;">' + photo("family-care.jpg","친정어머니가 손주를 돌보시는 시간") +
+    photo("poster-extra.jpg","영유아 · 정리수납 · AI 교육","tall") + '</div></div></div>' +
+  '<div class="note c"><span class="ic">!</span><span>교육과 등록에 시간이 걸립니다. <b>출산 전에 미리</b> 준비하셔야 합니다. ' +
+    '산모·신생아 교육 뒤 <b>영유아 · 정리수납 · AI 교육</b>까지 이어서 들으실 수 있습니다.</span></div>' +
   script([
     "혹시 친정어머니나 시어머니께서 산후조리를 도와주실 계획 있으세요?",
     "그러면 이거 꼭 아셔야 해요. 어머니가 저희 소속 관리사로 등록하시면 국가지원을 받으면서 근무하실 수 있어요.",
@@ -1295,32 +1345,29 @@ function s_summary(){
 function s_close(){
   return head("마무리", "편안하게 듣고 가세요",
     "오늘 결정하지 않으셔도 됩니다. <b>충분히 고민해 보시고 정하셔도 늦지 않습니다.</b>") +
-  '<div class="split" style="margin-bottom:14px;">' + photo("closing-warm.jpg","엄마가 되는 순간, 참사랑이 곁에 있습니다") +
-    '<div><p class="lede" style="margin:0;">오늘은 <b>편안하게 듣고 가시는 자리</b>입니다.<br>' +
-    '결정은 천천히 하셔도 됩니다.</p></div></div>' +
+  '<div class="split" style="margin-bottom:12px;">' + photo("closing-warm.jpg","엄마가 되는 순간, 참사랑이 곁에 있습니다") +
+    '<div class="gal g2" style="margin:0;">' + photo("qr-booking.png","간편예약","qr") + photo("qr-kakao.png","카카오채널","qr") + '</div></div>' +
   '<div class="cards c2">' +
     '<div class="box"><h3>바로 예약을 원하시면</h3>' +
-      '<p>이 자리에서 도와드립니다. 예약금 10%로 날짜를 잡아드립니다.</p>' +
-      '<div class="form" style="margin-top:10px;margin-bottom:0;">' +
+      '<p class="sm">예약금 10%로 날짜를 잡아드립니다.</p>' +
+      '<div class="form f2" style="margin:10px 0 0;">' +
         '<div><span class="lab">성함</span><input type="text" data-s="name" value="'+esc(S.name)+'" placeholder="산모님 성함"></div>' +
         '<div><span class="lab">출산 예정일</span><input type="date" data-s="due" value="'+esc(S.due)+'"></div></div></div>' +
     '<div class="box hi"><h3>천천히 생각해 보시겠다면</h3>' +
-      '<p>연락처 전체는 부담스러우실 수 있습니다. <b>뒷 네 자리만</b> 남겨주세요.</p>' +
-      '<div class="form" style="margin-top:10px;margin-bottom:7px;">' +
-        '<div><span class="lab">연락처 뒷 네 자리 <span class="tip">— 이것만</span></span>' +
+      '<p class="sm">연락처 전체는 부담스러우실 수 있습니다. <b>뒷 네 자리만</b> 남겨주세요.</p>' +
+      '<div class="form" style="margin:10px 0 6px;">' +
+        '<div><span class="lab">연락처 뒷 네 자리</span>' +
         '<input type="text" data-s="phone4" value="'+esc(S.phone4)+'" placeholder="0000" maxlength="4" inputmode="numeric"></div></div>' +
-      '<p class="sm">나중에 다시 문의하실 때 <b>오늘 체크하신 내용을 찾아</b> 이어서 상담해 드리기 위한 용도입니다.</p></div></div>' +
-  '<div class="split">' +
-    '<div><div class="punch" style="margin-bottom:0;"><div class="lab">더 자세히 알아보고 싶으시면</div>' +
-    '<div class="txt">QR로 <b>간편예약</b>에 남겨주시면 담당자가 더 자세히 상담해 드립니다.</div></div></div>' +
-    '<div class="gal g2" style="margin:0;">' + photo("qr-booking.png","간편예약") + photo("qr-kakao.png","카카오채널") + '</div></div>' +
-  '<div class="box"><h3>연락처</h3><div class="tel">' +
-      '<div class="t"><div class="nm">창원지점</div><div class="no">055-293-5008</div></div>' +
-      '<div class="t"><div class="nm">김해지점</div><div class="no">055-329-3579</div></div>' +
-      '<div class="t"><div class="nm">양산지점</div><div class="no">055-384-5008</div></div>' +
-      '<div class="t"><div class="nm">산모교실</div><div class="no">010-9940-9673</div></div></div>' +
-    '<p class="sm" style="margin-top:9px;">노출할 대표 번호 확정 필요<span class="tbd">담당자 확인</span></p></div>' +
-  '<div style="margin-top:6px;"><button class="btn lg" id="newBtn2" type="button">새 상담 시작</button></div>' +
+      '<p class="sm">다음에 문의하실 때 <b>오늘 내용을 찾아</b> 이어서 상담해 드리기 위한 것입니다.</p></div></div>' +
+  '<div class="telline">' +
+    '<b>창원</b> 055-293-5008 &nbsp;·&nbsp; <b>김해</b> 055-329-3579 &nbsp;·&nbsp; ' +
+    '<b>양산</b> 055-384-5008 &nbsp;·&nbsp; <b>산모교실</b> 010-9940-9673</div>' +
+  '<div class="note w"><span class="ic">!</span><span>노출할 대표 번호 확정 필요<span class="tbd">담당자 확인</span></span></div>' +
+  (justSaved ? '<div class="saved">✓ 저장했습니다. 다음에 뒷 네 자리로 찾아서 이어서 상담하실 수 있습니다.</div>' : '') +
+  '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;">' +
+    '<button class="btn pri lg" id="saveBtn" type="button">이 상담 저장하기</button>' +
+    '<button class="btn" id="printBtn2" onclick="window.print()" type="button">요약 인쇄</button>' +
+    '<button class="btn" id="newBtn2" type="button">새 상담 시작</button></div>' +
   script([
     "오늘 설명은 여기까지예요. 편안하게 들어보셨으면 좋겠어요.",
     "오늘 결정 안 하셔도 전혀 괜찮아요. 충분히 고민해 보시고 정하셔도 늦지 않아요.",
@@ -1328,8 +1375,11 @@ function s_close(){
     "더 자세히 알아보고 싶으시면 여기 QR로 간편예약에 남겨주시면 담당자가 자세히 상담해 드려요.",
     "오늘 방문해 주셔서 정말 감사합니다."
   ], "<b>재촉하지 마세요.</b> 여유 있는 태도가 오히려 신뢰를 만듭니다. " +
-     "뒷 네 자리는 <b>&lsquo;산모님을 위한 것&rsquo;</b>으로 설명하세요 — 다시 처음부터 말씀하지 않으셔도 되게.") +
-  checklist("close", ["재촉하지 않기","예약 원하시면 바로 도와드리기","뒷 네 자리는 ‘다음에 이어서’를 위한 것","QR 간편예약 안내","오늘 체크 내용 기록"]);
+     "뒷 네 자리는 <b>&lsquo;산모님을 위한 것&rsquo;</b>으로 설명하세요.") +
+  checklist("close", [
+    "재촉하지 않기","예약 원하시면 바로 도와드리기",
+    "뒷 네 자리는 '다음에 이어서'를 위한 것","QR 간편예약 안내","오늘 체크 내용 기록"
+  ]);
 }
 
 /* ══════════ 단계 ══════════ */
@@ -1457,6 +1507,140 @@ function renderFaq(){
   document.getElementById("faqBody").innerHTML = h || '<p style="color:var(--text-3);padding:20px 0;">검색 결과가 없습니다.</p>';
 }
 
+/* ══ 상담 기록 저장 ══ */
+var LOGKEY = "chamsarang_consult_logs";
+var justSaved = false;
+function loadLogs(){
+  try { return JSON.parse(localStorage.getItem(LOGKEY) || "[]"); }
+  catch(e){ return []; }
+}
+function saveLogs(a){
+  try { localStorage.setItem(LOGKEY, JSON.stringify(a)); return true; }
+  catch(e){ return false; }
+}
+function nowStr(){
+  var d = new Date();
+  function z(x){ return (x<10?"0":"")+x; }
+  return d.getFullYear()+"-"+z(d.getMonth()+1)+"-"+z(d.getDate())+" "+z(d.getHours())+":"+z(d.getMinutes());
+}
+function buildRecord(){
+  var q = quote();
+  var r = (!q.unavailable) ? q.all[S.period] : null;
+  return {
+    id: Date.now(),
+    at: nowStr(),
+    phone4: (S.phone4||"").trim(),
+    name: (S.name||"").trim(),
+    due: S.due || "",
+    fetus: S.fetus, order: S.order, band: S.band, period: S.period,
+    tf: JSON.parse(JSON.stringify(TF)),
+    code: q.unavailable ? "D형(별도확인)" : q.code,
+    days: q.unavailable ? 0 : q.days[S.period],
+    self: r ? r.self : 0, refund: r ? r.refund : 0, final: r ? r.final : 0
+  };
+}
+function saveConsult(){
+  var rec = buildRecord();
+  if (!rec.phone4 && !rec.name){
+    alert("연락처 뒷 네 자리나 성함 중 하나는 입력해 주세요.");
+    return;
+  }
+  var a = loadLogs();
+  a.unshift(rec);
+  if (a.length > 500) a = a.slice(0,500);
+  if (!saveLogs(a)){ alert("저장에 실패했습니다. 브라우저 설정을 확인해 주세요."); return; }
+  justSaved = true;
+  render();
+}
+function restoreLog(id){
+  var rec = loadLogs().filter(function(x){ return x.id === id; })[0];
+  if (!rec) return;
+  S.phone4 = rec.phone4 || ""; S.name = rec.name || ""; S.due = rec.due || "";
+  S.fetus = rec.fetus; S.order = rec.order; S.band = rec.band; S.period = rec.period;
+  TF = JSON.parse(JSON.stringify(rec.tf || {}));
+  tfIdx = TFQ.length;
+  checks = {}; QA_STATE = {}; GUESS = null; justSaved = false;
+  openLog(false);
+  cur = 1;
+  render();
+}
+function delLog(id){
+  if (!confirm("이 상담 기록을 지울까요?")) return;
+  saveLogs(loadLogs().filter(function(x){ return x.id !== id; }));
+  renderLogs();
+  renderLogCount();
+}
+function logChips(rec){
+  var t = rec.tf || {}, out = [];
+  if (t.birth) out.push([tfLabel("birth", t.birth), false]);
+  if (t.jori) out.push([tfLabel("jori", t.jori), false]);
+  if (t.help) out.push([tfLabel("help", t.help), false]);
+  (t.focus||[]).forEach(function(v){ out.push(["신경 "+tfLabel("focus", v), false]); });
+  (t.want||[]).forEach(function(v){ out.push([tfLabel("want", v), false]); });
+  (t.choose||[]).forEach(function(v){ out.push(["중요 "+tfLabel("choose", v), false]); });
+  (t.fear||[]).forEach(function(v){ out.push(["걱정 "+tfLabel("fear", v), true]); });
+  return out;
+}
+function renderLogs(){
+  var kw = (document.getElementById("logSearch").value || "").trim();
+  var a = loadLogs().filter(function(r){
+    if (!kw) return true;
+    return (r.phone4||"").indexOf(kw) >= 0 || (r.name||"").indexOf(kw) >= 0;
+  });
+  var h = "";
+  a.forEach(function(r){
+    h += '<div class="lg"><div class="lg-h">' +
+      '<span class="lg-no">'+(r.phone4 ? "····"+r.phone4 : "—")+'</span>' +
+      (r.name ? '<span class="lg-nm">'+r.name+'</span>' : '') +
+      '<span class="lg-dt">'+r.at+'</span></div>' +
+      '<div class="lg-sum"><b>'+r.code+'</b> · '+PNAME[r.period]+' '+r.days+'일' +
+      (r.final ? ' · 최종 <b>'+won(r.final)+'</b>' : '') +
+      (r.due ? ' · 예정일 '+r.due : '') + '</div>' +
+      '<div class="lg-chips">' + logChips(r).map(function(c){
+        return '<span'+(c[1]?' class="hot"':'')+'>'+c[0]+'</span>'; }).join("") + '</div>' +
+      '<div class="lg-btns"><button class="go" data-lgo="'+r.id+'" type="button">이 상담 이어서 진행</button>' +
+      '<button class="del" data-ldel="'+r.id+'" type="button">삭제</button></div></div>';
+  });
+  document.getElementById("logBody").innerHTML = h ||
+    '<p style="color:var(--text-3);padding:20px 0;">저장된 상담이 없습니다.</p>';
+}
+function renderLogCount(){
+  var c = loadLogs().length;
+  var e = document.getElementById("logCount");
+  if (e) e.textContent = "총 " + c + "건";
+  var b = document.getElementById("logBtn");
+  if (b) b.textContent = "상담 기록" + (c ? " ("+c+")" : "");
+}
+function openLog(on){
+  document.getElementById("logSheet").classList.toggle("open", on);
+  if (on){ renderLogs(); renderLogCount(); document.getElementById("logSearch").focus(); }
+}
+function exportCsv(){
+  var a = loadLogs();
+  if (!a.length){ alert("저장된 상담이 없습니다."); return; }
+  var head = ["저장시각","뒷4자리","성함","출산예정일","유형","기간","일수",
+              "본인부담금","환급","최종부담","몇째","조리계획","도와주실분",
+              "중점케어","바라는관리사","중요하게보는것","걱정"];
+  function j(t, k){ return ((t||{})[k]||[]).map(function(v){ return tfLabel(k, v); }).join(" / "); }
+  var rows = a.map(function(r){
+    var t = r.tf || {};
+    return [r.at, r.phone4, r.name, r.due, r.code, PNAME[r.period], r.days,
+            r.self, r.refund, r.final,
+            t.birth?tfLabel("birth",t.birth):"", t.jori?tfLabel("jori",t.jori):"",
+            t.help?tfLabel("help",t.help):"",
+            j(t,"focus"), j(t,"want"), j(t,"choose"), j(t,"fear")];
+  });
+  var csv = [head].concat(rows).map(function(r){
+    return r.map(function(c){ return '"'+String(c==null?"":c).replace(/"/g,'""')+'"'; }).join(",");
+  }).join("\r\n");
+  var blob = new Blob(["\uFEFF"+csv], {type:"text/csv;charset=utf-8;"});
+  var url = URL.createObjectURL(blob);
+  var link = document.createElement("a");
+  link.href = url; link.download = "상담기록_" + nowStr().replace(/[: ]/g,"-") + ".csv";
+  document.body.appendChild(link); link.click(); document.body.removeChild(link);
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+}
+
 /* ══ 렌더 ══ */
 var showScript = false;
 function renderNav(){
@@ -1491,7 +1675,7 @@ function render(){
   document.getElementById("prevBtn").disabled = atStart;
   document.getElementById("prevBtn").style.opacity = atStart ? ".4" : "1";
   document.getElementById("nextBtn").textContent = (pos === v.length-1) ? "처음으로" : "다음 →";
-  renderNav(); renderMomBar(); refresh(); loadPhotos();
+  renderNav(); renderMomBar(); refresh(); loadPhotos(); renderLogCount();
   document.getElementById("slide").scrollTop = 0;
   fb.classList.remove("slide-anim"); void fb.offsetWidth; fb.classList.add("slide-anim");
   fitScreen();
@@ -1608,6 +1792,11 @@ document.addEventListener("click", function(e){
   var b = e.target.closest("[data-go]");
   if (b){ cur = parseInt(b.dataset.go,10); menu(false); render(); return; }
   if (e.target.id === "newBtn2"){ reset(); return; }
+  if (e.target.id === "saveBtn"){ saveConsult(); return; }
+  var lgo = e.target.closest("[data-lgo]");
+  if (lgo){ restoreLog(parseInt(lgo.dataset.lgo,10)); return; }
+  var ldel = e.target.closest("[data-ldel]");
+  if (ldel){ delLog(parseInt(ldel.dataset.ldel,10)); return; }
   var tf = e.target.closest("[data-tf]");
   if (tf){
     var k = tf.dataset.tf, v = tf.dataset.tv;
@@ -1656,13 +1845,19 @@ function openFaq(on){
   document.getElementById("faqSheet").classList.toggle("open", on);
   if (on){ renderFaq(); document.getElementById("faqSearch").focus(); }
 }
+document.getElementById("logBtn").addEventListener("click", function(){ openLog(true); });
+document.getElementById("logBtn2").addEventListener("click", function(){ openLog(true); });
+document.getElementById("logX").addEventListener("click", function(){ openLog(false); });
+document.getElementById("logSheet").addEventListener("click", function(e){ if (e.target === this) openLog(false); });
+document.getElementById("logSearch").addEventListener("input", renderLogs);
+document.getElementById("logCsv").addEventListener("click", exportCsv);
 document.getElementById("faqFab").addEventListener("click", function(){ openFaq(true); });
 document.getElementById("faqX").addEventListener("click", function(){ openFaq(false); });
 document.getElementById("faqSheet").addEventListener("click", function(e){ if (e.target === this) openFaq(false); });
 document.getElementById("faqSearch").addEventListener("input", renderFaq);
 function reset(){
   S = {name:"",phone4:"",due:"",fetus:"single",order:1,staff:1,disability:false,preemie:false,band:"통합",period:1};
-  checks = {}; TF = {}; tfIdx = 0; QA_STATE = {}; GUESS = null; cur = 0; render();
+  checks = {}; TF = {}; tfIdx = 0; QA_STATE = {}; GUESS = null; justSaved = false; cur = 0; render();
 }
 document.getElementById("resetBtn").addEventListener("click", reset);
 (function(){
@@ -1683,7 +1878,7 @@ document.getElementById("resetBtn").addEventListener("click", reset);
 document.addEventListener("keydown", function(e){
   var tag = (e.target.tagName || "").toLowerCase();
   if (tag === "input" || tag === "select" || tag === "textarea") return;
-  if (e.key === "Escape"){ openFaq(false); menu(false); return; }
+  if (e.key === "Escape"){ openFaq(false); openLog(false); menu(false); return; }
   if (e.key === "ArrowRight") step(1);
   else if (e.key === "ArrowLeft") step(-1);
   else if (e.key === "n" || e.key === "N") document.getElementById("scriptBtn").click();
