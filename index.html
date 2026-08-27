@@ -205,6 +205,8 @@ figure.shot figcaption{font-size:13px;color:var(--text-3);margin-top:5px;line-he
 .cover .go{margin-top:28px;font-size:20px;padding:17px 44px;}
 .cover .hint{margin-top:18px;font-size:14px;color:var(--text-3);line-height:1.7;}
 
+.areas{display:flex;flex-wrap:wrap;gap:8px;}
+.ar{background:var(--brand);color:#fff;border-radius:9px;padding:9px 14px;font-size:15.5px;font-weight:600;}
 .qcount{font-family:"IBM Plex Mono",monospace;font-size:14px;color:var(--brand);font-weight:600;
   background:var(--brand-soft);border:1px solid var(--brand-line);border-radius:99px;padding:2px 11px;
   display:inline-block;margin-bottom:9px;}
@@ -838,11 +840,10 @@ function s_grade(){
   '<div class="split rev">' +
     '<div><div class="punch" style="margin-bottom:12px;"><div class="lab">무엇을 보나요</div>' +
     '<div class="txt">서비스만이 아니라 <b>관리사님을 어떻게 뽑고 · 교육하고 · 안전을 어떻게 관리하는지</b>까지 봅니다.</div></div>' +
-    '<div class="cards c2" style="margin:0;">' +
-      '<div class="box soft" style="padding:12px 14px;"><h3 style="font-size:15.5px;margin-bottom:3px;">인력 관리</h3><p class="sm">어떤 분을 뽑고 어떻게 관리하는가</p></div>' +
-      '<div class="box soft" style="padding:12px 14px;"><h3 style="font-size:15.5px;margin-bottom:3px;">교육 훈련</h3><p class="sm">얼마나 자주, 무엇을 교육하는가</p></div>' +
-      '<div class="box soft" style="padding:12px 14px;"><h3 style="font-size:15.5px;margin-bottom:3px;">안전 관리</h3><p class="sm">사고 예방과 대응 체계</p></div>' +
-      '<div class="box soft" style="padding:12px 14px;"><h3 style="font-size:15.5px;margin-bottom:3px;">이용자 만족</h3><p class="sm">실제 이용한 분들의 평가</p></div></div></div>' +
+    '<div class="areas">' +
+      ["서비스품질","고객만족도","인력관리","교육훈련","대응성","전문성","안전관리","윤리성"]
+        .map(function(a){ return '<span class="ar">'+a+'</span>'; }).join("") + '</div>' +
+    '<p class="sm" style="margin-top:9px;">이 <b>8개 영역</b>을 모두 봅니다.</p></div>' +
     photo("grade.jpg","보건복지부 2025년도 사회서비스 품질평가 A등급") + '</div>' +
   '<div class="punch"><div class="lab">그래서 A등급은</div>' +
     '<div class="txt">이 항목들을 <b>정부가 직접 확인하고 준 최고 등급</b>입니다.</div></div>' +
@@ -869,7 +870,11 @@ function s_edu(){
     photo("meeting-award.jpg","우수 관리사님 시상") + '</div>' +
   '<div class="punch"><div class="lab">그래서</div>' +
     '<div class="txt">교육(입력) + 간담회(피드백) — <b>경남에서 관리사 운영체계가 가장 탄탄한 회사</b>입니다.</div></div>' +
-  '<div class="note w"><span class="ic">!</span><span>연간 교육·간담회 횟수, 교육 일정표 필요<span class="tbd">담당자 확인</span></span></div>' +
+  '<div class="box soft"><h3>2026. 6. 23. 소속 관리사 전원 보수교육 — 이날 다룬 것</h3>' +
+    '<div class="areas"><span class="ar">신생아 응급상황 및 대처</span>' +
+    '<span class="ar">경청과 공감을 통한 소통</span>' +
+    '<span class="ar">고객 감동 서비스 품질</span></div></div>' +
+  '<div class="note w"><span class="ic">!</span><span>연간 교육 · 간담회 횟수<span class="tbd">담당자 확인</span></span></div>' +
   script([
     "저희는 창원참사랑평생교육원을 같이 운영해요. 그게 왜 중요하냐면요, 소속 관리사님들을 저희가 직접, 정기적으로 교육할 수 있다는 뜻이에요.",
     "보통 다른 데는 관리사님을 외부 교육기관에 한 번 보내고 끝이에요. 저희는 양성교육부터 정기 보수교육까지 계속 이어져요.",
@@ -937,11 +942,12 @@ function s_service(){
 /* ══════════ 9. 관리사님의 하루 ══════════ */
 function s_day(){
   var rows = [
-    ["09:00",[["b","손 씻기 · 위생"],["m","산모 · 아기 체온 확인"]]],
-    ["오전",[["m","산모 아침 식사"],["m","모유수유 지원"],["b","수유 · 트림 · 기저귀"],["h","공간 정리 · 세탁"]]],
-    ["점심",[["m","산모 점심 식사"],["b","관리사 휴게"]]],
-    ["오후",[["b","아기 목욕 · 배꼽 관리"],["m","부종 관리 · 좌욕"],["m","산후 체조 · 정서적 지지"]]],
-    ["18:00",[["m","저녁 식사 준비"],["b","서비스 기록"],["h","마무리 정리"]]]
+    ["09:00",[["b","손 씻기"],["m","산모 · 아기 기초체온 체크"]]],
+    ["09:10~11:00",[["m","산모 아침식사 준비"],["m","모유수유 돕기"],["h","세탁물 정리"]]],
+    ["11:00~13:00",[["m","산모 점심식사 준비"],["b","관리사 점심 겸 휴게"]]],
+    ["13:00~15:00",[["m","식사 지원 · 뒷정리"],["m","산모 스트레칭 돕기"]]],
+    ["15:00~16:00",[["b","아기 목욕 · 배꼽소독"],["b","수유 돕기"],["h","배냇저고리 세탁"]]],
+    ["16:00~18:00",[["m","산모 부종관리 · 좌욕지원"],["m","저녁식사 준비"],["b","서비스 기록"]]]
   ];
   var tl = '<div class="tl">';
   rows.forEach(function(r){
@@ -950,22 +956,23 @@ function s_day(){
   });
   tl += '</div>';
   return head("표준 일정", "관리사님의 하루",
-    "평일 <b>09:00 ~ 18:00</b> · <span style=\"color:var(--brand-d);font-weight:600;\">산모</span> · " +
+    "평일 <b>09:00 ~ 18:00</b> (휴게 1시간 포함) · <span style=\"color:var(--brand-d);font-weight:600;\">산모</span> · " +
     "<span style=\"color:#0E4E86;font-weight:600;\">신생아</span> · " +
     "<span style=\"color:var(--good);font-weight:600;\">가사</span>") +
   '<div class="gal g3" style="margin-bottom:12px;">' +
     photo("day-morning.jpg","오전 — 체온 확인과 수유") +
     photo("day-afternoon.jpg","오후 — 목욕과 부종 관리") +
     photo("day-evening.jpg","저녁 — 식사 준비와 기록") + '</div>' + tl +
-  '<div class="note c"><span class="ic">!</span><span>관리사님은 <b>의료인이 아닙니다.</b> 투약 · 의료행위 · 손발톱 깎기는 지원되지 않습니다.</span></div>' +
-  '<div class="note w"><span class="ic">!</span><span>회사 보유 표준일정표로 교체 필요<span class="tbd">담당자 확인</span></span></div>' +
+  '<div class="note g"><span class="ic">✓</span><span>산모님 상황에 맞게 <b>탄력적으로 조정</b>됩니다.</span></div>' +
+  '<div class="note c"><span class="ic">!</span><span>관리사님은 <b>의료인이 아닙니다.</b> 의료행위 · 투약 · 손발톱 깎기는 지원되지 않습니다.</span></div>' +
   script([
-    "관리사님 하루를 보여드릴게요. 9시에 오셔서 손 씻고 체온 체크부터 시작하세요.",
-    "오전엔 아침 식사랑 수유 도와드리고 공간 정리랑 세탁도 해드려요. 점심엔 관리사님도 휴게시간 가지시고요.",
-    "오후엔 아기 목욕이랑 배꼽 관리, 부종 관리랑 좌욕 해드려요. 여기가 제일 손이 많이 가요.",
+    "관리사님 하루를 보여드릴게요. 9시에 오셔서 손 씻고 산모님이랑 아기 기초체온 체크부터 시작하세요.",
+    "오전엔 아침식사 준비하고 모유수유 도와드리고 세탁물 정리해요. 11시부터 1시까지는 점심 준비하고 관리사님도 휴게시간 가지세요.",
+    "오후 3시부터 4시가 아기 목욕이랑 배꼽소독 시간이에요. 4시부터 6시까지는 산모님 부종관리랑 좌욕 도와드리고 저녁 준비하고 기록 쓰고 퇴근하세요.",
+    "이 일정은 산모님 상황에 맞게 조정돼요. 꼭 이대로만 하는 건 아니에요.",
     "그리고 하나 꼭 말씀드릴게요. 관리사님은 의료인이 아니셔서 투약이나 손발톱 깎아드리는 건 안 돼요."
-  ], "사진을 짚어가며 설명하세요. 의료행위 제외는 <b>반드시 소리 내어</b> 말하고 넘어가세요.") +
-  checklist("day", ["시간대별 산모·신생아·가사","관리사님도 휴게시간","의료행위 제외 — 반드시 확인"]);
+  ], "사진을 짚어가며 설명하세요. <b>탄력 조정 가능</b>과 <b>의료행위 제외</b>는 반드시 소리 내어 말하세요.") +
+  checklist("day", ["시간대별 산모·신생아·가사","휴게 1시간 포함","산모님 상황에 맞게 탄력 조정","의료행위 제외 — 반드시 확인"]);
 }
 
 /* ══════════ 10. O·X 퀴즈 ══════════ */
@@ -1149,9 +1156,12 @@ function s_extra(){
       '<p>기본은 <b>평일 09:00~18:00</b>. 주말·공휴일 근무는 추가 요금이 발생합니다.<span class="tbd">기준 금액 확인</span></p></div></div>' +
   '<div class="cards c2">' +
     '<div class="box soft"><h3>포함되지 않는 것</h3><ul>' +
-      '<li>집 전체 대청소 · 묵은 때 청소</li><li>다른 가족 식사 · 세탁물</li><li>투약 · 의료행위 · 손발톱 깎기</li></ul></div>' +
+      '<li>집 전체 대청소 · 묵은 때 청소</li><li>성인 물건 관리 · 다른 가족 세탁물</li>' +
+      '<li>투약 · 의료행위 · 손발톱 깎기</li>' +
+      '<li><b>반려동물 관련 업무 일체</b> (배변 · 산책 · 목욕)</li></ul></div>' +
     '<div class="box soft"><h3>관리사 교체</h3>' +
-      '<p>잘 맞지 않으시면 교체하실 수 있습니다. 즉시 투입 가능한 분이 있으면 바로.<span class="tbd">최대 횟수 확인</span></p></div></div>' +
+      '<p>잘 맞지 않으시면 교체하실 수 있습니다. <b>평일 15시 이전</b>에 연락 주시면 가장 빠르게 진행됩니다.' +
+      '<span class="tbd">최대 횟수 확인</span></p></div></div>' +
   script([
     "미리 아시면 좋은 것들만 짧게 말씀드릴게요.",
     "큰아이 돌보기는 기본 서비스가 아니에요. 따로 계약하시면 되고 추가 요금이 붙어요.",
@@ -1233,19 +1243,22 @@ function s_why(){
 function s_process(){
   return head("이용 절차", "예약하시면 이렇게 진행됩니다") +
   '<div class="flow">' +
-    '<div class="fstep"><div class="n">1</div><h4>예약</h4><p>전체 금액의 <b>10%</b></p></div>' +
-    '<div class="fstep"><div class="n">2</div><h4>관리사 배정</h4><p>오늘 말씀하신 내용을 반영</p></div>' +
-    '<div class="fstep"><div class="n">3</div><h4>서비스 시작</h4><p>시작 <b>3일 전</b>까지 잔금<br>전날 관리사님이 전화</p></div>' +
-    '<div class="fstep"><div class="n">4</div><h4>계약서</h4><p>카카오톡으로 간편하게</p></div>' +
-    '<div class="fstep"><div class="n">5</div><h4>환급 신청</h4><p>종료 후 <b>90일 이내</b><br>저희가 안내</p></div></div>' +
-  '<div class="note w"><span class="ic">!</span><span>예약금 취소 · 환불 규정 확정 필요<span class="tbd">담당자 확인</span></span></div>' +
+    '<div class="fstep"><div class="n">1</div><h4>예약금</h4><p>총 서비스요금의 <b>10%</b></p></div>' +
+    '<div class="fstep"><div class="n">2</div><h4>잔액 입금</h4><p>서비스 시작 <b>3일 전</b>까지</p></div>' +
+    '<div class="fstep"><div class="n">3</div><h4>관리사 파견안내</h4><p>시작 <b>전날 오후 5~7시</b><br>알림 전화</p></div>' +
+    '<div class="fstep"><div class="n">4</div><h4>계약서 서명</h4><p>전날 <b>카카오톡</b>으로<br>링크 발송</p></div>' +
+    '<div class="fstep"><div class="n">5</div><h4>모니터링</h4><p>서비스 당일<br>카카오톡으로 확인</p></div>' +
+    '<div class="fstep"><div class="n">6</div><h4>환급 신청</h4><p>종료 후 <b>90일 이내</b><br>저희가 안내</p></div></div>' +
+  '<div class="note g"><span class="ic">✓</span><span>관리사님은 오늘 말씀해 주신 내용을 반영해 배정해 드립니다.</span></div>' +
+  '<div class="note w"><span class="ic">!</span><span>예약금 취소 · 환불 규정<span class="tbd">담당자 확인</span></span></div>' +
   script([
-    "예약하시게 되면 전체 금액의 10%만 예약금으로 먼저 넣어주시고, 출산 후에 정확한 시작일을 정해요.",
-    "관리사님은 오늘 말씀해 주신 내용을 반영해서 배정해 드려요.",
-    "시작 3일 전까지 잔금 넣어주시면 되고, 전날에 관리사님이 직접 전화로 인사드려요.",
+    "예약하시게 되면 총 서비스요금의 10%만 예약금으로 먼저 넣어주세요.",
+    "잔액은 서비스 시작 3일 전까지 넣어주시면 되고요, 시작 전날 오후 5시에서 7시 사이에 관리사님 파견 안내 전화를 드려요.",
+    "계약서도 전날 카카오톡으로 링크 보내드려서 간편하게 서명하실 수 있어요.",
+    "서비스 당일에는 잘 진행되고 있는지 카카오톡으로 확인도 드려요.",
     "끝나고 환급 신청까지 저희가 안내해 드리니까 걱정 안 하셔도 돼요."
   ], "재촉하지 마세요. <b>&lsquo;결정하시면 이렇게 진행됩니다&rsquo;</b>라고 담담하게 안내하면 충분합니다.") +
-  checklist("process", ["예약금 10% · 잔금 3일 전","오늘 내용이 배정에 반영","계약서는 카카오톡","환급까지 안내"]);
+  checklist("process", ["예약금 10% · 잔액 3일 전","전날 오후 5~7시 파견 안내 전화","계약서는 카카오톡","당일 모니터링","환급까지 안내"]);
 }
 
 /* ══════════ 21. 상담 요약 ══════════ */
