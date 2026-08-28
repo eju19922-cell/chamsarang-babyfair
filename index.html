@@ -182,15 +182,15 @@ figure.shot figcaption{font-size:13.5px;color:var(--text-3);margin-top:5px;line-
 .procsplit figure.shot img{max-height:600px;}
 .pk.way{padding:16px 12px;}
 .lgtop{font-size:12px;font-weight:600;letter-spacing:.28em;color:var(--brand);opacity:.75;margin-bottom:6px;}
-.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:6px 0 10px;max-width:820px;margin-left:auto;margin-right:auto;}
+.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin:4px 0 8px;max-width:820px;margin-left:auto;margin-right:auto;}
 @media (max-width:760px){.modes{grid-template-columns:1fr;}}
-.modecard{background:linear-gradient(180deg,#FFFFFF,#FFFAFC);border:2px solid var(--line-2);border-radius:18px;padding:20px 15px;box-shadow:0 4px 16px -10px rgba(150,25,80,.15);
+.modecard{background:linear-gradient(180deg,#FFFFFF,#FFFAFC);border:2px solid var(--line-2);border-radius:18px;padding:14px 13px;box-shadow:0 4px 16px -10px rgba(150,25,80,.15);
   text-align:center;cursor:pointer;transition:.15s;font-family:inherit;}
 .modecard:hover{border-color:var(--brand);transform:translateY(-2px);box-shadow:0 10px 24px -14px rgba(194,24,91,.55);}
 .modecard .mn{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;
   background:var(--brand);color:#fff;font-weight:700;font-size:16px;margin-bottom:8px;}
 .modecard .mt{display:block;font-size:18.5px;font-weight:700;margin-bottom:5px;}
-.modecard .ms{display:block;font-size:14px;color:var(--text-3);line-height:1.45;}
+.modecard .ms{display:block;font-size:13.5px;color:var(--text-3);line-height:1.4;}
 .pk.regionpk{padding:13px 6px;border-radius:12px;}
 .pk.regionpk .tl2{font-size:17px;}
 .capgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
@@ -328,18 +328,18 @@ figure.shot.fill img{max-height:620px;width:auto;max-width:100%;object-fit:conta
 .chk input:checked + span{color:#8A7079;text-decoration:line-through;}
 
 .cover{position:fixed;inset:0;z-index:90;background:linear-gradient(160deg,#FFF 0%,#FDF1F6 100%);
-  display:grid;place-items:center;text-align:center;padding:30px;}
+  display:grid;place-items:center;text-align:center;padding:16px;}
 .cover.hide{display:none;}
-.cover-in{max-width:620px;}
-.cover-ph{margin-bottom:22px;}
-.cover-ph img{max-height:230px;object-fit:cover;}
+.cover-in{max-width:720px;}
+.cover-ph{margin-bottom:10px;}
+figure.shot.cover-ph img{max-height:min(195px,20vh);width:min(620px,90%);object-fit:cover;border-radius:20px;box-shadow:0 18px 44px -22px rgba(150,25,80,.4);}
 .cover-ph figcaption{display:none;}
-.cover .lg{font-family:"Gowun Batang",serif;font-size:44px;font-weight:700;color:var(--brand-d);
-  letter-spacing:-.025em;line-height:1.25;}
+.cover .lg{font-family:"Gowun Batang",serif;font-size:35px;font-weight:700;color:var(--brand-d);
+  letter-spacing:-.025em;line-height:1.2;}
 @media (max-width:640px){.cover .lg{font-size:31px;}}
-.cover .sb{font-size:19px;color:var(--text-2);margin-top:12px;line-height:1.55;}
+.cover .sb{font-size:17px;color:var(--text-2);margin-top:8px;line-height:1.5;}
 .cover .go{margin-top:28px;font-size:20px;padding:17px 44px;}
-.cover .hint{margin-top:18px;font-size:14px;color:var(--text-3);line-height:1.7;}
+.cover .hint{margin-top:8px;font-size:13.5px;color:var(--text-3);line-height:1.6;}
 
 .areas{display:flex;flex-wrap:wrap;gap:8px;}
 .ar{background:var(--brand);color:#fff;border-radius:9px;padding:10px 16px;font-size:17.5px;font-weight:600;}
@@ -644,9 +644,7 @@ figure.shot.short img{max-height:210px;}
     </div>
     <div class="hint" style="margin-top:2px;">중간에 다른 화면이 필요하면 <b>☰ 목차</b>에서 언제든 콕 집어 이동할 수 있습니다.</div>
     <div class="hint">
-      <span class="kbd">→</span> 다음 · <span class="kbd">←</span> 이전 ·
-      <span class="kbd">N</span> 상담자 대본 · <span class="kbd">F</span> 질문 찾기<br>
-      시작하면 <b>전체화면</b>으로 바뀝니다. 끝내려면 <span class="kbd">Esc</span>.
+      <span class="kbd">→</span> 다음 · <span class="kbd">N</span> 대본 · <span class="kbd">F</span> 질문·문자 · 시작하면 전체화면 (<span class="kbd">Esc</span> 종료)
     </div>
   </div>
 </div>
