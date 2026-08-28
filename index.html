@@ -175,10 +175,15 @@ figure.shot figcaption{font-size:13.5px;color:var(--text-3);margin-top:5px;line-
 .ard{font-size:14.5px;color:var(--text-3);line-height:1.35;}
 .gradesplit{grid-template-columns:0.6fr 1.4fr;align-items:stretch;}
 .compsplit{grid-template-columns:1.75fr 1fr;align-items:center;}
+.procsplit{grid-template-columns:0.52fr 1.48fr;align-items:start;}
+.procsplit figure.shot img{max-height:600px;}
+.pk.way{padding:16px 12px;}
+.pk.way .em{font-size:30px;margin-bottom:5px;}
+.pk.way .tl2{font-size:21px;}
 .compsplit figure.shot img{max-height:660px;width:100%;object-fit:contain;}
 .whyimg{max-width:1050px;margin:0 auto 12px;}
 .whyimg img{border-width:2px;border-color:var(--brand-line);}
-figure.shot.fill img{max-height:none;height:auto;width:100%;object-fit:contain;}
+figure.shot.fill img{max-height:620px;width:auto;max-width:100%;object-fit:contain;display:block;margin:0 auto;}
 @media (max-width:800px){.gradesplit{grid-template-columns:1fr;}}
 .flow32 .fstep{position:relative;}
 .fnext{position:absolute;right:-17px;top:50%;transform:translateY(-50%);font-size:22px;
@@ -1079,38 +1084,19 @@ function s_service(){
 
 /* ══════════ 9. 제공인력의 하루 ══════════ */
 function s_day(){
-  var rows = [
-    ["09:00", "앞치마 · 손 씻기", "첫날엔 신분확인증 · 서비스 안내 · 계약서 서명"],
-    ["09:10", "아침식사 준비와 뒷정리 · 환기와 청소<br>체온 체크 · 침상과 세탁물 정리<br>젖병 세척·소독 · 모유수유 돕기", "유축기 사용 시 세척·소독과 유축 돕기"],
-    ["11:00", "산모 점심식사 준비", "수시로 아기 수면상태·기저귀 확인"],
-    ["12:00", "점심 겸 휴게 시간", "제공인력 점심은 산모님이 제공"],
-    ["13:00", "식사 지원과 뒷정리 · 환기와 청소", ""],
-    ["14:00", "산모 스트레칭 돕기", ""],
-    ["15:00", "아기 목욕과 배꼽소독 · 모유수유 돕기<br>배냇저고리 세탁과 삶기", "필요시 산모 세탁물"],
-    ["16:00", "산모 부종관리 · 좌욕 지원", "마사지·안마 제외 / 제왕절개 산모 복부관리 제외"],
-    ["17:00", "젖병 세척·소독 · 집안 정리정돈<br>저녁식사 준비와 상차림 · 체온 체크<br>제공기록지 작성 · 비용 결제", ""]
-  ];
-  var half = Math.ceil(rows.length/2);
-  function col(list){
-    var h = '<div class="sched">';
-    list.forEach(function(r){
-      h += '<div class="sc-row"><div class="sc-t">'+r[0]+'</div><div class="sc-b">' +
-        '<div class="sc-m">'+r[1]+'</div>' + (r[2]?'<div class="sc-s">'+r[2]+'</div>':'') + '</div></div>';
-    });
-    return h + '</div>';
-  }
   return head("표준 일정", "제공인력의 하루 — 실제 표준일정표") +
-  '<div class="schedwrap">' + col(rows.slice(0,half)) + col(rows.slice(half)) + '</div>' +
-  '<div class="note g"><span class="ic">✓</span><span>평일 <b>09:00~18:00</b> (휴게 1시간 포함) · 이용자의 요구에 따라 <b>탄력적으로 조정</b>됩니다.</span></div>' +
+  photo("day-schedule.jpg","시간대별 하루 일과 (이용자 상황에 따라 탄력 조정)","fill") +
+  '<div class="note g"><span class="ic">✓</span><span>이용자의 요구나 우선순위에 따라 <b>탄력적으로 조정</b>될 수 있습니다. ' +
+  '첫날에는 신분확인증 제시와 계약서 서명이 함께 진행돼요.</span></div>' +
   script([
-    "저희가 실제로 쓰는 표준일정표를 그대로 보여드릴게요.",
-    "9시에 오셔서 앞치마 갈아입고 손 씻는 것부터 시작해요. 첫날에는 신분확인증 보여드리고 계약서도 같이 써요.",
-    "오전에는 아침 준비하고 체온 체크하고, 젖병 소독하고 수유 도와드려요. 12시부터 1시까지는 제공인력 휴게시간이에요.",
-    "오후에는 스트레칭 돕고, 3시에 아기 목욕이랑 배꼽소독 해드려요. 4시부터는 부종관리랑 좌욕 도와드리고요.",
-    "5시부터는 젖병 소독하고 저녁 준비하고 기록지 쓰고 결제까지 하고 마무리해요.",
-    "이 일정은 산모님 상황에 맞게 조정돼요."
-  ], "<b>실제 표준일정표</b>입니다. 산모님이 가장 궁금해하시는 부분이니 손으로 짚어가며 읽어주세요.") +
-  checklist("day", ["첫날 신분확인·계약서 절차","제공인력도 휴게시간(12~13시)","부종관리는 마사지·안마 제외","제왕절개 산모는 복부관리 제외","탄력 조정 가능"]);
+    "하루 일과를 그림으로 보여드릴게요. 9시에 오셔서 앞치마 갈아입고 손 씻는 것부터 시작해요.",
+    "오전에는 아침 준비하고 체온 체크하고, 수유 도와드리고요. 12시부터 1시까지는 제공인력 식사 겸 휴게시간이에요.",
+    "오후에는 스트레칭 돕고, 3시에 아기 목욕이랑 배꼽소독 해드려요. 4시부터는 좌욕 도와드리고요.",
+    "5시부터는 저녁 준비하고 기록지 쓰고 마무리해요.",
+    "이 일정은 산모님 상황에 맞게 조정돼요. 꼭 이대로만 하는 건 아니에요."
+  ], "<b>실제 표준일정표</b>입니다. 산모님이 가장 궁금해하시는 부분이니 그림을 짚어가며 천천히 설명하세요. " +
+     "<b>탄력 조정 가능</b>도 꼭 말씀하세요.") +
+  checklist("day", ["첫날 신분확인·계약서 절차","제공인력도 휴게시간(12~13시)","마사지·안마는 제외","제왕절개 산모는 복부관리 제외","탄력 조정 가능"]);
 }
 
 /* ══════════ 11. 요금 유형 ══════════ */
@@ -1308,12 +1294,12 @@ function s_process(){
     ["모니터링","서비스 당일 카카오톡으로 확인"],
     ["환급 신청","종료 후 <b>90일 이내</b> 보건소 방문"]
   ];
-  var h = '<div class="grid32 flow32">';
+  var h = '<div class="split procsplit">' + photo("process-official.jpg","참사랑 공식 서비스 절차 안내","tall") + '<div class="grid32 flow32">';
   steps.forEach(function(x,i){
     h += '<div class="fstep"><div class="n">'+(i+1)+'</div><h4>'+x[0]+'</h4><p>'+x[1]+'</p>' +
          ((i===0||i===1||i===3||i===4) ? '<span class="fnext">→</span>' : '') + '</div>';
   });
-  h += '</div>';
+  h += '</div></div>';
   return head("이용 절차", "예약하시면 이렇게 진행됩니다") + h +
   '<div class="note g"><span class="ic">✓</span><span>제공인력은 오늘 말씀해 주신 내용을 반영해 배정해 드립니다.</span></div>' +
   script([
@@ -1370,52 +1356,67 @@ function s_summary(){
 }
 
 /* ══════════ 22. 마무리 ══════════ */
+var closeMode = "";
 function s_close(){
   function fld(k,label,ph,type){
     return '<div><span class="lab">'+label+'</span><input type="'+(type||"text")+'" data-s="'+k+'" ' +
       'value="'+esc(S[k])+'" placeholder="'+(ph||"")+'"></div>';
   }
-  return head("마무리", "편안하게 듣고 가세요",
-    "오늘 결정하지 않으셔도 됩니다. <b>충분히 고민해 보시고 정하셔도 늦지 않습니다.</b>") +
-  '<div class="closegrid">' +
-    '<div class="box" style="padding:14px 17px;"><h3 style="margin-bottom:6px;">바로 예약을 원하시면</h3>' +
-      '<p class="sm" style="margin-bottom:9px;">상담자가 대신 적어드립니다. 예약금 10%로 날짜를 잡아드립니다.</p>' +
+  function way(id, num, tl, sb){
+    return '<button type="button" class="pk way'+(closeMode===id?" sel":"")+'" data-way="'+id+'">' +
+      '<span class="em">'+num+'</span><span class="tl2">'+tl+'</span><span class="sb">'+sb+'</span></button>';
+  }
+  var detail = "";
+  if (closeMode === "quick"){
+    detail = '<div class="box" style="padding:14px 17px;"><h3 style="margin-bottom:6px;">간편 예약 — 여기서 정보만 등록하세요</h3>' +
+      '<p class="sm" style="margin-bottom:9px;">상담자가 대신 적어드립니다. 이후 <b>해피콜</b>로 자세히 안내드리고 집중 예약을 도와드려요.</p>' +
       '<div class="form f3" style="margin:0;">' +
-        fld("name","성함","산모님 성함") +
-        fld("phone","연락처","010-0000-0000") +
-        fld("birth","생년월일","1995-01-01") +
-        fld("addr","주소","창원시 …") +
-        fld("due","출산 예정일","","date") +
-        fld("startWish","서비스 희망 시작일","출산 후 바로 등") +
+        fld("name","성함","산모님 성함") + fld("phone","연락처","010-0000-0000") + fld("birth","생년월일","1995-01-01") +
+        fld("addr","주소","창원시 …") + fld("due","출산 예정일","","date") + fld("startWish","서비스 희망 시작일","출산 후 바로 등") +
         '<div><span class="lab">출산 방법</span><div class="seg mini">' +
           seg("deliv","natural","자연분만") + seg("deliv","cesarean","제왕절개") + '</div></div>' +
-        fld("memo","특이사항","반려동물 · 큰아이 · 알레르기 등") +
-      '</div></div>' +
-    '<div><div class="box hi" style="padding:14px 17px;margin-bottom:11px;">' +
-      '<h3 style="margin-bottom:5px;">천천히 생각해 보시겠다면</h3>' +
-      '<p class="sm" style="margin-bottom:8px;">연락처 전체가 부담스러우시면 <b>뒷 네 자리만</b> 남겨주세요.</p>' +
-      '<div class="form" style="margin:0;">' + fld("phone4","연락처 뒷 네 자리","0000") + '</div>' +
-      '<p class="sm" style="margin-top:7px;">다음에 문의하실 때 <b>오늘 내용을 찾아</b> 이어서 상담해 드립니다.</p></div>' +
-      '<div style="text-align:center;">' + photo("qr-kakao.png","카카오채널 친구추가","qr") + '</div></div>' +
-  '</div>' +
+        fld("memo","특이사항","반려동물 · 큰아이 · 알레르기 등") + '</div>' +
+      '<div style="margin-top:10px;"><button class="btn pri lg" id="saveBtn" type="button">등록하고 저장하기</button></div></div>';
+  } else if (closeMode === "full"){
+    detail = '<div class="box hi" style="padding:16px 19px;"><h3 style="margin-bottom:6px;">오늘 예약 확정까지 — 참사랑 홈페이지</h3>' +
+      '<p style="margin-bottom:8px;">본인 · 배우자 정보(주민등록번호 포함)까지 입력하시면 <b>예약이 바로 확정</b>됩니다.</p>' +
+      '<p class="sm" style="margin-bottom:8px;">상담자가 지금 이 화면에서 <b>참사랑 홈페이지 예약 화면으로 안내</b>해 드립니다.</p>' +
+      '<div class="note g"><span class="ic">✓</span><span>예약금 10% 입금까지 완료되면 날짜가 확정됩니다. 오늘 상담 내용은 그대로 배정에 반영돼요.</span></div></div>';
+  } else if (closeMode === "info"){
+    detail = '<div class="box" style="padding:16px 19px;"><h3 style="margin-bottom:6px;">오늘은 상담 내용만 받아보기</h3>' +
+      '<p class="sm" style="margin-bottom:9px;">오늘 보신 <b>상담 요약</b>과 <b>간편상담 링크</b>를 문자로 보내드립니다. ' +
+      '<b>전화번호는 저장하지 않아요</b> — 발송에만 쓰입니다.</p>' +
+      '<div class="split" style="grid-template-columns:1.4fr 1fr;align-items:center;">' +
+        '<div><div class="form" style="margin:0 0 9px;">' + fld("phone4","(선택) 연락처 뒷 네 자리","0000") + '</div>' +
+        '<p class="sm">뒷 네 자리만 남기시면, 다음에 문의하실 때 <b>오늘 내용을 찾아 이어서</b> 상담해 드립니다.</p>' +
+        '<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">' +
+          '<button class="btn pri" id="printBtn2" onclick="window.print()" type="button">상담요약 인쇄 · PDF</button>' +
+          '<button class="btn" id="saveBtn" type="button">뒷 네 자리로 저장</button></div></div>' +
+        '<div style="text-align:center;">' + photo("qr-kakao.png","카카오채널 친구추가","qr") + '</div></div></div>';
+  }
+  return head("마무리", "어떻게 도와드릴까요?",
+    "오늘 결정하지 않으셔도 됩니다. <b>세 가지 중 편한 방법</b>을 골라주세요.") +
+  '<div class="pick n3" style="margin-bottom:13px;">' +
+    way("quick","①","지금 간편 예약","여기서 정보만 등록 → 해피콜로 집중 예약") +
+    way("full","②","오늘 예약 확정","홈페이지에서 본인·배우자 정보까지 입력") +
+    way("info","③","상담 내용만 받기","요약 PDF · 간편상담 문자 (번호 저장 안 함)") +
+  '</div>' + detail +
   '<div class="telline"><b>창원</b> 055-293-5008 &nbsp;·&nbsp; <b>김해</b> 055-329-3579 &nbsp;·&nbsp; ' +
     '<b>양산</b> 055-384-5008</div>' +
   (justSaved ? '<div class="saved">✓ 저장했습니다. 다음에 찾아서 이어서 상담하실 수 있습니다.</div>' : '') +
   '<div style="display:flex;gap:9px;flex-wrap:wrap;">' +
-    '<button class="btn pri lg" id="saveBtn" type="button">이 상담 저장하기</button>' +
-    '<button class="btn" id="printBtn2" onclick="window.print()" type="button">요약 인쇄</button>' +
     '<button class="btn" id="newBtn2" type="button">새 상담 시작</button></div>' +
   script([
-    "오늘 설명은 여기까지예요. 편안하게 들어보셨으면 좋겠어요.",
-    "오늘 결정 안 하셔도 전혀 괜찮아요. 충분히 고민해 보시고 정하셔도 늦지 않아요.",
-    "바로 예약 도와드릴 수도 있어요. 제가 대신 적어드릴 테니 말씀만 해주세요.",
-    "천천히 생각해 보시겠다면 연락처 뒷 네 자리만 남겨주세요. 나중에 문의 주실 때 오늘 내용 찾아서 이어서 상담해 드릴 수 있거든요.",
+    "오늘 설명은 여기까지예요. 마지막으로, 어떻게 도와드리면 좋을지 세 가지 중에 골라주세요.",
+    "첫째, 지금 자리에서 간편하게 예약만 걸어두시는 거예요. 제가 대신 적어드리고, 나중에 해피콜로 자세히 안내드려요.",
+    "둘째, 오늘 아예 예약을 확정하고 싶으시면 참사랑 홈페이지에서 본인이랑 배우자 정보까지 넣으시면 바로 확정돼요.",
+    "셋째, 오늘은 부담 없이 상담 내용만 받아보고 싶으시면 요약이랑 간편상담 링크를 문자로 보내드릴게요. 전화번호는 저장 안 해요.",
     "오늘 방문해 주셔서 정말 감사합니다."
-  ], "<b>재촉하지 마세요.</b> 예약카드는 <b>상담자가 대신 작성</b>합니다 — 산모님께 펜을 드리지 마세요. " +
-     "저장해두면 나중에 문의 오실 때 그대로 불러옵니다.") +
+  ], "<b>재촉하지 마세요.</b> 산모님이 직접 고르게 하세요. ①은 <b>상담자가 대신 작성</b>, ②는 <b>홈페이지 화면으로 안내</b>, " +
+     "③은 <b>번호 저장 없이 발송만</b>이라는 점을 분명히 말씀드리면 부담이 없습니다.") +
   checklist("close", [
-    "재촉하지 않기","예약 원하시면 대신 작성해 드리기",
-    "뒷 네 자리는 '다음에 이어서'를 위한 것","QR 카카오채널 안내","저장 버튼 누르기"
+    "세 가지 방법 산모님이 직접 선택","① 간편 예약은 대신 작성 + 해피콜",
+    "② 확정 예약은 홈페이지로 안내","③ 문자 발송은 번호 저장 없음 명시","QR 카카오채널 안내"
   ]);
 }
 
@@ -1830,7 +1831,9 @@ document.addEventListener("input", function(e){
 document.addEventListener("click", function(e){
   var b = e.target.closest("[data-go]");
   if (b){ cur = parseInt(b.dataset.go,10); menu(false); render(); return; }
-  if (e.target.id === "newBtn2"){ reset(); return; }
+  var wb = e.target.closest ? e.target.closest("[data-way]") : null;
+  if (wb){ closeMode = (closeMode === wb.dataset.way) ? "" : wb.dataset.way; render(); return; }
+  if (e.target.id === "newBtn2"){ closeMode = ""; reset(); return; }
   if (e.target.id === "saveBtn" || e.target.id === "saveBtn2"){ saveConsult(); return; }
   var lgo = e.target.closest("[data-lgo]");
   if (lgo){ restoreLog(parseInt(lgo.dataset.lgo,10)); return; }
