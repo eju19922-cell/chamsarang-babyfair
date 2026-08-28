@@ -1551,7 +1551,7 @@ function wkRender(){
     if (w.gu) sub.push(w.gu);
     if (w.car) sub.push("자차 " + w.car);
     if (w.career) sub.push(w.career);
-    if (w.allergy) sub.push("⚠ 알레르기: " + w.allergy);
+    if (w.allergy && w.allergy !== "무" && w.allergy !== "없음") sub.push("⚠ 알레르기: " + w.allergy);
     var when = w.status === "근무중" && w.busy_until ? (w.busy_until.slice(5).replace("-","/") + "까지 근무") :
                (w.status === "배정예정" && w.next_start ? (w.next_start.slice(5).replace("-","/") + " 시작 예정") : "");
     var go = "";
