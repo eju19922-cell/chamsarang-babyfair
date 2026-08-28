@@ -1403,7 +1403,7 @@ function s_summary(){
   return head("마무리", "오늘 나눈 이야기, 이렇게 정리됩니다",
     "이 내용이 <b>담당자에게 그대로 전달</b>되고, 제공인력 배정에도 반영됩니다.") + sum +
   '<div style="display:flex;gap:9px;flex-wrap:wrap;">' +
-    '<button class="btn pri lg" onclick="window.print()">상담 요약 인쇄</button>' +
+
     '<button class="btn lg" id="saveBtn2" type="button">상담 요약 저장</button></div>' +
   (justSaved ? '<div class="saved" style="margin-top:10px;">✓ 저장했습니다.</div>' : '') +
   script([
@@ -1412,7 +1412,7 @@ function s_summary(){
     "금액은 최종적으로 이만큼 나가시게 돼요.",
     "이 내용 그대로 남아 있어서, 나중에 연락 주시면 처음부터 다시 여쭤보지 않아도 돼요."
   ], "요약을 <b>소리 내어 읽어드리세요.</b> &ldquo;내 이야기를 다 들었구나&rdquo;가 느껴지는 순간입니다.") +
-  checklist("summary", ["소리 내어 읽어드리기","“다시 여쭤보지 않아도 된다”","인쇄해서 들려 보내기"]);
+  checklist("summary", ["소리 내어 읽어드리기","“다시 여쭤보지 않아도 된다”","문자로 상담 내용 보내드리기 (F키 → 문자 템플릿)"]);
 }
 
 /* ══════════ 22. 마무리 ══════════ */
@@ -1444,13 +1444,13 @@ function s_close(){
       '<div class="note g"><span class="ic">✓</span><span>예약금 10% 입금까지 완료되면 날짜가 확정됩니다. 오늘 상담 내용은 그대로 배정에 반영돼요.</span></div></div>';
   } else if (closeMode === "info"){
     detail = '<div class="box" style="padding:16px 19px;"><h3 style="margin-bottom:6px;">오늘은 상담 내용만 받아보기</h3>' +
-      '<p class="sm" style="margin-bottom:9px;">오늘 보신 <b>상담 요약</b>과 <b>간편상담 링크</b>를 문자로 보내드립니다. ' +
+      '<p class="sm" style="margin-bottom:9px;">오늘 보신 <b>상담 요약</b>(선택하신 것·유형별 금액·상담 메모)과 <b>간편예약 링크</b>를 문자로 보내드립니다. ' +
       '<b>전화번호는 저장하지 않아요</b> — 발송에만 쓰입니다.</p>' +
       '<div class="split" style="grid-template-columns:1.4fr 1fr;align-items:center;">' +
         '<div><div class="form" style="margin:0 0 9px;">' + fld("phone4","(선택) 연락처 뒷 네 자리","0000") + '</div>' +
         '<p class="sm">뒷 네 자리만 남기시면, 다음에 문의하실 때 <b>오늘 내용을 찾아 이어서</b> 상담해 드립니다.</p>' +
         '<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">' +
-          '<button class="btn pri" id="printBtn2" onclick="window.print()" type="button">상담요약 인쇄 · PDF</button>' +
+
           '<button class="btn" id="saveBtn" type="button">뒷 네 자리로 저장</button></div></div>' +
         '<div style="text-align:center;">' + photo("qr-kakao.png","카카오채널 친구추가","qr") + '</div></div></div>';
   }
@@ -1768,11 +1768,28 @@ function smsSummaryText(){
   var q = quote(), lines = [];
   var f = {single:"단태아", twin:"쌍태아", triplet:"삼태아 이상"}[S.fetus] || "";
   if (f) lines.push("· 상황: " + f + " " + (S.order===1?"첫째":"둘째 이상"));
-  if (!q.unavailable && q.inc && q.inc.entered){
-    var r = q.all[S.period];
-    lines.push("· " + q.code + " · " + PNAME[S.period] + " " + q.days[S.period] + "일");
-    lines.push("· 본인부담 " + won(r.self) + " → 환급 후 최종 " + won(r.final));
-    lines.push("  (예상 금액이며, 정확한 유형은 보건소·복지로에서 확정됩니다)");
+  function tfj(k){ return (TF[k]||[]).map(function(v){ return tfLabel(k,v); }).join(", "); }
+  if (tfj("focus")) lines.push("· 중점 케어: " + tfj("focus"));
+  if (tfj("want")) lines.push("· 바라시는 분: " + tfj("want") + " — 배정에 그대로 반영됩니다");
+  if (tfj("fear")) lines.push("· 걱정하신 것: " + tfj("fear") + " — 전담 담당자가 챙겨드립니다");
+  if (!q.unavailable){
+    var d = q.days ? q.days[S.period] : "";
+    lines.push("· 기간: " + PNAME[S.period] + (d ? " " + d + "일" : ""));
+    // 유형별 금액 모두 안내 (유형 미확정 대비)
+    var keep = S.band, rows = [];
+    ["가","통합","라"].forEach(function(b){
+      S.band = b;
+      var qq = quote();
+      if (!qq.unavailable && qq.all && qq.all[S.period]){
+        var rr = qq.all[S.period];
+        rows.push("  - " + (b==="가"?"가형(수급·차상위)":b==="통합"?"통합형(대부분)":"라형(소득 상위)") +
+                  ": 본인부담 " + won(rr.self) + " → 환급 후 " + won(rr.final));
+      }
+    });
+    S.band = keep;
+    lines.push("· 유형별 예상 금액 (기간 동일 기준)");
+    rows.forEach(function(r){ lines.push(r); });
+    lines.push("  ※ 정확한 유형은 보건소·복지로에서 확정 — 확정되시면 바로 안내드립니다");
   }
   return lines.join("\n");
 }
@@ -1852,6 +1869,14 @@ function buildRecord(){
     due: S.due || "",
     consultMemo: S.consultMemo || "",
     region: S.region || "",
+    feeNote: (function(){
+      try {
+        var q = quote();
+        if (q.unavailable || !q.all) return "";
+        var r = q.all[S.period];
+        return q.code + " " + PNAME[S.period] + " " + q.days[S.period] + "일 / 본인부담 " + won(r.self) + " 최종 " + won(r.final);
+      } catch(e){ return ""; }
+    })(),
     fetus: S.fetus, order: S.order, band: S.band, period: S.period,
     tf: JSON.parse(JSON.stringify(TF)),
     code: q.unavailable ? "D형(별도확인)" : q.code,
