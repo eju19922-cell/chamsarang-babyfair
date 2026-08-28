@@ -1417,6 +1417,16 @@ function s_summary(){
 
 /* ══════════ 22. 마무리 ══════════ */
 var closeMode = "";
+var GU_PHONE_DEFAULT = {"의창구":"055-293-5008","성산구":"055-293-5008","진해구":"055-293-5008",
+  "마산합포구":"055-293-5008","마산회원구":"055-293-5008","김해":"055-329-3579","양산":"055-384-5008","기타지역":"055-293-5008"};
+function guPhone(){
+  var g = S.region || "기타지역";
+  try {
+    var d = JSON.parse(localStorage.getItem("chamsarang_sms") || "{}");
+    if (d.guPhone && d.guPhone[g]) return d.guPhone[g];
+  } catch(e){}
+  return GU_PHONE_DEFAULT[g] || GU_PHONE_DEFAULT["기타지역"];
+}
 function s_close(){
   function fld(k,label,ph,type){
     return '<div><span class="lab">'+label+'</span><input type="'+(type||"text")+'" data-s="'+k+'" ' +
@@ -1427,9 +1437,12 @@ function s_close(){
       '<span class="em">'+num+'</span><span class="tl2">'+tl+'</span><span class="sb">'+sb+'</span></button>';
   }
   var detail = "";
-  if (closeMode === "quick"){
-    detail = '<div class="box" style="padding:14px 17px;"><h3 style="margin-bottom:6px;">간편 예약 — 여기서 정보만 등록하세요</h3>' +
-      '<p class="sm" style="margin-bottom:9px;">상담자가 대신 적어드립니다. 이후 <b>해피콜</b>로 자세히 안내드리고 집중 예약을 도와드려요.</p>' +
+  if (closeMode === "reserve"){
+    detail = '<div class="box" style="padding:14px 17px;">' +
+      '<div class="punch" style="margin-bottom:11px;"><div class="lab">부담 갖지 마세요</div>' +
+      '<div class="txt">오늘 꼭 예약하지 않으셔도 됩니다. 예약은 <b class="hl">예약금 입금과 동시에 확정</b>되는 거라서, ' +
+      '지금은 <b>기본 정보만 적어두시면</b> 됩니다.</div></div>' +
+      '<p class="sm" style="margin-bottom:9px;">상담자가 대신 적어드립니다. 이후 담당자가 전화로 자세히 안내드려요.</p>' +
       '<div class="form f3" style="margin:0;">' +
         fld("name","성함","산모님 성함") + fld("phone","연락처","010-0000-0000") + fld("birth","생년월일","1995-01-01") +
         fld("addr","주소","창원시 …") + fld("due","출산 예정일","","date") + fld("startWish","서비스 희망 시작일","출산 후 바로 등") +
@@ -1437,29 +1450,25 @@ function s_close(){
           seg("deliv","natural","자연분만") + seg("deliv","cesarean","제왕절개") + '</div></div>' +
         fld("memo","특이사항","반려동물 · 큰아이 · 알레르기 등") + '</div>' +
       '<div style="margin-top:10px;"><button class="btn pri lg" id="saveBtn" type="button">등록하고 저장하기</button></div></div>';
-  } else if (closeMode === "full"){
-    detail = '<div class="box hi" style="padding:16px 19px;"><h3 style="margin-bottom:6px;">오늘 예약 확정까지 — 참사랑 홈페이지</h3>' +
-      '<p style="margin-bottom:8px;">본인 · 배우자 정보(주민등록번호 포함)까지 입력하시면 <b>예약이 바로 확정</b>됩니다.</p>' +
-      '<p class="sm" style="margin-bottom:8px;">상담자가 지금 이 화면에서 <b>참사랑 홈페이지 예약 화면으로 안내</b>해 드립니다.</p>' +
-      '<div class="note g"><span class="ic">✓</span><span>예약금 10% 입금까지 완료되면 날짜가 확정됩니다. 오늘 상담 내용은 그대로 배정에 반영돼요.</span></div></div>';
   } else if (closeMode === "info"){
-    detail = '<div class="box" style="padding:16px 19px;"><h3 style="margin-bottom:6px;">오늘은 상담 내용만 받아보기</h3>' +
-      '<p class="sm" style="margin-bottom:9px;">오늘 보신 <b>상담 요약</b>(선택하신 것·유형별 금액·상담 메모)과 <b>간편예약 링크</b>를 문자로 보내드립니다. ' +
-      '<b>전화번호는 저장하지 않아요</b> — 발송에만 쓰입니다.</p>' +
+    detail = '<div class="box" style="padding:16px 19px;"><h3 style="margin-bottom:6px;">오늘 상담 내용을 문자로 보내드립니다</h3>' +
+      '<p class="sm" style="margin-bottom:9px;">선택하신 것 · 유형별 예상 금액 · 상담 메모와 함께 ' +
+      '<b>'+esc(S.region || "지역")+' 담당자 연락처('+guPhone()+')</b>를 같이 넣어드려요.</p>' +
+      '<p class="sm" style="margin-bottom:10px;">더 궁금한 게 생기면 <b>언제든 전화</b> 주세요 — ' +
+      '오늘 상담 내용을 그대로 확인하면서 <b>이어서</b> 도와드립니다.</p>' +
       '<div class="split" style="grid-template-columns:1.4fr 1fr;align-items:center;">' +
         '<div><div class="form" style="margin:0 0 9px;">' + fld("phone4","(선택) 연락처 뒷 네 자리","0000") + '</div>' +
-        '<p class="sm">뒷 네 자리만 남기시면, 다음에 문의하실 때 <b>오늘 내용을 찾아 이어서</b> 상담해 드립니다.</p>' +
+        '<p class="sm">뒷 네 자리만 남기시면, 다음에 문의하실 때 <b>오늘 내용을 찾아 이어서</b> 상담해 드립니다. 전체 번호는 저장하지 않아요.</p>' +
         '<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">' +
-
+          '<button class="btn pri" id="smsOpenBtn" type="button">📨 문자 내용 만들기 · 복사</button>' +
           '<button class="btn" id="saveBtn" type="button">뒷 네 자리로 저장</button></div></div>' +
         '<div style="text-align:center;">' + photo("qr-kakao.png","카카오채널 친구추가","qr") + '</div></div></div>';
   }
   return head("마무리", "어떻게 도와드릴까요?",
-    "오늘 결정하지 않으셔도 됩니다. <b>세 가지 중 편한 방법</b>을 골라주세요.") +
-  '<div class="pick n3" style="margin-bottom:13px;">' +
-    way("quick","①","지금 간편 예약","여기서 정보만 등록 → 해피콜로 집중 예약") +
-    way("full","②","오늘 예약 확정","홈페이지에서 본인·배우자 정보까지 입력") +
-    way("info","③","상담 내용만 받기","요약 PDF · 간편상담 문자 (번호 저장 안 함)") +
+    "오늘 결정하지 않으셔도 됩니다. <b>편한 쪽</b>을 골라주세요.") +
+  '<div class="pick" style="grid-template-columns:1fr 1fr;margin-bottom:13px;max-width:900px;margin-left:auto;margin-right:auto;">' +
+    way("reserve","①","예약 진행하기","기본 정보만 적어두세요 — 확정은 예약금 입금 때") +
+    way("info","②","상담 내용만 받기","요약 · 유형별 금액 · 담당자 연락처를 문자로") +
   '</div>' + detail +
   '<div class="telline"><b>창원</b> 055-293-5008 &nbsp;·&nbsp; <b>김해</b> 055-329-3579 &nbsp;·&nbsp; ' +
     '<b>양산</b> 055-384-5008</div>' +
@@ -1467,16 +1476,16 @@ function s_close(){
   '<div style="display:flex;gap:9px;flex-wrap:wrap;">' +
     '<button class="btn" id="newBtn2" type="button">새 상담 시작</button></div>' +
   script([
-    "오늘 설명은 여기까지예요. 마지막으로, 어떻게 도와드리면 좋을지 세 가지 중에 골라주세요.",
-    "첫째, 지금 자리에서 간편하게 예약만 걸어두시는 거예요. 제가 대신 적어드리고, 나중에 해피콜로 자세히 안내드려요.",
-    "둘째, 오늘 아예 예약을 확정하고 싶으시면 참사랑 홈페이지에서 본인이랑 배우자 정보까지 넣으시면 바로 확정돼요.",
-    "셋째, 오늘은 부담 없이 상담 내용만 받아보고 싶으시면 요약이랑 간편상담 링크를 문자로 보내드릴게요. 전화번호는 저장 안 해요.",
+    "오늘 설명은 여기까지예요. 마지막으로 편한 쪽을 골라주세요.",
+    "예약을 진행하고 싶으시면, 오늘 꼭 확정하는 게 아니에요. 기본 정보만 적어두시면 되고, 예약은 예약금 입금하실 때 확정돼요. 부담 갖지 않으셔도 돼요.",
+    "오늘은 내용만 받아보고 싶으시면, 상담 요약이랑 유형별 예상 금액, 그리고 사시는 구 담당자 연락처까지 문자로 보내드릴게요.",
+    "나중에 궁금한 게 생기면 그 번호로 전화 주세요. 오늘 상담 내용을 그대로 보면서 이어서 도와드려요.",
     "오늘 방문해 주셔서 정말 감사합니다."
-  ], "<b>재촉하지 마세요.</b> 산모님이 직접 고르게 하세요. ①은 <b>상담자가 대신 작성</b>, ②는 <b>홈페이지 화면으로 안내</b>, " +
-     "③은 <b>번호 저장 없이 발송만</b>이라는 점을 분명히 말씀드리면 부담이 없습니다.") +
+  ], "<b>재촉하지 마세요.</b> ①은 <b>&lsquo;적어만 두는 것, 확정은 입금 때&rsquo;</b>를 분명히 — 부담을 내려놓게 하는 게 핵심입니다. " +
+     "②는 저장(뒷 네 자리) 후 <b>📨 버튼</b>으로 문자 내용을 복사해 상담자 휴대폰에서 보내세요.") +
   checklist("close", [
-    "세 가지 방법 산모님이 직접 선택","① 간편 예약은 대신 작성 + 해피콜",
-    "② 확정 예약은 홈페이지로 안내","③ 문자 발송은 번호 저장 없음 명시","QR 카카오채널 안내"
+    "① 예약 진행 — 확정은 예약금 입금 때라고 안심시키기","② 상담 내용만 — 담당자 연락처 같이 간다고 안내",
+    "뒷 네 자리 저장 권유 (이어서 상담용)","📨 문자 복사해서 상담자 폰으로 발송","QR 카카오채널 안내"
   ]);
 }
 
@@ -1754,7 +1763,7 @@ function renderQjump(){
   }).join("");
 }
 var SMS_DEFAULT = {
-  consult: "[참사랑어머니회] {이름}님, 오늘 상담 감사합니다.\n\n{요약}\n{메모}\n간편 예약: {간편예약링크}\n\n궁금하신 점은 언제든 전화 주세요.\n창원 055-293-5008 · 김해 055-329-3579 · 양산 055-384-5008",
+  consult: "[참사랑어머니회] {이름}님, 오늘 상담 감사합니다.\n\n{요약}\n{메모}\n간편 예약: {간편예약링크}\n\n더 궁금하신 점은 {구} 담당자에게 전화 주세요.\n담당자: {담당자연락처}\n오늘 상담 내용을 확인하고 이어서 도와드립니다.",
   typeO: "[참사랑어머니회] {이름}님, 예약 안내드립니다.\n\n바우처 유형이 이미 발급되어 있어 예약금 입금만 하시면 예약이 확정됩니다.\n입금 계좌와 금액은 개별 안내드립니다.\n\n{구} 담당자가 예정일({예정일})에 맞춰 다시 연락드리겠습니다.",
   typeX: "[참사랑어머니회] {이름}님, 예약 안내드립니다.\n\n서비스 이용 전에 {구} 관할 보건소에서 바우처 유형 발급 신청이 먼저 필요합니다.\n(복지로 www.bokjiro.go.kr 온라인 신청도 가능)\n신청 방법이 어려우시면 전화 주세요 — 차근차근 도와드립니다.\n\n발급 후 예약금 입금하시면 예약이 확정됩니다."
 };
@@ -1800,7 +1809,8 @@ function smsText(){
           .replace(/\{예정일\}/g, S.due || "미정")
           .replace(/\{요약\}/g, smsSummaryText())
           .replace(/\{메모\}/g, S.consultMemo ? ("· 상담 메모: " + S.consultMemo) : "")
-          .replace(/\{간편예약링크\}/g, smsLoad().link || "(간편예약 링크)");
+          .replace(/\{간편예약링크\}/g, smsLoad().link || "(간편예약 링크)")
+          .replace(/\{담당자연락처\}/g, guPhone());
 }
 function renderSms(){
   var GUS = ["의창구","성산구","진해구","마산합포구","마산회원구","김해","양산"];
@@ -1822,7 +1832,16 @@ function renderSms(){
        '<div style="display:flex;gap:8px;margin-top:6px;align-items:center;flex-wrap:wrap;">' +
        '<button class="btn pri" id="smsTplSave" type="button">이 노트북에 저장</button>' +
        '<input type="text" id="smsLink" placeholder="간편예약 링크 주소" value="' + esc(smsLoad().link || "") + '" ' +
-       'style="flex:1;min-width:200px;padding:9px 11px;border:1.5px solid var(--line-2);border-radius:9px;font-size:14px;font-family:inherit;"></div></div>';
+       'style="flex:1;min-width:200px;padding:9px 11px;border:1.5px solid var(--line-2);border-radius:9px;font-size:14px;font-family:inherit;"></div>' +
+       '<div class="hint2" style="margin-top:10px;">구별 담당자 연락처 — {담당자연락처} 자리에 산모님 지역구에 맞춰 자동으로 들어갑니다</div>' +
+       '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;">' +
+       Object.keys(GU_PHONE_DEFAULT).map(function(g){
+         var d = smsLoad();
+         var v = (d.guPhone && d.guPhone[g]) || GU_PHONE_DEFAULT[g];
+         return '<label style="display:flex;align-items:center;gap:6px;font-size:13.5px;color:var(--text-3);">' + g +
+           '<input type="text" class="guPhoneIn" data-gu="'+g+'" value="'+esc(v)+'" ' +
+           'style="flex:1;padding:7px 9px;border:1.5px solid var(--line-2);border-radius:8px;font-size:13.5px;font-family:inherit;"></label>';
+       }).join("") + '</div></div>';
   h += '</div>';
   document.getElementById("faqBody").innerHTML = h;
 }
@@ -2166,6 +2185,12 @@ document.addEventListener("click", function(e){
     });
     return;
   }
+  if (e.target.id === "smsOpenBtn"){
+    smsKind = "consult"; faqTab = "sms"; openFaq(true);
+    var tb = document.querySelectorAll("#faqSheet .sheet-tabs button");
+    tb.forEach(function(x){ x.classList.toggle("on", x.dataset.tab === "sms"); });
+    return;
+  }
   if (e.target.id === "smsEditBtn"){
     var ed = document.getElementById("smsEdit");
     ed.style.display = ed.style.display === "none" ? "block" : "none"; return;
@@ -2174,6 +2199,8 @@ document.addEventListener("click", function(e){
     var d = smsLoad();
     d[smsKind] = document.getElementById("smsTa").value;
     d.link = document.getElementById("smsLink").value.trim();
+    d.guPhone = d.guPhone || {};
+    document.querySelectorAll(".guPhoneIn").forEach(function(inp){ d.guPhone[inp.dataset.gu] = inp.value.trim(); });
     smsSave(d); renderSms(); return;
   }
   var qj = e.target.closest ? e.target.closest("[data-qj]") : null;
