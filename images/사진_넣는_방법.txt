@@ -1,76 +1,58 @@
-이 폴더에 아래 이름 그대로 사진을 넣으면 프로그램에 자동으로 나타납니다.
-(넣고 나서 브라우저에서 F5 새로고침)
+이 폴더에 아래 이름으로 사진을 넣으면 프로그램에 자동으로 나타납니다.
+(넣고 나서 브라우저에서 F5)
 
-사진 자리 33개 중 31개가 채워졌습니다.
-아직 없는 것: voucher / type-body / type-baby / type-house / closing-warm / qr-booking / qr-kakao
-AI로 만들 것은 「남은_이미지_프롬프트.md」를 보세요.
+지금 사진은 다 채워져 있습니다. 아래는 「더 좋은 걸로 바꾸고 싶을 때」 참고용입니다.
 
-────────────────────────────────────────────────────────────
-[커버]
-hero-consult.jpg      상담 시작 화면          상담 부스 장면   ✅ 완료
+──────────────────────────────────────────────
+[상담 시작]      hero-consult.jpg    상담 부스
 
-[유형 결과 — 산모님 답에 따라 하나가 나옴]
-type-body.jpg         회복 우선형             다리 부종 관리
-type-baby.jpg         신생아 집중형           아기 목욕 알려주기
-type-house.jpg        살림 부담형             정돈된 거실 · 산모는 휴식
-type-feed.jpg         수유 고민형             수유 자세 도움   ✅ 완료
-type-learn.jpg        배우고 싶은 마음형      속싸개 시범   ✅ 완료
-type-rest.jpg         체력 걱정형             산모 낮잠 · 관리사가 아기   ✅ 완료
+[유형 결과]      type-body.jpg       회복 우선형    ← 지금은 care-mom 과 같은 그림
+                 type-baby.jpg       신생아 집중형  ← 지금은 care-baby 와 같은 그림
+                 type-house.jpg      살림 부담형    ← 지금은 care-house 와 같은 그림
+                 type-feed.jpg       수유 고민형
+                 type-learn.jpg      배우고 싶은 마음형
+                 type-rest.jpg       체력 걱정형
 
-[맞춤 배정]
-matching-team.jpg     이걸로 배정합니다       관리사님 여러 분 단체   ✅ 완료
+[맞춤 배정]      matching-team.jpg   관리사님 단체
 
-[참사랑 소개]
-voucher.jpg           참사랑은 어떤 곳인가    전자바우처 검색 결과      ← 실제 캡처
+[품질평가]       grade.jpg           품질평가 A등급
 
-[품질평가]
-grade.jpg             품질평가 A등급          A등급 인증서              ← 실제   ✅ 완료
+[정기 교육]      edu-lecture.jpg     양성과정 강의
+                 edu-practice.jpg    신생아 목욕 실습
+                 edu-bosu.jpg        정기 보수교육
+                 meeting.jpg         제공인력 간담회
+                 edu-grad.jpg        수료식
+                 meeting-award.jpg   우수 관리사 시상
+                 quality-check.jpg   품질평가 설명 교육
 
-[정기 교육 · 간담회]  ← 전부 실제 사진
-edu-lecture.jpg       양성과정 강의   ✅ 완료
-edu-practice.jpg      신생아 목욕 실습   ✅ 완료
-edu-bosu.jpg          2026 정기 보수교육   ✅ 완료
-edu-grad.jpg          수료식 단체사진   ✅ 완료
-meeting.jpg           제공인력 간담회   ✅ 완료
-meeting-award.jpg     우수 관리사 시상   ✅ 완료
+[업체 비교]      compare-people.jpg  인력 배정
+                 compare-edu.jpg     교육 강의실
+                 compare-family.jpg  가족 등록 대행
 
-[다른 업체와 비교]
-compare-people.jpg    ① 몇 분 계세요          인력 배정 보드   ✅ 완료
-compare-edu.jpg       ② 교육은 직접           교육 강의실   ✅ 완료
-compare-family.jpg    ③ 가족 등록 대행        서류 도와주는 장면   ✅ 완료
+[하는 일]        care-mom.jpg        산모 케어 (식사)
+                 care-baby.jpg       신생아 케어 (목욕)
+                 care-house.jpg      가사 지원 (옷 개기)
 
-[관리사님이 하는 일]
-care-mom.jpg          산모 케어               식사 차려드리기 (산모 앉음)   ✅ 완료
-care-baby.jpg         신생아 케어             아기 목욕 준비   ✅ 완료
-care-house.jpg        가사 지원               산모 · 아기 옷 개기   ✅ 완료
+[하루]           day-morning.jpg     오전
+                 day-afternoon.jpg   오후
+                 day-evening.jpg     저녁
 
-[관리사님의 하루]
-day-morning.jpg       오전                    체온 확인   ✅ 완료
-day-afternoon.jpg     오후                    아기 목욕   ✅ 완료
-day-evening.jpg       저녁                    식사 준비 · 기록   ✅ 완료
+[산모교실]       poster-class.jpg    첫 번째 동화 포스터
+                 poster-monthly.jpg  월간 산모교실 포스터
+                 class-gift.jpg      사은품
+                 class-scene.jpg     진행 사진
 
-[환급 · 추가요금]
-refund-money.jpg      환급 안내               보건소 창구   ✅ 완료
-elder-care.jpg        추가 요금               큰아이 등원 준비   ✅ 완료
+[가족 산후관리사] poster-family.jpg  친정엄마·시어머니 포스터
+                 family-edu.jpg      2026 교육일정
+                 family-care.jpg     친정어머니와 손주
+                 poster-extra.jpg    영유아·AI·정리수납
 
-[산모교실]
-poster-class.jpg      산모교실                「첫 번째 동화」 포스터   ← 실제   ✅ 완료
-poster-monthly.jpg    산모교실                월간 산모교실 포스터      ← 실제   ✅ 완료
-class-scene.jpg       산모교실                지난 진행 사진            ← 실제   ✅ 완료
-class-gift.jpg        산모교실                사은품 이미지   ✅ 완료
+[환급/큰아이]    refund-money.jpg    보건소 창구
+                 elder-care.jpg      큰아이 등원
 
-[가족 산후관리사]
-poster-family.jpg     가족 산후관리사         「딸과 며느리」 포스터    ← 실제   ✅ 완료
-family-care.jpg       가족 산후관리사         친정어머니와 손주   ✅ 완료
-poster-extra.jpg      가족 산후관리사         영유아·정리수납·AI 포스터 ← 실제   ✅ 완료
-family-edu.jpg        가족 산후관리사         가족 관리사 교육 현장     ← 실제   ✅ 완료
+[마무리]         closing-warm.jpg    마무리 그림
+                 qr-kakao.png        카카오채널 QR
+──────────────────────────────────────────────
 
-[마무리]
-closing-warm.jpg      마무리                  산모와 아기, 창가
-qr-booking.png        마무리                  간편예약 QR               ← 실제
-qr-kakao.png          마무리                  카카오채널 QR             ← 실제
-────────────────────────────────────────────────────────────
-
-· 확장자는 위 표와 같아야 합니다 (jpg는 jpg, png는 png).
-· 사진이 없으면 "여기에 넣으세요" 안내 상자가 대신 보입니다. 상담에는 지장 없습니다.
-· 가로로 긴 사진(16:9)이 화면에 가장 잘 맞습니다.
+· 가로로 긴 사진(16:9)이 가장 잘 맞습니다.
+· 바꾸고 싶은 사진은 「상담자료 이미지」 폴더에 넣고 말씀해 주시면 제가 바꿔 넣습니다.
