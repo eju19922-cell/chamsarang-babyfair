@@ -178,6 +178,43 @@ figure.shot figcaption{font-size:13.5px;color:var(--text-3);margin-top:5px;line-
 .procsplit{grid-template-columns:0.52fr 1.48fr;align-items:start;}
 .procsplit figure.shot img{max-height:600px;}
 .pk.way{padding:16px 12px;}
+.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:6px 0 10px;max-width:820px;margin-left:auto;margin-right:auto;}
+@media (max-width:760px){.modes{grid-template-columns:1fr;}}
+.modecard{background:var(--surface);border:2px solid var(--line-2);border-radius:16px;padding:18px 14px;
+  text-align:center;cursor:pointer;transition:.15s;font-family:inherit;}
+.modecard:hover{border-color:var(--brand);transform:translateY(-2px);box-shadow:0 10px 24px -14px rgba(194,24,91,.55);}
+.modecard .mn{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;
+  background:var(--brand);color:#fff;font-weight:700;font-size:16px;margin-bottom:8px;}
+.modecard .mt{display:block;font-size:18.5px;font-weight:700;margin-bottom:5px;}
+.modecard .ms{display:block;font-size:14px;color:var(--text-3);line-height:1.45;}
+.pk.regionpk{padding:13px 6px;border-radius:12px;}
+.pk.regionpk .tl2{font-size:17px;}
+.capgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.capcell{border:2px solid var(--line-2);border-radius:13px;padding:13px 10px;text-align:center;background:var(--surface);}
+.capcell .cb{font-size:14.5px;color:var(--text-3);margin-bottom:4px;}
+.capcell .cs{font-size:20px;font-weight:700;}
+.capcell .cn{font-size:13px;color:var(--text-3);margin-top:4px;}
+.capcell.ok{border-color:#86efac;background:#f0fdf4;} .capcell.ok .cs{color:#15803d;}
+.capcell.mid{border-color:#fde047;background:#fefce8;} .capcell.mid .cs{color:#a16207;}
+.capcell.full{border-color:#fca5a5;background:#fef2f2;} .capcell.full .cs{color:#b91c1c;}
+.capcell.ask{border-color:var(--line-2);} .capcell.ask .cs{color:var(--text-2);}
+.capverdict{font-size:21px;font-weight:700;border-radius:13px;padding:13px 16px;margin-bottom:10px;text-align:center;}
+.capverdict.ok{background:#f0fdf4;color:#15803d;border:2px solid #86efac;}
+.capverdict.mid{background:#fefce8;color:#a16207;border:2px solid #fde047;}
+.capverdict.full{background:#fef2f2;color:#b91c1c;border:2px solid #fca5a5;}
+.capverdict.ask{background:var(--surface-2);color:var(--text-2);border:2px solid var(--line-2);}
+.wkrow{display:flex;align-items:center;gap:9px;padding:7px 10px;border:1.5px solid var(--line-2);border-radius:10px;margin-bottom:6px;background:var(--surface);}
+.wkrow b{font-size:16.5px;}
+.qjump{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px;}
+.qjbtn{background:var(--brand-soft);border:1.5px solid var(--brand-line);color:var(--brand-d);
+  border-radius:99px;padding:7px 13px;font-size:14.5px;font-weight:600;cursor:pointer;font-family:inherit;}
+.qjbtn:hover{background:var(--brand);color:#fff;}
+.wkrow .wsub{font-size:13.5px;color:var(--text-3);flex:1;}
+.capchip{font-size:13px;font-weight:600;padding:3px 9px;border-radius:99px;white-space:nowrap;}
+.capchip.ok{background:#f0fdf4;color:#15803d;border:1px solid #86efac;}
+.capchip.mid{background:#fefce8;color:#a16207;border:1px solid #fde047;}
+.capchip.full{background:#fef2f2;color:#b91c1c;border:1px solid #fca5a5;}
+.capchip.ask{background:var(--surface-2);color:var(--text-2);border:1px solid var(--line-2);}
 .pk.way .em{font-size:30px;margin-bottom:5px;}
 .pk.way .tl2{font-size:21px;}
 .compsplit figure.shot img{max-height:660px;width:100%;object-fit:contain;}
@@ -580,8 +617,19 @@ figure.shot.short img{max-height:210px;}
     <figure class="shot cover-ph" data-ph="hero-consult.jpg" data-cap="">
       <div class="ph"><div class="pt">상담 첫 화면 사진<span class="pf">images / hero-consult.jpg</span></div></div></figure>
     <div class="lg">참사랑어머니회<br>베이비페어 상담</div>
-    <div class="sb">산모님과 함께 보면서 진행합니다.<br>버튼 하나로 시작해 <b>다음</b>만 누르시면 됩니다.</div>
-    <button class="btn pri go" id="startBtn" type="button">상담 시작하기</button>
+    <div class="sb"><b>맞춤 상담</b> — 산모님 상황에 맞는 코스를 골라 시작하세요.<br>시작하면 <b>다음</b>만 누르시면 됩니다.</div>
+    <div class="modes">
+      <button class="modecard" data-mode="first" type="button">
+        <span class="mn">1</span><span class="mt">처음 들어보시는 분</span>
+        <span class="ms">정부지원 산후도우미가 뭔지<br>제도부터 차근차근 (전체)</span></button>
+      <button class="modecard" data-mode="compare" type="button">
+        <span class="mn">2</span><span class="mt">다른 부스 상담 받고 오신 분</span>
+        <span class="ms">가격은 어디나 같습니다 —<br>참사랑이 뭐가 다른지 중심</span></button>
+      <button class="modecard" data-mode="quick" type="button">
+        <span class="mn">3</span><span class="mt">이미 알고 오신 분</span>
+        <span class="ms">예약 여유 · 내 부담금 확인하고<br>바로 예약까지</span></button>
+    </div>
+    <div class="hint" style="margin-top:2px;">중간에 다른 화면이 필요하면 <b>☰ 목차</b>에서 언제든 콕 집어 이동할 수 있습니다.</div>
     <div class="hint">
       <span class="kbd">→</span> 다음 · <span class="kbd">←</span> 이전 ·
       <span class="kbd">N</span> 상담자 대본 · <span class="kbd">F</span> 질문 찾기<br>
@@ -654,6 +702,7 @@ figure.shot.short img{max-height:210px;}
       </div>
       <div class="sheet-s" style="padding-left:0;padding-right:0;">
         <input type="text" id="faqSearch" placeholder="검색 — 예: 환급, 큰아이, 교체">
+      <div class="qjump" id="qjump"></div>
       </div>
     </div>
     <div class="sheet-b" id="faqBody"></div>
@@ -700,7 +749,7 @@ function won(n){ return Math.round(n).toLocaleString("ko-KR") + "원"; }
 function limit180(f){ return Math.round(FEE150[f].income * 1.2); }
 function esc(s){ return String(s == null ? "" : s).replace(/"/g,"&quot;"); }
 
-var S = {name:"",phone:"",birth:"",addr:"",due:"",deliv:"",startWish:"",memo:"",phone4:"",
+var S = {name:"",phone:"",birth:"",addr:"",due:"",deliv:"",startWish:"",memo:"",phone4:"",region:"",
   fetus:"single",order:1,staff:1,disability:false,preemie:false,band:"통합",period:1};
 var checks = {}, TF = {}, tfIdx = 0, QA_STATE = {}, GUESS = null;
 
@@ -897,7 +946,9 @@ function s_typefinder(){
     h += '<div class="note w"><span class="ic">?</span><span>아직 안 고르신 항목이 있습니다. <b>이전</b>으로 돌아가 채워주세요.</span></div>';
   }
   return h + script([
-    "본격적으로 설명드리기 전에요, 산모님께 딱 맞는 것부터 같이 찾아볼까요? 여덟 개만 골라주시면 돼요.",
+    "안녕하세요! 편하게 앉으세요. 혹시 정부지원 산후도우미 — 산모신생아 건강관리사 지원사업이라고 들어보셨어요?",
+    "네, 정부가 비용 대부분을 지원해주는 제도예요. 오늘 그 내용, 산모님 기준으로 쉽게 풀어드릴게요.",
+    "본격적으로 설명드리기 전에요, 산모님께 딱 맞는 것부터 같이 찾아볼까요? 몇 개만 골라주시면 돼요.",
     "몇째 아기세요? 조리는 어디서 하실 계획이세요? 집에서 도와주실 분은 계세요?",
     "그리고 이게 제일 중요한데요, 제공인력께 뭘 가장 바라세요? 두 개만 골라주세요.",
     "아 그러시구나. 저도 그 말씀 정말 많이 들어요. 그러면 그 부분을 중심으로 말씀드릴게요."
@@ -1420,10 +1471,141 @@ function s_close(){
   ]);
 }
 
+/* ══════════ 예약 가능 확인 ══════════ */
+var CAPD = null, CAPERR = false;
+var CAP_URL = "https://chamsarang-baejeong.onrender.com/api/capacity?key=chamsarang-cap-2026";
+function capFetch(){
+  if (CAPD || CAPERR) return;
+  fetch(CAP_URL).then(function(r){ return r.json(); }).then(function(d){
+    if (d && d.buckets){ CAPD = d; } else { CAPERR = true; }
+    if (STEPS[cur].render === s_capacity) render();
+  }).catch(function(){ CAPERR = true; if (STEPS[cur].render === s_capacity) render(); });
+}
+var CAP_REGIONS = ["의창구","성산구","진해구","마산합포구","마산회원구","김해","양산","기타지역"];
+function capBox(){
+  if (!S.region) return '<div class="note"><span class="ic">·</span><span>지역을 골라주시면 <b>지금 예약 여유</b>를 바로 보여드립니다.</span></div>';
+  if (S.region === "김해" || S.region === "양산")
+    return '<div class="note w"><span class="ic">!</span><span><b>'+S.region+'</b>는 지사에서 배정합니다 — 상담자가 <b>'+(S.region==="김해"?"055-329-3579":"055-384-5008")+'</b>로 바로 확인해 드립니다.</span></div>';
+  if (CAPERR) return '<div class="note w"><span class="ic">!</span><span>지금 인터넷 연결이 원활하지 않아요 — 상담자가 <b>본사 배정 프로그램</b>에서 바로 확인해 드립니다.</span></div>';
+  if (!CAPD){ capFetch(); return '<div class="note"><span class="ic">…</span><span>본사 배정 현황을 불러오는 중입니다…</span></div>'; }
+  var reg = null;
+  CAPD.regions.forEach(function(r){ if (r.gu === S.region) reg = r; });
+  if (!reg) return '<div class="note w"><span class="ic">!</span><span>상담자가 본사 배정표에서 확인해 드립니다.</span></div>';
+  var startIdx = 0;
+  if (S.due){
+    CAPD.buckets.forEach(function(b,i){ if (b.start <= S.due && S.due <= b.end) startIdx = i; });
+  }
+  // 판정 문구: 예정일 반월 기준
+  var verdict = "";
+  if (S.due && reg.cap){
+    var vb = reg.booked[startIdx], vr = vb / reg.cap;
+    if (vr < 0.7) verdict = '<div class="capverdict ok">지금 예약 가능합니다 — 여유가 있어요</div>';
+    else if (vr < 1) verdict = '<div class="capverdict mid">예약 가능하지만 자리가 얼마 없어요 — 서두르시는 게 좋아요</div>';
+    else verdict = '<div class="capverdict full">이 시기는 거의 찼어요 — 본사에서 정확히 확인해 드릴게요</div>';
+  } else if (S.due && !reg.cap){
+    verdict = '<div class="capverdict ask">상담자가 본사 배정표에서 바로 확인해 드립니다</div>';
+  }
+  var h = verdict + '<div class="capgrid">';
+  var shown = 0;
+  for (var i = startIdx; i < CAPD.buckets.length && shown < 3; i++, shown++){
+    var b = CAPD.buckets[i], booked = reg.booked[i], cap = reg.cap;
+    var cls, txt;
+    if (!cap){ cls = "ask"; txt = "본사 확인"; }
+    else { var ratio = booked / cap;
+      if (ratio < 0.7){ cls = "ok"; txt = "여유 있음"; }
+      else if (ratio < 1){ cls = "mid"; txt = "얼마 안 남음"; }
+      else { cls = "full"; txt = "마감 임박"; } }
+    h += '<div class="capcell '+cls+'"><div class="cb">'+b.label+'</div><div class="cs">'+txt+'</div>' +
+         (cap ? '<div class="cn">예약 '+booked+' / 수용 '+cap+'</div>' : '<div class="cn">배정표 기준 안내</div>') + '</div>';
+  }
+  h += '</div><div class="note g" style="margin-top:10px;"><span class="ic">✓</span><span>' +
+    (S.due ? '출산 예정일 <b>'+S.due+'</b> 기준, 보름 단위 현황입니다. ' : '') +
+    '기준 시각 '+(CAPD.generated||"").replace("T"," ").slice(0,16)+' · 실제 확정은 본사 배정에서 이뤄집니다.</span></div>';
+  return h;
+}
+var WKD = null, WKERR = false;
+var WK_URL = "https://chamsarang-baejeong.onrender.com/api/workers?key=chamsarang-cap-2026";
+function wkFetch(){
+  if (WKD || WKERR) return;
+  fetch(WK_URL).then(function(r){ return r.json(); }).then(function(d){
+    if (d && d.workers){ WKD = d; } else { WKERR = true; }
+    wkRender();
+  }).catch(function(){ WKERR = true; wkRender(); });
+}
+function wkRender(){
+  var box = document.getElementById("wkList");
+  if (!box) return;
+  if (WKERR){ box.innerHTML = '<div class="note w"><span class="ic">!</span><span>연결이 원활하지 않아요 — 본사 배정 프로그램에서 확인해 주세요.</span></div>'; return; }
+  if (!WKD){ box.innerHTML = '<div class="note"><span class="ic">…</span><span>제공인력 현황을 불러오는 중…</span></div>'; return; }
+  var kw = (document.getElementById("wkSearch") ? document.getElementById("wkSearch").value : "").trim();
+  var list = WKD.workers;
+  if (kw) list = list.filter(function(w){ return (w.name||"").indexOf(kw) >= 0 || (w.gu||"").indexOf(kw) >= 0; });
+  else if (S.region && S.region !== "김해" && S.region !== "양산") list = list.filter(function(w){ return w.gu === S.region; });
+  if (!list.length){ box.innerHTML = '<div class="note"><span class="ic">·</span><span>해당하는 제공인력이 없습니다. 이름이나 구 이름으로 검색해 보세요.</span></div>'; return; }
+  var order = {"대기중":0,"배정예정":1,"근무중":2,"휴가중":3};
+  list.sort(function(a,b){ return (order[a.status]||9) - (order[b.status]||9) || a.name.localeCompare(b.name); });
+  var h = "";
+  list.slice(0, 12).forEach(function(w){
+    var cls = w.status === "대기중" ? "ok" : (w.status === "배정예정" ? "mid" : (w.status === "근무중" ? "full" : "ask"));
+    var sub = [];
+    if (w.gu) sub.push(w.gu);
+    if (w.car) sub.push("자차 " + w.car);
+    if (w.career) sub.push(w.career);
+    if (w.allergy) sub.push("⚠ 알레르기: " + w.allergy);
+    var when = w.status === "근무중" && w.busy_until ? (w.busy_until.slice(5).replace("-","/") + "까지 근무") :
+               (w.status === "배정예정" && w.next_start ? (w.next_start.slice(5).replace("-","/") + " 시작 예정") : "");
+    var go = "";
+    if (S.region && S.region !== "김해" && S.region !== "양산" && kw){
+      var hasCar = String(w.car||"").indexOf("O") >= 0 || String(w.car||"").indexOf("유") >= 0 || String(w.car||"").indexOf("있") >= 0;
+      if (w.gu === S.region) go = '<span class="capchip ok">같은 지역 — 지정 가능</span>';
+      else if (hasCar) go = '<span class="capchip mid">타 구 · 자차 있음 — 이동 가능</span>';
+      else go = '<span class="capchip ask">타 구 · 자차 확인 필요</span>';
+    }
+    h += '<div class="wkrow"><b>'+esc(w.name)+'</b><span class="wsub">'+sub.join(" · ")+'</span>' + go +
+         '<span class="capchip '+cls+'">'+w.status+(when ? " · " + when : "")+'</span></div>';
+  });
+  if (list.length > 12) h += '<div class="wsub" style="padding:5px 2px;">외 '+(list.length-12)+'명 — 이름으로 검색하세요</div>';
+  box.innerHTML = h;
+}
+function s_capacity(){
+  var chips = CAP_REGIONS.map(function(g){
+    return '<button type="button" class="pk regionpk'+(S.region===g?" sel":"")+'" data-region="'+g+'">' +
+      '<span class="tl2">'+g+'</span></button>';
+  }).join("");
+  return head("예정일 확인", "예정일이 언제실까요?",
+    "예정일과 지역만 알려주시면 <b>지금 예약 여유</b>를 바로 보여드립니다.") +
+  '<div class="punch"><div class="lab">먼저 알려드릴 것</div>' +
+    '<div class="txt">보통 <b class="hl">예정일 한 달~한 달 반 전</b>에 예약하세요 — ' +
+    '<b>미리 예약하신 분부터</b> 원하시는 날짜에 배정되기 때문입니다.</div></div>' +
+  '<div class="split" style="grid-template-columns:0.8fr 1.2fr;align-items:start;">' +
+    '<div><div class="form" style="margin:0 0 10px;">' +
+      '<div><span class="lab">출산 예정일</span><input type="date" data-s="due" value="'+esc(S.due)+'"></div></div>' +
+      '<span class="lab">사시는 지역</span>' +
+      '<div class="pick" style="grid-template-columns:repeat(4,1fr);gap:8px;margin:6px 0 0;">'+chips+'</div></div>' +
+    '<div><span class="lab">지금 예약 여유</span><div id="capBoxWrap" style="margin-top:6px;">'+capBox()+'</div>' +
+      '<div style="margin-top:12px;"><span class="lab">제공인력 현황 — &ldquo;혹시 OO 관리사님 되나요?&rdquo;</span>' +
+      '<input type="text" id="wkSearch" placeholder="이름이나 구 이름으로 검색 · 지역을 고르면 그 지역만 보여요" ' +
+      'style="width:100%;margin:6px 0 8px;padding:10px 12px;border:1.5px solid var(--line-2);border-radius:10px;font-size:16px;font-family:inherit;">' +
+      '<div id="wkList"></div></div></div>' +
+  '</div>' +
+  script([
+    "혹시 예정일이 언제실까요? 아, 그러시구나 — 축하드려요!",
+    "보통 예정일 한 달에서 한 달 반 전에 예약을 하세요. 왜냐하면 미리 예약해 두신 분들께 먼저 배정을 해드리거든요. 원하시는 날짜에 받으시려면 미리가 유리해요.",
+    "사시는 지역이 어디세요? 지금 화면에서 그 지역 예약 여유를 바로 보여드릴게요.",
+    "혹시 집에 강아지나 고양이 키우세요? 반려동물이 있으면 가능한 제공인력으로 맞춰서 배정해 드리거든요.",
+    "특정 관리사님을 지정하고 싶으시면 성함 말씀해 주세요 — 그분 지역이랑 자차 여부 보고 가능한지 바로 알려드릴게요.",
+    "이 시기에는 여유가 있네요 — 그러면 오늘 원하시는 조건까지 같이 정해두시면, 그 조건에 맞는 제공인력으로 배정을 잡아드릴 수 있어요.",
+    "여유가 얼마 없는 시기면, 오늘 간편 예약이라도 걸어두시는 게 유리해요."
+  ], "현장 핵심 멘트입니다. <b>예정일 → 한 달~한 달 반 전 예약 프레임 → 지역 여유 확인 → 예약 유도</b> 순서로 자연스럽게 이어가세요. " +
+     "여유가 없어 보여도 단정하지 말고 <b>&lsquo;본사에서 정확히 확인해 드릴게요&rsquo;</b>로 받으세요.") +
+  checklist("cap", ["예정일 여쭙고 축하 인사","한 달~한 달 반 전 예약 이유 설명","지역 여유 같이 보기","반려동물 여부 확인","지정 문의는 현황 검색으로 바로 답","여유 적으면 간편 예약 권유"]);
+}
+
 /* ══════════ 단계 ══════════ */
 var STEPS = [
 { group:"산모님 먼저", nav:"내 산후조리 유형 찾기", render:s_typefinder },
 { group:"산모님 먼저", nav:"이걸로 제공인력을 배정합니다", render:s_matching },
+{ group:"산모님 먼저", nav:"예정일 확인 · 예약 여유", render:s_capacity },
 { group:"산모님 먼저", nav:"걱정하시는 부분 풀어드립니다", render:s_relief },
 { group:"우리는", nav:"참사랑은 어떤 곳인가", render:s_company },
 { group:"우리는", nav:"품질평가 A등급이란", render:s_grade },
@@ -1440,7 +1622,23 @@ var STEPS = [
 { group:"마무리", nav:"마무리", render:s_close }
 ];
 var cur = 0;
-function visible(){ return STEPS.map(function(_,i){ return i; }); }
+var MODE = "first";
+/* 상황별 코스: 화면 순서를 그대로 정의 (번호는 STEPS 순서) */
+var ROUTES = {
+  first: null,   // 전체 순서 그대로 — 제도부터 차근차근
+  compare: [s_typefinder, s_matching, s_capacity, s_compare, s_company, s_grade, s_edu,
+            s_why, s_calc, s_family, s_process, s_summary, s_close],
+  quick: [s_typefinder, s_matching, s_capacity, s_calc, s_why, s_process, s_summary, s_close]
+};
+function visible(){
+  var route = ROUTES[MODE];
+  if (!route) return STEPS.map(function(_, i){ return i; });
+  var v = [];
+  route.forEach(function(fn){
+    STEPS.forEach(function(st, i){ if (st.render === fn) v.push(i); });
+  });
+  return v;
+}
 
 /* ══ 질문 패널 ══ */
 var FAQ = [
@@ -1529,6 +1727,23 @@ var OBJ = [
 ["“제공인력이 어떤 분인지 미리 알 수 있어요?”",
  "→ &ldquo;오늘 말씀해 주신 내용 그대로 반영해서 배정해요.&rdquo;<br>→ &ldquo;시작 전날 제공인력이 직접 전화로 인사드려요.&rdquo;"]
 ];
+var QJUMP = [
+  ["요금이 어떻게 되나요?", s_calc],
+  ["참사랑은 뭐가 달라요?", s_compare],
+  ["이 서비스가 뭐예요?", s_service],
+  ["예약은 어떻게 해요?", s_process],
+  ["언제 예약해야 하나요?", s_capacity],
+  ["OO 관리사님 되나요?", s_capacity],
+  ["관리사님은 뭘 해주나요?", s_day],
+  ["믿을 만한 곳인가요?", s_company]
+];
+function renderQjump(){
+  var el = document.getElementById("qjump");
+  if (!el) return;
+  el.innerHTML = QJUMP.map(function(q, i){
+    return '<button type="button" class="qjbtn" data-qj="'+i+'">'+q[0]+'</button>';
+  }).join("");
+}
 var faqTab = "faq";
 function renderFaq(){
   var kw = (document.getElementById("faqSearch").value || "").trim();
@@ -1717,6 +1932,11 @@ function render(){
   document.getElementById("nextBtn").textContent = (pos === v.length-1) ? "처음으로" : "다음 →";
   document.body.classList.toggle('warmbg', STEPS[cur].render===s_family || STEPS[cur].render===s_class);
   renderNav(); renderMomBar(); refresh(); loadPhotos(); renderLogCount();
+  if (STEPS[cur].render === s_capacity){
+    wkFetch(); wkRender();
+    var ws = document.getElementById("wkSearch");
+    if (ws) ws.addEventListener("input", wkRender);
+  }
   document.getElementById("slide").scrollTop = 0;
   fb.classList.remove("slide-anim"); void fb.offsetWidth; fb.classList.add("slide-anim");
   fitScreen();
@@ -1831,6 +2051,14 @@ document.addEventListener("input", function(e){
 document.addEventListener("click", function(e){
   var b = e.target.closest("[data-go]");
   if (b){ cur = parseInt(b.dataset.go,10); menu(false); render(); return; }
+  var qj = e.target.closest ? e.target.closest("[data-qj]") : null;
+  if (qj){
+    var fn = QJUMP[+qj.dataset.qj][1];
+    STEPS.forEach(function(st, i){ if (st.render === fn) cur = i; });
+    openFaq(false); render(); return;
+  }
+  var rg = e.target.closest ? e.target.closest("[data-region]") : null;
+  if (rg){ S.region = (S.region === rg.dataset.region) ? "" : rg.dataset.region; render(); return; }
   var wb = e.target.closest ? e.target.closest("[data-way]") : null;
   if (wb){ closeMode = (closeMode === wb.dataset.way) ? "" : wb.dataset.way; render(); return; }
   if (e.target.id === "newBtn2"){ closeMode = ""; reset(); return; }
@@ -1873,17 +2101,23 @@ document.getElementById("scriptBtn").addEventListener("click", function(){
   setTimeout(fitScreen, 280);
 });
 document.getElementById("scriptBtn2").addEventListener("click", function(){ document.getElementById("scriptBtn").click(); });
-document.getElementById("startBtn").addEventListener("click", function(){
+function startConsult(mode){
+  MODE = mode;
+  cur = visible()[0]; tfIdx = 0;
+  renderNav(); render();
   document.getElementById("cover").classList.add("hide");
   document.body.classList.add("presenting");
   var el = document.documentElement;
   if (el.requestFullscreen) el.requestFullscreen().catch(function(){});
   setTimeout(fitScreen, 320);
+}
+document.querySelectorAll(".modecard").forEach(function(b){
+  b.addEventListener("click", function(){ startConsult(b.dataset.mode); });
 });
 function menu(on){ document.body.classList.toggle("menu", on); }
 document.getElementById("menuBtn").addEventListener("click", function(){ menu(!document.body.classList.contains("menu")); });
 document.getElementById("railveil").addEventListener("click", function(){ menu(false); });
-function openFaq(on){
+function openFaq(on){ renderQjump();
   document.getElementById("faqSheet").classList.toggle("open", on);
   if (on){ renderFaq(); document.getElementById("faqSearch").focus(); }
 }
