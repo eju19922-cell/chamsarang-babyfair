@@ -209,6 +209,14 @@ figure.shot figcaption{font-size:13.5px;color:var(--text-3);margin-top:5px;line-
 .qjbtn{background:var(--brand-soft);border:1.5px solid var(--brand-line);color:var(--brand-d);
   border-radius:99px;padding:7px 13px;font-size:14.5px;font-weight:600;cursor:pointer;font-family:inherit;}
 .qjbtn:hover{background:var(--brand);color:#fff;}
+.qjbtn.on2{background:var(--brand);color:#fff;border-color:var(--brand);}
+.smsprev{white-space:pre-wrap;background:var(--surface-2);border:1.5px solid var(--line-2);border-radius:12px;
+  padding:13px 15px;font-size:14.5px;line-height:1.55;font-family:inherit;margin:0 0 10px;max-height:300px;overflow-y:auto;}
+.hint2{font-size:13.5px;color:var(--text-3);margin-bottom:8px;}
+.memobox{margin-top:14px;padding-top:12px;border-top:1.5px dashed var(--line-2);}
+.memobox .lab{margin-bottom:5px;}
+.memobox textarea{width:100%;font-family:inherit;font-size:15px;padding:9px 11px;
+  border:1.5px solid var(--line-2);border-radius:10px;resize:vertical;}
 .wkrow .wsub{font-size:13.5px;color:var(--text-3);flex:1;}
 .capchip{font-size:13px;font-weight:600;padding:3px 9px;border-radius:99px;white-space:nowrap;}
 .capchip.ok{background:#f0fdf4;color:#15803d;border:1px solid #86efac;}
@@ -698,6 +706,7 @@ figure.shot.short img{max-height:210px;}
       <p>산모님 질문에 그 자리에서 답하세요. 상담자 화면입니다.</p>
       <div class="sheet-tabs">
         <button data-tab="faq" class="on" type="button">자주 묻는 질문</button>
+        <button data-tab="sms" type="button">문자 템플릿</button>
         <button data-tab="obj" type="button">이런 말 나오면</button>
       </div>
       <div class="sheet-s" style="padding-left:0;padding-right:0;">
@@ -749,7 +758,7 @@ function won(n){ return Math.round(n).toLocaleString("ko-KR") + "원"; }
 function limit180(f){ return Math.round(FEE150[f].income * 1.2); }
 function esc(s){ return String(s == null ? "" : s).replace(/"/g,"&quot;"); }
 
-var S = {name:"",phone:"",birth:"",addr:"",due:"",deliv:"",startWish:"",memo:"",phone4:"",region:"",
+var S = {name:"",phone:"",birth:"",addr:"",due:"",deliv:"",startWish:"",memo:"",phone4:"",region:"",consultMemo:"",
   fetus:"single",order:1,staff:1,disability:false,preemie:false,band:"통합",period:1};
 var checks = {}, TF = {}, tfIdx = 0, QA_STATE = {}, GUESS = null;
 
@@ -1744,9 +1753,66 @@ function renderQjump(){
     return '<button type="button" class="qjbtn" data-qj="'+i+'">'+q[0]+'</button>';
   }).join("");
 }
+var SMS_DEFAULT = {
+  consult: "[참사랑어머니회] {이름}님, 오늘 상담 감사합니다.\n\n{요약}\n{메모}\n간편 예약: {간편예약링크}\n\n궁금하신 점은 언제든 전화 주세요.\n창원 055-293-5008 · 김해 055-329-3579 · 양산 055-384-5008",
+  typeO: "[참사랑어머니회] {이름}님, 예약 안내드립니다.\n\n바우처 유형이 이미 발급되어 있어 예약금 입금만 하시면 예약이 확정됩니다.\n입금 계좌와 금액은 개별 안내드립니다.\n\n{구} 담당자가 예정일({예정일})에 맞춰 다시 연락드리겠습니다.",
+  typeX: "[참사랑어머니회] {이름}님, 예약 안내드립니다.\n\n서비스 이용 전에 {구} 관할 보건소에서 바우처 유형 발급 신청이 먼저 필요합니다.\n(복지로 www.bokjiro.go.kr 온라인 신청도 가능)\n신청 방법이 어려우시면 전화 주세요 — 차근차근 도와드립니다.\n\n발급 후 예약금 입금하시면 예약이 확정됩니다."
+};
+function smsLoad(){
+  try { var d = JSON.parse(localStorage.getItem("chamsarang_sms") || "{}"); return Object.assign({}, SMS_DEFAULT, d); }
+  catch(e){ return Object.assign({}, SMS_DEFAULT); }
+}
+function smsSave(d){ try { localStorage.setItem("chamsarang_sms", JSON.stringify(d)); } catch(e){} }
+var smsKind = "consult", smsGu = "";
+function smsSummaryText(){
+  var q = quote(), lines = [];
+  var f = {single:"단태아", twin:"쌍태아", triplet:"삼태아 이상"}[S.fetus] || "";
+  if (f) lines.push("· 상황: " + f + " " + (S.order===1?"첫째":"둘째 이상"));
+  if (!q.unavailable && q.inc && q.inc.entered){
+    var r = q.all[S.period];
+    lines.push("· " + q.code + " · " + PNAME[S.period] + " " + q.days[S.period] + "일");
+    lines.push("· 본인부담 " + won(r.self) + " → 환급 후 최종 " + won(r.final));
+    lines.push("  (예상 금액이며, 정확한 유형은 보건소·복지로에서 확정됩니다)");
+  }
+  return lines.join("\n");
+}
+function smsText(){
+  var t = smsLoad()[smsKind] || "";
+  return t.replace(/\{이름\}/g, S.name || "산모님")
+          .replace(/\{구\}/g, smsGu || S.region || "거주 지역")
+          .replace(/\{예정일\}/g, S.due || "미정")
+          .replace(/\{요약\}/g, smsSummaryText())
+          .replace(/\{메모\}/g, S.consultMemo ? ("· 상담 메모: " + S.consultMemo) : "")
+          .replace(/\{간편예약링크\}/g, smsLoad().link || "(간편예약 링크)");
+}
+function renderSms(){
+  var GUS = ["의창구","성산구","진해구","마산합포구","마산회원구","김해","양산"];
+  var kinds = [["consult","상담 내용 전달"],["typeO","예약 안내 — 유형 발급 O"],["typeX","예약 안내 — 유형 미발급"]];
+  var h = '<div class="smswrap">';
+  h += '<div class="qjump" style="margin:0 0 8px;">' + kinds.map(function(k){
+    return '<button type="button" class="qjbtn'+(smsKind===k[0]?' on2':'')+'" data-smskind="'+k[0]+'">'+k[1]+'</button>';
+  }).join("") + '</div>';
+  h += '<div class="qjump" style="margin:0 0 10px;">' + GUS.map(function(g){
+    return '<button type="button" class="qjbtn'+((smsGu||S.region)===g?' on2':'')+'" data-smsgu="'+g+'">'+g+'</button>';
+  }).join("") + '</div>';
+  h += '<div class="hint2">아래 미리보기를 <b>복사</b>해서 문자로 붙여넣으세요. {이름} {구} {예정일} 자리는 자동으로 채워집니다.</div>';
+  h += '<pre class="smsprev" id="smsPrev">' + esc(smsText()) + '</pre>';
+  h += '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">' +
+       '<button class="btn pri" id="smsCopy" type="button">📋 문자 복사</button>' +
+       '<button class="btn" id="smsEditBtn" type="button">템플릿 수정</button></div>';
+  h += '<div id="smsEdit" style="display:none;"><textarea id="smsTa" rows="7" style="width:100%;font-family:inherit;font-size:14.5px;' +
+       'border:1.5px solid var(--line-2);border-radius:10px;padding:10px;">' + esc(smsLoad()[smsKind] || "") + '</textarea>' +
+       '<div style="display:flex;gap:8px;margin-top:6px;align-items:center;flex-wrap:wrap;">' +
+       '<button class="btn pri" id="smsTplSave" type="button">이 노트북에 저장</button>' +
+       '<input type="text" id="smsLink" placeholder="간편예약 링크 주소" value="' + esc(smsLoad().link || "") + '" ' +
+       'style="flex:1;min-width:200px;padding:9px 11px;border:1.5px solid var(--line-2);border-radius:9px;font-size:14px;font-family:inherit;"></div></div>';
+  h += '</div>';
+  document.getElementById("faqBody").innerHTML = h;
+}
 var faqTab = "faq";
 function renderFaq(){
   var kw = (document.getElementById("faqSearch").value || "").trim();
+  if (faqTab === "sms"){ renderSms(); return; }
   var list = (faqTab === "faq") ? FAQ : OBJ, h = "";
   list.forEach(function(it){
     if (kw && (it[0]+it[1]).replace(/<[^>]+>/g,"").indexOf(kw) < 0) return;
@@ -1784,6 +1850,8 @@ function buildRecord(){
     deliv: S.deliv||"", startWish: (S.startWish||"").trim(), memo: (S.memo||"").trim(),
     name: (S.name||"").trim(),
     due: S.due || "",
+    consultMemo: S.consultMemo || "",
+    region: S.region || "",
     fetus: S.fetus, order: S.order, band: S.band, period: S.period,
     tf: JSON.parse(JSON.stringify(TF)),
     code: q.unavailable ? "D형(별도확인)" : q.code,
@@ -1810,6 +1878,7 @@ function restoreLog(id){
   S.phone4 = rec.phone4 || ""; S.phone = rec.phone || ""; S.birth = rec.birth || "";
   S.addr = rec.addr || ""; S.deliv = rec.deliv || ""; S.startWish = rec.startWish || ""; S.memo = rec.memo || "";
   S.name = rec.name || ""; S.due = rec.due || "";
+  S.consultMemo = rec.consultMemo || ""; S.region = rec.region || "";
   S.fetus = rec.fetus; S.order = rec.order; S.band = rec.band; S.period = rec.period;
   TF = JSON.parse(JSON.stringify(rec.tf || {}));
   tfIdx = TFQ.length;
@@ -1920,6 +1989,13 @@ function render(){
   dr.innerHTML = "";
   fb.querySelectorAll(".note").forEach(function(n){ if (n.querySelector(".tbd")) n.setAttribute("data-staff",""); });
   fb.querySelectorAll("[data-script], .chk, [data-staff]").forEach(function(el){ el.hidden = false; dr.appendChild(el); });
+  var memoBox = document.createElement("div");
+  memoBox.className = "memobox";
+  memoBox.innerHTML = '<div class="lab">상담 메모 (저장·문자에 함께 담깁니다)</div>' +
+    '<textarea id="consultMemo" rows="3" placeholder="상담하며 메모 — 예: 10월 초 시작 희망, 강아지 1, OO 관리사님 문의">' + esc(S.consultMemo) + '</textarea>';
+  dr.appendChild(memoBox);
+  var cm = document.getElementById("consultMemo");
+  if (cm) cm.addEventListener("input", function(){ S.consultMemo = cm.value; });
   document.getElementById("drawer").classList.toggle("open", showScript);
   document.getElementById("scriptBtn").textContent = showScript ? "상담자 화면 닫기" : "상담자 화면 열기";
   document.getElementById("scriptBtn").classList.toggle("on", showScript);
@@ -2051,6 +2127,30 @@ document.addEventListener("input", function(e){
 document.addEventListener("click", function(e){
   var b = e.target.closest("[data-go]");
   if (b){ cur = parseInt(b.dataset.go,10); menu(false); render(); return; }
+  var sk = e.target.closest ? e.target.closest("[data-smskind]") : null;
+  if (sk){ smsKind = sk.dataset.smskind; renderSms(); return; }
+  var sg = e.target.closest ? e.target.closest("[data-smsgu]") : null;
+  if (sg){ smsGu = (smsGu === sg.dataset.smsgu) ? "" : sg.dataset.smsgu; renderSms(); return; }
+  if (e.target.id === "smsCopy"){
+    var txt = smsText();
+    (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(function(){
+      e.target.textContent = "✓ 복사됨 — 문자에 붙여넣으세요";
+      setTimeout(function(){ var b = document.getElementById("smsCopy"); if (b) b.textContent = "📋 문자 복사"; }, 1800);
+    }).catch(function(){
+      window.prompt("아래 내용을 길게 눌러 복사하세요", txt);
+    });
+    return;
+  }
+  if (e.target.id === "smsEditBtn"){
+    var ed = document.getElementById("smsEdit");
+    ed.style.display = ed.style.display === "none" ? "block" : "none"; return;
+  }
+  if (e.target.id === "smsTplSave"){
+    var d = smsLoad();
+    d[smsKind] = document.getElementById("smsTa").value;
+    d.link = document.getElementById("smsLink").value.trim();
+    smsSave(d); renderSms(); return;
+  }
   var qj = e.target.closest ? e.target.closest("[data-qj]") : null;
   if (qj){
     var fn = QJUMP[+qj.dataset.qj][1];
