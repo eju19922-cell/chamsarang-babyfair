@@ -133,6 +133,9 @@ figure.shot figcaption{font-size:13.5px;color:var(--text-3);margin-top:5px;line-
 .g3{grid-template-columns:repeat(auto-fit,minmax(200px,1fr));}
 .g4{grid-template-columns:repeat(auto-fit,minmax(165px,1fr));}
 .gal.g4 figure.shot img{max-height:225px;}
+.cmp3{grid-template-columns:repeat(3,1fr);gap:12px;}
+.cmp3 figure.shot img{height:250px;max-height:250px;object-fit:cover;}
+@media (max-width:900px){.cmp3{grid-template-columns:1fr;}}
 .gal.edu4{grid-template-columns:repeat(4,1fr);gap:10px;}
 .gal.edu4 figure.shot img{height:300px;max-height:300px;object-fit:cover;}
 @media (max-width:900px){.gal.edu4{grid-template-columns:repeat(2,1fr);}}
@@ -995,19 +998,19 @@ function s_grade(){
     cards += '<div class="arbox"><div class="arn">'+a[0]+'</div><div class="ard">'+a[1]+'</div></div>';
   });
   cards += '</div>';
-  return head("업체강점 ①", "국가 평가, 처음부터 지금까지 계속 A등급",
+  return head("업체강점 ①", "정부 품질평가, 처음부터 지금까지 계속 A등급",
     "<b>보건복지부</b>가 3년마다 직접 점검합니다. 참사랑은 <b>한 번도 A등급을 놓친 적이 없습니다.</b>") +
   '<div class="split gradesplit">' + photo("grade.jpg","보건복지부 사회서비스 품질평가 A등급","fill") +
-    '<div><div class="punch" style="margin-bottom:11px;"><div class="lab">국가가 이런 것들을 봅니다</div>' +
+    '<div><div class="punch" style="margin-bottom:11px;"><div class="lab">정부가 이런 것들을 봅니다</div>' +
     '<div class="txt">서비스만이 아니라 <b>사람을 어떻게 뽑고 교육하고 관리하는지</b>까지</div></div>' +
     cards + '</div></div>' +
   script([
-    "품질평가는 보건복지부가 3년마다 직접 나와서 점검하는 국가 평가예요.",
+    "정부 품질평가는 보건복지부가 3년마다 직접 나와서 점검하는 평가예요.",
     "서비스만 보는 게 아니에요. 관리사님을 어떻게 뽑는지, 교육은 얼마나 하는지, 안전 관리는 어떻게 하는지까지 다 봐요.",
     "저희는 이 평가를 받기 시작한 이후로 한 번도 A등급을 놓친 적이 없어요.",
     "한 번 잘 받은 게 아니라 계속 잘하고 있다는 뜻이에요."
   ], "<b>&lsquo;계속 A등급&rsquo;</b>이 핵심입니다. 항목 카드를 손으로 짚어가며 읽어주세요.") +
-  checklist("grade", ["3년마다 받는 국가 평가","서비스뿐 아니라 인력·교육·안전까지 점검","처음부터 지금까지 계속 A등급"]);
+  checklist("grade", ["3년마다 받는 정부 품질평가","서비스뿐 아니라 인력·교육·안전까지 점검","처음부터 지금까지 계속 A등급"]);
 }
 
 /* ══════════ 6. 정기 교육 · 간담회 ══════════ */
@@ -1032,24 +1035,24 @@ function s_edu(){
 function s_compare(){
   return head("업체 비교", "가격은 어디를 가셔도 똑같습니다",
     "정부 고시 가격입니다. <b>그럼 무엇이 다를까요?</b>") +
+  '<div class="gal g3 cmp3">' +
+    photo("compare-match.jpg","① 나에게 맞는 관리사님") +
+    photo("compare-teach.jpg","② 교육원 직접 운영") +
+    photo("consult-manager.jpg","③ 전문 담당자 밀착") + '</div>' +
   '<div class="cards c3">' +
     '<div class="box hi"><h3>① 나에게 맞는 관리사님</h3>' +
-      '<p>같은 값이면 <b>내 요구에 맞는 분</b>이 오셔야 합니다. 사람이 하는 서비스라 ' +
-      '<b>안 맞으시면 교체</b>도 됩니다.</p></div>' +
+      '<p>같은 값이면 <b>내 요구에 맞는 분</b>이 오셔야 합니다. 사람이 하는 서비스라 <b>안 맞으시면 교체</b>도 됩니다.</p></div>' +
     '<div class="box"><h3>② 교육원을 직접 운영</h3>' +
       '<p><b>창원참사랑평생교육원</b>을 함께 운영합니다. 관리사님의 <b>실력과 체계적 관리</b>가 다릅니다.</p></div>' +
     '<div class="box"><h3>③ 전문 담당자가 밀착</h3>' +
       '<p>서비스 <b>전후로 전문 담당자</b>가 상담과 진행을 직접 관리해 드립니다.</p></div>' +
   '</div>' +
-  '<div class="split">' + photo("consult-manager.jpg","전담 담당자가 서비스 전후로 직접 챙깁니다") +
-    '<div><div class="punch" style="margin-bottom:0;"><div class="lab">다른 부스에서 이것만 물어보세요</div>' +
-    '<div class="txt">&ldquo;관리사님이 안 맞으면 어떻게 되나요?&rdquo;<br>&ldquo;교육은 직접 하시나요?&rdquo;</div></div></div></div>' +
   script([
-    "혹시 다른 부스도 둘러보셨어요? 이 사업은 서비스 가격이 정부 고시라 어느 업체를 가셔도 같은 조건이면 금액이 똑같아요.",
+    "이 사업은 서비스 가격이 정부 고시라 어느 업체를 가셔도 같은 조건이면 금액이 똑같아요.",
     "그럼 뭐가 다르냐면요, 첫째는 나에게 맞는 관리사님이 오시느냐예요. 사람이 하는 서비스라 안 맞으실 수도 있는데, 그때 교체가 되느냐가 중요해요.",
     "둘째는 저희가 창원참사랑평생교육원을 직접 운영해요. 그래서 관리사님 실력이랑 관리 체계가 달라요.",
     "셋째는 서비스 전후로 전문 담당자가 밀착해서 챙겨드려요. 뭔가 불편하시면 바로 말씀하시면 돼요."
-  ], "경쟁사를 깎아내리지 말고 <b>&lsquo;같은 값이면 무엇이 다른가&rsquo;</b>로 말하세요.") +
+  ], "경쟁사 이야기는 꺼내지 말고 <b>&lsquo;같은 값이면 무엇이 다른가&rsquo;</b>로만 말하세요. 사진 세 장을 왼쪽부터 짚어가며.") +
   checklist("compare", ["가격은 정부 고시라 같다","나에게 맞는 관리사 + 교체 가능","교육원 직접 운영 → 실력과 관리","전문 담당자 밀착"]);
 }
 
@@ -1293,7 +1296,7 @@ function s_why(){
   var ring = [
     ["1위","관리사님 수","경남에서 가장 많습니다"],
     ["1위","이용 산모님 수","가장 많이 진행했습니다"],
-    ["A","계속 A등급","국가 평가 한 번도 안 놓침"],
+    ["A","계속 A등급","정부 품질평가 한 번도 안 놓침"],
     ["28","년째","1998년부터"],
     ["직영","교육원","정기 교육과 간담회"],
     ["무료","산모교실","예약 없이도 참여"]
@@ -1309,7 +1312,7 @@ function s_why(){
     '<div class="txt">관리사님이 가장 많다 = <b class="hl">나에게 맞는 분을 고를 수 있다</b></div></div>' +
   script([
     "저희가 왜 다른지 한 번에 말씀드릴게요.",
-    "관리사님 수 1위, 이용하신 산모님 수 1위, 국가 평가 계속 A등급, 28년, 교육원 직접 운영, 무료 산모교실.",
+    "관리사님 수 1위, 이용하신 산모님 수 1위, 정부 품질평가 계속 A등급, 28년, 교육원 직접 운영, 무료 산모교실.",
     "이 중에서 제일 와닿으실 만한 건 첫 번째예요. 관리사님이 많다는 건 나에게 맞는 분을 고를 수 있다는 뜻이거든요."
   ], "숫자 여섯 개를 <b>손으로 짚어가며</b> 빠르게. 마지막 한 문장만 남기세요.") +
   checklist("why", ["여섯 개를 짚어가며 빠르게","관리사 1위 → 나에게 맞는 분을 고를 수 있다"]);
