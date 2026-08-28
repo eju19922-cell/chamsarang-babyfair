@@ -116,6 +116,8 @@ figure.shot.qr img{max-height:150px;object-fit:contain;background:#fff;padding:6
 /* 3칸 갤러리 안에서는 더 낮게 */
 .gal.g3 figure.shot img{max-height:210px;}
 .gal.g2 figure.shot img{max-height:250px;}
+.gal.g2.big{grid-template-columns:1fr 1fr;gap:14px;}
+.gal.g2.big figure.shot img{max-height:380px;object-fit:contain;background:var(--surface-2);padding:5px;}
 figure.shot figcaption{font-size:13px;color:var(--text-3);margin-top:5px;line-height:1.4;}
 .ph{border:2px dashed var(--line-2);border-radius:13px;background:var(--surface-2);min-height:120px;
   display:grid;place-items:center;text-align:center;padding:14px;height:100%;}
@@ -140,6 +142,21 @@ figure.shot figcaption{font-size:13px;color:var(--text-3);margin-top:5px;line-he
 .stat.hero .v,.stat.hero .k{color:#fff;}
 .stat.hero .why{color:rgba(255,255,255,.88);}
 
+.grid32{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:13px;}
+.flow32 .fstep{position:relative;}
+.fnext{position:absolute;right:-17px;top:50%;transform:translateY(-50%);font-size:22px;
+  color:var(--brand);font-weight:700;z-index:2;}
+@media (max-width:900px){.fnext{display:none;}}
+@media (max-width:900px){.grid32{grid-template-columns:repeat(2,1fr);}}
+.ladder{display:grid;gap:5px;margin-bottom:13px;}
+.ld{background:var(--surface);border:1.5px solid var(--line);border-radius:12px;
+  padding:12px 20px;display:flex;align-items:baseline;gap:14px;}
+.ld.on{background:var(--brand-soft);border-color:var(--brand);border-width:2px;}
+.lk{font-size:20px;font-weight:700;color:var(--ink);min-width:190px;}
+.ld.on .lk{color:var(--brand-d);}
+.lv{font-size:18px;color:var(--text-2);}
+.ldarr{text-align:center;font-size:19px;color:var(--brand);line-height:1;font-weight:700;}
+@media (max-width:640px){.lk{min-width:auto;}.ld{flex-direction:column;gap:2px;}}
 .punch{background:var(--brand-soft);border:2px solid var(--brand-line);border-left:6px solid var(--brand);
   border-radius:12px;padding:13px 18px;margin-bottom:13px;}
 .punch .lab{font-size:12.5px;font-weight:600;letter-spacing:.08em;color:var(--brand);margin-bottom:3px;}
@@ -350,7 +367,9 @@ figure.shot figcaption{font-size:13px;color:var(--text-3);margin-top:5px;line-he
 
 .form{display:grid;gap:12px;margin-bottom:14px;}
 .f2{grid-template-columns:repeat(auto-fit,minmax(225px,1fr));}
-.lab{display:block;font-size:14.5px;font-weight:600;color:var(--text-2);margin-bottom:6px;}
+.lab{display:block;font-size:14px;font-weight:600;color:var(--text-2);margin-bottom:4px;}
+.form{gap:10px;}
+input[type="text"],input[type="number"],input[type="date"],select{padding:9px 12px;font-size:15.5px;}
 .lab .tip{font-weight:400;color:var(--text-3);font-size:13px;}
 .seg{display:flex;flex-wrap:wrap;gap:7px;}
 .seg label{position:relative;flex:1 1 0;min-width:90px;}
@@ -391,6 +410,15 @@ table.ref td{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-
 .sum-row .v{font-weight:500;}
 .sum-row.big .v{font-size:20px;font-weight:700;color:var(--brand);}
 
+.closerow{display:grid;grid-template-columns:1.6fr 1fr;gap:14px;align-items:center;margin-bottom:10px;}
+@media (max-width:800px){.closerow{grid-template-columns:1fr;}}
+figure.shot.short img{max-height:165px;}
+.printonly{margin-top:12px;padding-top:11px;border-top:1px dashed var(--line);}
+.disc{font-size:14.5px;color:var(--text-3);line-height:1.5;margin:0 0 8px;}
+.disc b{color:var(--text-2);}
+.tel2{font-size:15px;color:var(--text-2);margin:0;font-family:"IBM Plex Mono",monospace;}
+.tel2 b{font-family:"IBM Plex Sans KR",sans-serif;color:var(--brand-d);}
+@media print{.printonly{display:block;} .sum{border-color:#999;}}
 .telline{background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:10px 16px;
   font-size:16px;color:var(--text-2);font-family:"IBM Plex Mono",monospace;margin-bottom:12px;text-align:center;}
 .telline b{font-family:"IBM Plex Sans KR",sans-serif;color:var(--brand-d);font-weight:600;margin-right:4px;}
@@ -593,7 +621,7 @@ function won(n){ return Math.round(n).toLocaleString("ko-KR") + "원"; }
 function limit180(f){ return Math.round(FEE150[f].income * 1.2); }
 function esc(s){ return String(s == null ? "" : s).replace(/"/g,"&quot;"); }
 
-var S = {name:"",phone4:"",due:"",fetus:"single",order:1,staff:1,disability:false,preemie:false,
+var S = {name:"",phone:"",birth:"",phone4:"",due:"",fetus:"single",order:1,staff:1,disability:false,preemie:false,
   band:"통합",period:1};
 var checks = {}, TF = {}, tfIdx = 0, QA_STATE = {}, GUESS = null;
 
@@ -880,7 +908,7 @@ function s_company(){
     '<div class="box stat hero"><div class="v">1위</div><div class="k">소속 관리사님 수</div>' +
       '<div class="why">경남에서 관리사님이 가장 많습니다</div></div>' +
   '</div>' +
-  '<div class="split">' + photo("edu-bosu.jpg","소속 관리사님 정기 보수교육 — 이만큼 많습니다") +
+  '<div class="split">' + photo("voucher.jpg","정부 사회서비스 전자바우처 공식 검색 결과") +
     '<div><div class="punch" style="margin-bottom:0;"><div class="lab">28년, 1998년부터</div>' +
     '<div class="txt">가장 오래 했고, <b>가장 많이 했습니다.</b><br>' +
     '관리사님이 많으니 <b>문제가 생겨도 바로 다른 분이</b> 오십니다.</div></div>' +
@@ -905,7 +933,7 @@ function s_grade(){
     '<div class="areas">' +
     ["서비스품질","고객만족도","인력관리","교육훈련","대응성","전문성","안전관리","윤리성"]
       .map(function(a){ return '<span class="ar">'+a+'</span>'; }).join("") + '</div></div>' +
-    photo("grade.jpg","보건복지부 사회서비스 품질평가 A등급") + '</div>' +
+    photo("grade.jpg","보건복지부 사회서비스 품질평가 A등급","tall") + '</div>' +
   '<div class="note g"><span class="ic">✓</span><span>저희가 주장하는 게 아니라 <b>정부가 직접 확인하고 준 최고 등급</b>입니다.</span></div>' +
   script([
     "품질평가라는 게 뭐냐면요, 보건복지부에서 저희 같은 기관을 3년마다 직접 점검해서 등급을 매기는 국가 평가예요.",
@@ -1063,28 +1091,38 @@ function s_quiz(){
 
 /* ══════════ 11. 요금 유형 ══════════ */
 function s_feeintro(){
-  return head("이용요금", "요금은 네 가지로 정해집니다") +
-  '<div class="flow">' +
-    '<div class="fstep"><div class="n">1</div><h4>태아 유형</h4><p>단태아 · 쌍태아 · 삼태아<br><b>A · B · C형</b></p></div>' +
-    '<div class="fstep"><div class="n">2</div><h4>출산 순위</h4><p>첫째 · 둘째 · 셋째 이상<br><b>① ② ③</b></p></div>' +
-    '<div class="fstep"><div class="n">3</div><h4>소득 구간</h4><p>수급자 · 150% 이하 · 초과<br><b>가 · 통합 · 라형</b></p></div>' +
-    '<div class="fstep"><div class="n">4</div><h4>이용 일수</h4><p>단축 · 표준 · 연장<br><b>유형마다 다름</b></p></div></div>' +
+  return head("이용요금", "산모님은 두 번 지원받으십니다") +
+  '<div class="ladder">' +
+    '<div class="ld"><div class="lk">총 서비스 비용</div>' +
+      '<div class="lv">정부가 정한 가격</div></div>' +
+    '<div class="ldarr">↓</div>' +
+    '<div class="ld on"><div class="lk">① 정부지원금</div>' +
+      '<div class="lv">국민행복카드로 <b>자동 결제</b></div></div>' +
+    '<div class="ldarr">↓</div>' +
+    '<div class="ld"><div class="lk">본인부담금</div>' +
+      '<div class="lv">산모님이 업체에 <b>먼저 결제</b></div></div>' +
+    '<div class="ldarr">↓</div>' +
+    '<div class="ld on"><div class="lk">② 창원시 환급</div>' +
+      '<div class="lv">낸 돈의 <b>90%</b>를 다시 돌려받음</div></div>' +
+  '</div>' +
+  '<div class="punch"><div class="lab">그래서</div>' +
+    '<div class="txt">정부가 한 번, 창원시가 또 한 번 — <b>이중으로 지원받는 구조</b>입니다.</div></div>' +
   '<div class="cards c2">' +
-    '<div class="box"><h3>일수는 유형마다 다릅니다</h3><div class="scrollx">' +
-      '<table class="ref"><thead><tr><th>유형</th><th>단축</th><th>표준</th><th>연장</th></tr></thead><tbody>' +
-      '<tr><td>단태아 첫째아</td><td>5일</td><td>10일</td><td>15일</td></tr>' +
-      '<tr><td>단태아 둘째아 이상</td><td>10일</td><td>15일</td><td>20일</td></tr>' +
-      '<tr><td>쌍태아</td><td>10일</td><td>15일</td><td>20일</td></tr>' +
-      '<tr><td>삼태아 이상</td><td>15일</td><td>25일</td><td>40일</td></tr></tbody></table></div></div>' +
-    '<div class="box soft"><h3>가장 많은 경우</h3><p>첫째아 · 단태아 · 통합형 · 표준 10일</p>' +
-      '<p style="font-size:18px;">본인부담금 <b>462,000원</b><br>→ 환급 후 <b style="color:var(--brand);">46,200원</b></p>' +
-      '<p class="sm" style="margin-top:8px;">소득 구간은 <b>보건소 · 복지로</b>에서 확정됩니다. 여기서는 구간별 금액만 보여드립니다.</p></div></div>' +
+    '<div class="box"><h3>요금은 네 가지로 정해집니다</h3>' +
+      '<p>① 태아 유형 (단태아 · 쌍둥이 · 삼둥이)<br>② 출산 순위 (첫째 · 둘째 · 셋째 이상)<br>' +
+      '③ 소득 구간 (가 · 통합 · 라형)<br>④ 이용 일수 (단축 · 표준 · 연장)</p></div>' +
+    '<div class="box soft"><h3>가장 많은 경우</h3>' +
+      '<p>첫째아 · 단태아 · 통합형 · 표준 10일</p>' +
+      '<p style="font-size:19px;">본인부담금 <b>462,000원</b> → 환급 후 <b style="color:var(--brand);">46,200원</b></p></div>' +
+  '</div>' +
   script([
-    "이제 요금이에요. 네 가지로 정해져요. 단태아인지 쌍태아인지, 첫째인지 둘째인지, 소득 구간, 며칠 이용하시는지.",
-    "일수도 유형마다 달라요. 첫째아는 5·10·15일인데 둘째아부터는 10·15·20일이에요.",
-    "그럼 지금 고객님 상황으로 실제 금액을 바로 보여드릴게요."
-  ], "표를 통째로 보여주지 마세요. <b>기준 4개만 설명하고 바로 계산기로</b>.") +
-  checklist("feeintro", ["기준 4가지","일수가 유형마다 다르다","바로 계산기로"]);
+    "이제 요금인데요, 산모님은 지원을 두 번 받으세요.",
+    "먼저 총 서비스 비용이 있고, 여기서 정부가 지원금을 대줘요. 그 나머지를 산모님이 본인부담금으로 내시는 거예요.",
+    "그런데 여기서 끝이 아니에요. 그 낸 돈에서 창원시가 90%를 또 돌려줘요. 그래서 이중 지원이에요.",
+    "요금은 네 가지로 정해져요. 단태아인지 쌍둥이인지, 첫째인지 둘째인지, 소득 구간, 며칠 이용하시는지.",
+    "그럼 지금 고객님 경우로 실제 금액을 바로 보여드릴게요."
+  ], "<b>&lsquo;두 번 지원받는다&rsquo;</b>가 이 장의 전부입니다. 화살표를 짚어가며 위에서 아래로 읽어주세요.") +
+  checklist("feeintro", ["정부지원 + 창원시 환급 = 이중 지원","먼저 결제하고 나중에 돌려받는 순서","요금을 정하는 기준 4가지"]);
 }
 
 /* ══════════ 13. 금액 맞춰보기 ══════════ */
@@ -1228,37 +1266,45 @@ function s_extra(){
 /* ══════════ 17. 산모교실 ══════════ */
 function s_class(){
   return head("더 드리는 것", "산모교실은 예약과 상관없이 신청하실 수 있습니다") +
-  '<div class="split">' + photo("poster-class.jpg","「태어날 우리 아기에게 선물하는 첫 번째 동화」","tall") +
-    '<div><div class="punch" style="margin-bottom:12px;"><div class="lab">AI와 함께 만드는 태교 동화</div>' +
-    '<div class="txt">참가비 <b>무료</b> · 추첨 <b>20명</b> · 사은품</div></div>' +
-    '<p class="lede" style="margin:0 0 12px;">저희 예약을 <b>안 하셔도</b> 신청하실 수 있습니다.</p>' +
-    '<div class="gal g2" style="margin:0;">' + photo("poster-monthly.jpg","월간 산모교실","tall") +
-    photo("class-gift.jpg","참여하신 분께 드리는 사은품") + '</div></div></div>' +
+  '<div class="punch"><div class="lab">산모님께 드리는 혜택</div>' +
+    '<div class="txt">참가비 <b>무료</b> · 추첨 <b>20명</b> · <b>사은품</b> 증정 — 저희 예약을 안 하셔도 됩니다.</div></div>' +
+  '<div class="gal g2 big">' + photo("poster-class.jpg","AI와 만드는 태교 동화 — 첫 번째 동화","tall") +
+    photo("poster-monthly.jpg","월간 산모교실 — 매월 마지막 주","tall") + '</div>' +
   script([
-    "그리고 하나 더 안내드릴 게 있어요. 산모교실을 정기적으로 운영하는데요, 저희 예약 안 하셔도 신청하실 수 있어요.",
+    "그리고 하나 더 안내드릴 게 있어요. 저희가 산모교실을 정기적으로 운영하는데요, 저희 예약 안 하셔도 신청하실 수 있어요.",
     "이번에는 태어날 우리 아기에게 선물하는 첫 번째 동화라는 주제로, AI로 태교 동화를 만들어보는 시간이에요.",
     "참가비는 무료고 추첨으로 20분 모셔요. 참여하시는 분들께는 사은품도 드려요.",
-    "매월 마지막 주에도 산모교실이 열려요. 카카오채널 친구추가 해두시면 일정을 알려드려요."
-  ], "계약이 부담스러워 보이시는 분께 <b>먼저 꺼내는 카드</b>입니다. 포스터를 보여드리며 설명하세요.") +
-  checklist("class", ["예약과 무관","AI 태교 동화 — 차별점","무료 · 추첨 20명 · 사은품","카카오채널 안내"]);
+    "매월 마지막 주에도 산모교실이 열려요. 카카오채널 친구추가 해두시면 매월 일정을 알려드려요."
+  ], "포스터 안에 내용이 다 있으니 <b>크게 보여드리고 짚어가며</b> 설명하세요. " +
+     "계약이 부담스러워 보이시는 분께 <b>먼저 꺼내는 카드</b>입니다.") +
+  checklist("class", ["예약과 무관하다는 점 먼저","무료 · 추첨 20명 · 사은품","AI 태교 동화 — 다른 부스와 차별점","카카오채널 친구추가 안내"]);
 }
 
 /* ══════════ 18. 가족 산후관리사 ══════════ */
 function s_family(){
-  return head("더 드리는 것", "친정엄마 · 시어머니가 관리사로 오실 수 있습니다",
-    "<b>국가지원을 받으면서</b> 어머니가 돌봐주십니다.") +
-  '<div class="split">' + photo("poster-family.jpg","친정엄마 · 시어머니가 우리 아기의 산후관리사","tall") +
-    '<div><div class="punch" style="margin-bottom:12px;"><div class="lab">참사랑만의 차이</div>' +
-    '<div class="txt">지정 교육기관이라 <b>교육부터 제공인력 등록 · 바우처 신청까지 한 번에</b> 도와드립니다.</div></div>' +
-    photo("family-edu.jpg","2026년 양성과정 교육일정","tall") + '</div></div>' +
+  return head("더 드리는 것", "친정엄마 · 시어머니가 관리사로 오실 수 있습니다") +
+  '<div class="punch"><div class="lab">참사랑만의 차이</div>' +
+    '<div class="txt">지정 교육기관이라 <b>교육 · 제공인력 등록 · 바우처 신청까지 한 번에</b> 도와드리고, ' +
+    '어머니 <b>수당도 경남 최대 수준</b>으로 지급합니다.</div></div>' +
+  '<div class="gal g2 big">' + photo("poster-family.jpg","딸과 며느리의 산후조리 — 2026년 교육일정","tall") +
+    photo("poster-extra.jpg","영유아 · 정리수납 · AI 실무 활용교육","tall") + '</div>' +
   '<div class="note c"><span class="ic">!</span><span>교육과 등록에 시간이 걸립니다. <b>출산 전에 미리</b> 준비하셔야 합니다.</span></div>' +
   script([
     "혹시 친정어머니나 시어머니께서 산후조리를 도와주실 계획 있으세요?",
     "어머니가 저희 소속 관리사로 등록하시면 국가지원을 받으면서 근무하실 수 있어요.",
-    "저희는 지정 교육기관이라 교육 접수부터 이수, 등록, 바우처 신청까지 저희가 한 번에 다 도와드려요. 다른 데는 교육은 외부에 가시고 행정도 각자 하셔야 해요.",
-    "다만 시간이 걸려요. 그래서 출산 전에 미리 준비하셔야 해요."
-  ], "베이비페어는 <b>어머니와 함께 오시는 경우가 많습니다.</b> 포스터의 <b>교육 일정</b>을 짚어드리세요.") +
-  checklist("family", ["국가지원 받으며 근무 가능","교육→등록→바우처 한 번에","출산 전에 미리"]);
+    "저희는 지정 교육기관이라 교육 접수부터 이수, 제공인력 등록, 바우처 신청까지 저희가 한 번에 다 도와드려요. 다른 데는 교육은 외부에 가시고 행정도 각자 하셔야 해요.",
+    "그리고 어머니께 드리는 수당도 경남에서 최대 수준으로 드리고 있어요.",
+    "산모·신생아 교육 들으시고 나서 영유아나 정리수납, AI 교육까지 이어서 들으실 수도 있고요.",
+    "다만 교육 듣고 등록하는 데 시간이 걸려요. 그래서 출산 전에 미리 준비하셔야 해요."
+  ], "베이비페어는 <b>어머니와 함께 오시는 경우가 많습니다.</b> " +
+     "포스터의 <b>교육 일정</b>을 짚고, <b>&lsquo;교육부터 행정까지 한 번에&rsquo;</b>와 <b>수당</b>을 꼭 말씀하세요.") +
+  checklist("family", [
+    "국가지원 받으며 근무 가능",
+    "교육 → 제공인력 등록 → 바우처까지 한 번에",
+    "어머니 수당 경남 최대 수준",
+    "영유아 · 정리수납 · AI 교육까지 이어짐",
+    "출산 전에 미리 준비"
+  ]);
 }
 
 /* ══════════ 19. 왜 참사랑인가 ══════════ */
@@ -1271,7 +1317,7 @@ function s_why(){
     ["무료 산모교실","예약과 상관없이 참여하시고 <b>선물도</b> 받아 가십니다."],
     ["가족 산후관리사 원스톱","지정 교육기관이라 <b>교육부터 행정까지 한 번에</b> 도와드립니다."]
   ];
-  var h = '<div class="cards c3">';
+  var h = '<div class="grid32">';
   items.forEach(function(it,i){
     h += '<div class="box'+(i===0?" hi":"")+'"><h3>'+(i+1)+'. '+it[0]+'</h3><p>'+it[1]+'</p></div>';
   });
@@ -1288,24 +1334,29 @@ function s_why(){
 
 /* ══════════ 20. 이용 절차 ══════════ */
 function s_process(){
-  return head("이용 절차", "예약하시면 이렇게 진행됩니다") +
-  '<div class="flow">' +
-    '<div class="fstep"><div class="n">1</div><h4>예약금</h4><p>총 서비스요금의 <b>10%</b></p></div>' +
-    '<div class="fstep"><div class="n">2</div><h4>잔액 입금</h4><p>서비스 시작 <b>3일 전</b>까지</p></div>' +
-    '<div class="fstep"><div class="n">3</div><h4>관리사 파견안내</h4><p>시작 <b>전날 오후 5~7시</b><br>알림 전화</p></div>' +
-    '<div class="fstep"><div class="n">4</div><h4>계약서 서명</h4><p>전날 <b>카카오톡</b>으로<br>링크 발송</p></div>' +
-    '<div class="fstep"><div class="n">5</div><h4>모니터링</h4><p>서비스 당일<br>카카오톡으로 확인</p></div>' +
-    '<div class="fstep"><div class="n">6</div><h4>환급 신청</h4><p>종료 후 <b>90일 이내</b><br>저희가 안내</p></div></div>' +
+  var steps = [
+    ["예약금","총 서비스요금의 <b>10%</b>"],
+    ["잔액 입금","서비스 시작 <b>3일 전</b>까지"],
+    ["관리사 파견안내","시작 <b>전날 오후 5~7시</b> 알림 전화"],
+    ["계약서 서명","전날 <b>카카오톡</b>으로 링크 발송"],
+    ["모니터링","서비스 당일 카카오톡으로 확인"],
+    ["환급 신청","종료 후 <b>90일 이내</b> · 저희가 안내"]
+  ];
+  var h = '<div class="grid32 flow32">';
+  steps.forEach(function(x,i){
+    h += '<div class="fstep"><div class="n">'+(i+1)+'</div><h4>'+x[0]+'</h4><p>'+x[1]+'</p>' +
+         ((i===0||i===1||i===3||i===4) ? '<span class="fnext">→</span>' : '') + '</div>';
+  });
+  h += '</div>';
+  return head("이용 절차", "예약하시면 이렇게 진행됩니다") + h +
   '<div class="note g"><span class="ic">✓</span><span>관리사님은 오늘 말씀해 주신 내용을 반영해 배정해 드립니다.</span></div>' +
-  '<div class="note w"><span class="ic">!</span><span>예약금 취소 · 환불 규정<span class="tbd">담당자 확인</span></span></div>' +
   script([
     "예약하시게 되면 총 서비스요금의 10%만 예약금으로 먼저 넣어주세요.",
     "잔액은 서비스 시작 3일 전까지 넣어주시면 되고요, 시작 전날 오후 5시에서 7시 사이에 관리사님 파견 안내 전화를 드려요.",
     "계약서도 전날 카카오톡으로 링크 보내드려서 간편하게 서명하실 수 있어요.",
-    "서비스 당일에는 잘 진행되고 있는지 카카오톡으로 확인도 드려요.",
-    "끝나고 환급 신청까지 저희가 안내해 드리니까 걱정 안 하셔도 돼요."
-  ], "재촉하지 마세요. <b>&lsquo;결정하시면 이렇게 진행됩니다&rsquo;</b>라고 담담하게 안내하면 충분합니다.") +
-  checklist("process", ["예약금 10% · 잔액 3일 전","전날 오후 5~7시 파견 안내 전화","계약서는 카카오톡","당일 모니터링","환급까지 안내"]);
+    "서비스 당일에는 잘 진행되고 있는지 카카오톡으로 확인도 드리고, 끝나고 환급 신청까지 저희가 안내해 드려요."
+  ], "재촉하지 마세요. <b>&lsquo;결정하시면 이렇게 진행됩니다&rsquo;</b>로 담담하게 안내하면 충분합니다.") +
+  checklist("process", ["예약금 10% · 잔액 3일 전","전날 오후 5~7시 파견 안내","계약서는 카카오톡","환급까지 안내"]);
 }
 
 /* ══════════ 21. 상담 요약 ══════════ */
@@ -1324,6 +1375,11 @@ function s_summary(){
     sum += row("금액", "본인부담 " + won(r.self) + "  →  환급 " + won(r.refund));
     sum += '<div class="sum-row big"><span class="k">최종 부담액</span><span class="v num">'+won(r.final)+'</span></div>';
   }
+  sum += '<div class="printonly">' +
+    '<p class="disc">※ 기재해 주신 정보를 바탕으로 산정한 <b>예상 금액</b>이며, 정확한 지원 유형 · 본인부담금 · 환급액은 ' +
+    '<b>관할 보건소 확인 후 최종 확정</b>됩니다.</p>' +
+    '<p class="tel2"><b>(주)참사랑어머니회</b> &nbsp; 창원 055-293-5008 &nbsp;·&nbsp; 김해 055-329-3579 &nbsp;·&nbsp; 양산 055-384-5008</p>' +
+    '</div>';
   sum += '</div>';
   return head("마무리", "오늘 나눈 이야기, 이렇게 정리됩니다",
     "이 내용이 <b>담당자에게 그대로 전달</b>되고, 관리사님 배정에도 반영됩니다.") + sum +
@@ -1341,16 +1397,17 @@ function s_summary(){
 function s_close(){
   return head("마무리", "편안하게 듣고 가세요",
     "오늘 결정하지 않으셔도 됩니다. <b>충분히 고민해 보시고 정하셔도 늦지 않습니다.</b>") +
-  '<div class="split" style="margin-bottom:10px;">' + photo("closing-warm.jpg","엄마가 되는 순간, 참사랑이 곁에 있습니다") +
-    '<div style="text-align:center;">' + photo("qr-kakao.png","카카오채널 친구추가","qr") +
-    '<p class="sm" style="margin-top:6px;">산모교실 일정과 상담 안내를 보내드립니다</p></div></div>' +
+  '<div class="closerow">' + photo("closing-warm.jpg","엄마가 되는 순간, 참사랑이 곁에 있습니다","short") +
+    '<div style="text-align:center;">' + photo("qr-kakao.png","카카오채널 친구추가","qr") + '</div></div>' +
   '<div class="cards c2">' +
-    '<div class="box"><h3>바로 예약을 원하시면</h3>' +
-      '<p class="sm">예약금 10%로 날짜를 잡아드립니다.</p>' +
+    '<div class="box" style="padding:13px 16px;"><h3 style="margin-bottom:4px;">바로 예약을 원하시면</h3>' +
+      '<p class="sm" style="margin-bottom:4px;">예약금 10%로 날짜를 잡아드립니다.</p>' +
       '<div class="form f2" style="margin:10px 0 0;">' +
         '<div><span class="lab">성함</span><input type="text" data-s="name" value="'+esc(S.name)+'" placeholder="산모님 성함"></div>' +
+        '<div><span class="lab">연락처</span><input type="text" data-s="phone" value="'+esc(S.phone)+'" placeholder="010-0000-0000" inputmode="numeric"></div>' +
+        '<div><span class="lab">생년월일</span><input type="text" data-s="birth" value="'+esc(S.birth)+'" placeholder="1995-01-01" inputmode="numeric"></div>' +
         '<div><span class="lab">출산 예정일</span><input type="date" data-s="due" value="'+esc(S.due)+'"></div></div></div>' +
-    '<div class="box hi"><h3>천천히 생각해 보시겠다면</h3>' +
+    '<div class="box hi" style="padding:13px 16px;"><h3 style="margin-bottom:4px;">천천히 생각해 보시겠다면</h3>' +
       '<p class="sm">연락처 전체는 부담스러우실 수 있습니다. <b>뒷 네 자리만</b> 남겨주세요.</p>' +
       '<div class="form" style="margin:10px 0 6px;">' +
         '<div><span class="lab">연락처 뒷 네 자리</span>' +
@@ -1388,9 +1445,7 @@ var STEPS = [
 { group:"우리는", nav:"다른 업체와 뭐가 다른가", render:s_compare },
 { group:"서비스", nav:"관리사님이 하는 일", render:s_service },
 { group:"서비스", nav:"관리사님의 하루", render:s_day },
-{ group:"서비스", nav:"O · X 퀴즈", render:s_quiz },
 { group:"요금", nav:"요금은 이렇게 정해집니다", render:s_feeintro },
-{ group:"요금", nav:"금액 맞춰보기", render:s_guess },
 { group:"요금", nav:"내 본인부담금", render:s_calc },
 { group:"더 드리는 것", nav:"산모교실", render:s_class },
 { group:"더 드리는 것", nav:"가족 산후관리사", render:s_family },
@@ -1523,6 +1578,8 @@ function buildRecord(){
     id: Date.now(),
     at: nowStr(),
     phone4: (S.phone4||"").trim(),
+    phone: (S.phone||"").trim(),
+    birth: (S.birth||"").trim(),
     name: (S.name||"").trim(),
     due: S.due || "",
     fetus: S.fetus, order: S.order, band: S.band, period: S.period,
@@ -1548,7 +1605,8 @@ function saveConsult(){
 function restoreLog(id){
   var rec = loadLogs().filter(function(x){ return x.id === id; })[0];
   if (!rec) return;
-  S.phone4 = rec.phone4 || ""; S.name = rec.name || ""; S.due = rec.due || "";
+  S.phone4 = rec.phone4 || ""; S.phone = rec.phone || ""; S.birth = rec.birth || "";
+  S.name = rec.name || ""; S.due = rec.due || "";
   S.fetus = rec.fetus; S.order = rec.order; S.band = rec.band; S.period = rec.period;
   TF = JSON.parse(JSON.stringify(rec.tf || {}));
   tfIdx = TFQ.length;
@@ -1611,13 +1669,13 @@ function openLog(on){
 function exportCsv(){
   var a = loadLogs();
   if (!a.length){ alert("저장된 상담이 없습니다."); return; }
-  var head = ["저장시각","뒷4자리","성함","출산예정일","유형","기간","일수",
+  var head = ["저장시각","뒷4자리","연락처","생년월일","성함","출산예정일","유형","기간","일수",
               "본인부담금","환급","최종부담","몇째","조리계획","도와주실분",
               "중점케어","바라는관리사","중요하게보는것","걱정"];
   function j(t, k){ return ((t||{})[k]||[]).map(function(v){ return tfLabel(k, v); }).join(" / "); }
   var rows = a.map(function(r){
     var t = r.tf || {};
-    return [r.at, r.phone4, r.name, r.due, r.code, PNAME[r.period], r.days,
+    return [r.at, r.phone4, r.phone||"", r.birth||"", r.name, r.due, r.code, PNAME[r.period], r.days,
             r.self, r.refund, r.final,
             t.birth?tfLabel("birth",t.birth):"", t.jori?tfLabel("jori",t.jori):"",
             t.help?tfLabel("help",t.help):"",
@@ -1848,7 +1906,7 @@ document.getElementById("faqX").addEventListener("click", function(){ openFaq(fa
 document.getElementById("faqSheet").addEventListener("click", function(e){ if (e.target === this) openFaq(false); });
 document.getElementById("faqSearch").addEventListener("input", renderFaq);
 function reset(){
-  S = {name:"",phone4:"",due:"",fetus:"single",order:1,staff:1,disability:false,preemie:false,band:"통합",period:1};
+  S = {name:"",phone:"",birth:"",phone4:"",due:"",fetus:"single",order:1,staff:1,disability:false,preemie:false,band:"통합",period:1};
   checks = {}; TF = {}; tfIdx = 0; QA_STATE = {}; GUESS = null; justSaved = false; cur = 0; render();
 }
 document.getElementById("resetBtn").addEventListener("click", reset);
