@@ -205,9 +205,10 @@ figure.shot figcaption{font-size:13.5px;color:var(--text-3);margin-top:5px;line-
 .pk.regionpk{padding:13px 6px;border-radius:12px;}
 .pk.regionpk .tl2{font-size:17px;}
 .capgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-.closewrap{display:flex;justify-content:center;margin:2px auto 8px;}
+.closewrap{display:flex;justify-content:center;margin:0 auto;}
 .closewrap figure.shot{margin:0;}
-.closewrap figure.shot img{max-height:620px;box-shadow:0 22px 50px -24px rgba(150,25,80,.45);}
+.closewrap figure.shot img{max-height:none;height:calc(100vh - 240px);min-height:430px;width:auto;
+  box-shadow:0 22px 50px -24px rgba(150,25,80,.45);}
 .procwide{display:flex;justify-content:center;}
 .procwide figure.shot{margin:0;max-width:1050px;width:100%;}
 .procwide figure.shot img{max-height:540px;width:100%;object-fit:contain;background:transparent;}
@@ -583,6 +584,10 @@ figure.shot.short img{max-height:210px;}
 .kbd{font-family:"IBM Plex Mono",monospace;font-size:12px;background:var(--surface-2);
   border:1px solid var(--line-2);border-radius:5px;padding:1px 6px;color:var(--text-2);}
 
+.pagelogo{position:fixed;right:76px;top:22px;z-index:60;height:27px;width:auto;opacity:.92;
+  background:rgba(255,255,255,.85);border-radius:8px;padding:5px 10px;box-shadow:0 2px 10px -4px rgba(120,30,70,.18);}
+body:not(.presenting) .pagelogo{display:none;}
+@media print{.pagelogo{display:none;}}
 .fsbtn{position:fixed;right:20px;top:14px;z-index:65;width:44px;height:44px;border-radius:11px;
   background:rgba(19,37,64,.88);border:1.5px solid rgba(255,255,255,.2);color:#EAF1F8;
   font-size:20px;cursor:pointer;line-height:1;}
@@ -671,6 +676,7 @@ figure.shot.short img{max-height:210px;}
   </div>
 </div>
 
+<img class="pagelogo" src="images/logo.png" alt="참사랑어머니회">
 <div class="railveil" id="railveil"></div>
 <div class="app">
   <nav class="rail">
@@ -783,9 +789,10 @@ function won(n){ return Math.round(n).toLocaleString("ko-KR") + "원"; }
 function limit180(f){ return Math.round(FEE150[f].income * 1.2); }
 function esc(s){ return String(s == null ? "" : s).replace(/"/g,"&quot;"); }
 
-var S = {name:"",phone:"",birth:"",addr:"",due:"",deliv:"",startWish:"",memo:"",phone4:"",region:"",consultMemo:"",
+var S = {name:"",phone:"",birth:"",addr:"",due:"",deliv:"",startWish:"",memo:"",phone4:"",region:"",consultMemo:"",staffName:"",
   fetus:"single",order:1,staff:1,disability:false,preemie:false,band:"통합",period:1};
 var checks = {}, TF = {}, tfIdx = 0, QA_STATE = {}, GUESS = null;
+try { S.staffName = localStorage.getItem("chamsarang_staffname") || ""; } catch(e){}
 
 function letterOf(){
   var seq = ["A","B","C","D"], base = S.fetus === "single" ? 0 : S.fetus === "twin" ? 1 : 2;
@@ -1421,9 +1428,14 @@ function s_summary(){
   if (info) sum = sum.replace('<h3>오늘 상담 요약</h3>', '<h3>오늘 상담 요약</h3><div class="sumtop">'+info+'</div>');
   return head("마무리", "오늘 나눈 이야기, 이렇게 정리됩니다",
     "이 내용이 <b>담당자에게 그대로 전달</b>되고, 제공인력 배정에도 반영됩니다.") + sum +
-  '<div style="display:flex;gap:9px;flex-wrap:wrap;">' +
-
-    '<button class="btn lg" id="saveBtn2" type="button">상담 요약 저장</button></div>' +
+  '<div class="box" style="padding:12px 16px;display:flex;gap:10px;align-items:end;flex-wrap:wrap;">' +
+    '<div><span class="lab">연락처 뒷 네 자리</span>' +
+      '<input type="text" data-s="phone4" value="' + esc(S.phone4) + '" placeholder="0000" inputmode="numeric" ' +
+      'style="width:130px;padding:10px 12px;border:1.5px solid var(--line-2);border-radius:10px;font-size:17px;font-family:inherit;letter-spacing:.15em;"></div>' +
+    '<div><span class="lab">상담자 이름</span>' +
+      '<input type="text" id="staffNameIn" value="' + esc(S.staffName || "") + '" placeholder="상담자 성함" ' +
+      'style="width:140px;padding:10px 12px;border:1.5px solid var(--line-2);border-radius:10px;font-size:16px;font-family:inherit;"></div>' +
+    '<button class="btn pri lg" id="saveBtn2" type="button">상담 요약 저장</button></div>' +
   (justSaved ? '<div class="saved" style="margin-top:10px;">✓ 저장했습니다.</div>' : '') +
   script([
     "오늘 나눈 이야기 한번 정리해 드릴게요.",
@@ -1450,12 +1462,12 @@ function s_close(){
   return head("마무리", "오늘 함께해 주셔서 감사합니다") +
   '<div class="closewrap">' + photo("closing-bless.jpg","","tall") + '</div>' +
   (justSaved ? '<div class="saved" style="text-align:center;">✓ 오늘 상담을 저장했습니다.</div>' : '') +
-  '<div style="text-align:center;margin-top:6px;"><button class="btn" id="newBtn2" type="button">새 상담 시작</button></div>' +
   '<div class="chk" data-staff hidden><h4>상담자 마무리 체크 <span class="cnt">저장·전달</span></h4>' +
     '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">' +
     '<input type="text" data-s="phone4" value="' + esc(S.phone4) + '" placeholder="연락처 뒷 네 자리" ' +
     'style="width:170px;padding:9px 12px;border-radius:9px;border:1.5px solid #2A4A6E;background:#0F2038;color:#EAF1F8;font-family:inherit;font-size:15px;">' +
-    '<button class="btn pri" id="saveBtn" type="button">오늘 상담 저장</button></div>' +
+    '<button class="btn pri" id="saveBtn" type="button">오늘 상담 저장</button>' +
+    '<button class="btn" id="newBtn2" type="button">새 상담 시작</button></div>' +
     '<p style="margin:0;font-size:14px;color:#9FB4CE;">예약 원하시면 본사 사이트에서 바로 진행(예약금은 담당자 안내) · ' +
     '상담 내용 전달은 <b style="color:#FFD3E4;">F키 → 문자 템플릿</b> · 망설이시면 &ldquo;다음에 이어서 상담 가능&rdquo;만 안내</p></div>' +
   script([
@@ -1893,6 +1905,7 @@ function buildRecord(){
     due: S.due || "",
     consultMemo: S.consultMemo || "",
     region: S.region || "",
+    staff: (S.staffName || "").trim(),
     feeNote: (function(){
       try {
         var q = quote();
@@ -1965,6 +1978,7 @@ function renderLogs(){
     h += '<div class="lg"><div class="lg-h">' +
       '<span class="lg-no">'+(r.phone4 ? "····"+r.phone4 : "—")+'</span>' +
       (r.name ? '<span class="lg-nm">'+r.name+'</span>' : '') +
+      (r.staff ? '<span class="lg-nm" style="opacity:.75;">상담: '+esc(r.staff)+'</span>' : '') +
       '<span class="lg-dt">'+r.at+'</span></div>' +
       '<div class="lg-sum"><b>'+r.code+'</b> · '+PNAME[r.period]+' '+r.days+'일' +
       (r.final ? ' · 최종 <b>'+won(r.final)+'</b>' : '') +
@@ -1991,13 +2005,13 @@ function openLog(on){
 function exportCsv(){
   var a = loadLogs();
   if (!a.length){ alert("저장된 상담이 없습니다."); return; }
-  var head = ["저장시각","뒷4자리","연락처","생년월일","성함","주소","출산방법","희망시작일","특이사항","출산예정일","유형","기간","일수",
+  var head = ["저장시각","상담자","뒷4자리","연락처","생년월일","성함","주소","출산방법","희망시작일","특이사항","출산예정일","유형","기간","일수",
               "본인부담금","환급","최종부담","몇째","조리계획","도와주실분",
               "중점케어","바라는제공인력","중요하게보는것","걱정"];
   function j(t, k){ return ((t||{})[k]||[]).map(function(v){ return tfLabel(k, v); }).join(" / "); }
   var rows = a.map(function(r){
     var t = r.tf || {};
-    return [r.at, r.phone4, r.phone||"", r.birth||"", r.name, r.addr||"",
+    return [r.at, r.staff||"", r.phone4, r.phone||"", r.birth||"", r.name, r.addr||"",
             (r.deliv==="natural"?"자연분만":r.deliv==="cesarean"?"제왕절개":""), r.startWish||"", r.memo||"", r.due, r.code, PNAME[r.period], r.days,
             r.self, r.refund, r.final,
             t.birth?tfLabel("birth",t.birth):"", t.jori?tfLabel("jori",t.jori):"",
@@ -2067,6 +2081,11 @@ function render(){
   }
   var cm2 = document.getElementById("closeMemo");
   if (cm2) cm2.addEventListener("input", function(){ S.consultMemo = cm2.value; });
+  var sn = document.getElementById("staffNameIn");
+  if (sn) sn.addEventListener("input", function(){
+    S.staffName = sn.value;
+    try { localStorage.setItem("chamsarang_staffname", sn.value); } catch(e){}
+  });
   document.getElementById("slide").scrollTop = 0;
   fb.classList.remove("slide-anim"); void fb.offsetWidth; fb.classList.add("slide-anim");
   fitScreen();
