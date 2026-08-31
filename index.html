@@ -201,8 +201,14 @@ figure.shot figcaption{font-size:13.5px;color:var(--text-3);margin-top:5px;line-
 .pk.regionpk{padding:13px 6px;border-radius:12px;}
 .pk.regionpk .tl2{font-size:17px;}
 .capgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-.closesplit{grid-template-columns:0.9fr 1.1fr;align-items:center;}
-.closesplit figure.shot img{max-height:430px;}
+.closewrap{display:grid;grid-template-columns:auto 1fr;gap:36px;align-items:center;max-width:960px;margin:4px auto 10px;}
+.closewrap figure.shot{margin:0;}
+.closewrap figure.shot img{max-height:520px;box-shadow:0 22px 50px -24px rgba(150,25,80,.45);}
+.bless{text-align:center;}
+.bless .b1{font-family:"Gowun Batang",serif;font-size:52px;font-weight:700;color:var(--brand-d);line-height:1.3;letter-spacing:-.02em;}
+.bless .b2{font-size:26px;color:var(--navy-d);line-height:1.65;margin-top:18px;}
+.bless .b3{margin-top:22px;font-size:15px;color:var(--text-3);letter-spacing:.22em;}
+@media (max-width:900px){.closewrap{grid-template-columns:1fr;}.bless .b1{font-size:34px;}.bless .b2{font-size:20px;}}
 .procwide{display:flex;justify-content:center;}
 .procwide figure.shot{margin:0;max-width:1050px;width:100%;}
 .procwide figure.shot img{max-height:540px;width:100%;object-fit:contain;background:transparent;}
@@ -876,7 +882,7 @@ var TFQ = [
   { k:"jori", q:"산후조리는 어디서 하실 계획이세요?", sub:"집에서 보내는 시간이 진짜 산후조리입니다",
     opts:[["center","🏥","조리원 갔다가 집으로","보통 2주 정도"],["home","🏠","조리원 없이 집에서",""],
           ["undecided","🤔","아직 고민 중이에요",""]] },
-  { k:"help", q:"집에서 도와주실 분이 계세요?", sub:"이 답에 따라 안내가 크게 달라집니다",
+  { k:"help", multi:true, q:"집에서 도와주실 분이 계세요?", sub:"해당되는 분을 <b>모두</b> 골라주세요",
     opts:[["mom","👵","친정엄마가 오세요",""],["mil","👩‍🦳","시어머니가 오세요",""],
           ["husband","👨","남편만 있어요",""],["none","🙅","도와주실 분이 없어요",""]] },
   { k:"focus", multi:true, q:"서비스 받으실 때 어디에 가장 신경 써주면 좋겠어요?",
@@ -917,7 +923,8 @@ function tfApply(){
 }
 function tfDone(){ return TFQ.every(function(q){ return q.multi ? (TF[q.k]&&TF[q.k].length) : TF[q.k]; }); }
 function tfResult(){
-  var w = (TF.focus||[])[0], h = TF.help, j = TF.jori, hw = TF.how;
+  var w = (TF.focus||[])[0], ha = TF.help || [], j = TF.jori, hw = TF.how;
+  var h = ha.length ? ha[0] : null;
   var R = {
     body:["회복 우선형","💗","산모님 몸 회복을 가장 신경 쓰고 계십니다.",
       "산후풍·수유 문제는 <b>초기 2주</b>가 가장 중요합니다. 매일 상태를 확인하고 좌욕과 회복 식단까지 챙겨드립니다."],
@@ -933,10 +940,10 @@ function tfResult(){
       "제공인력은 <b>낮 시간(09~18시)</b>에 오십니다. 낮에 아기를 봐드리는 동안 <b>눈을 붙이실 수 있는 것</b>이 가장 큰 차이입니다."]
   }[w] || ["맞춤 상담형","🌸","산모님 상황에 맞춰 안내해 드리겠습니다.",""];
   var recos = [];
-  if (h === "mom" || h === "mil")
+  if (ha.indexOf("mom") >= 0 || ha.indexOf("mil") >= 0)
     recos.push(["가족 산후관리사 — 꼭 보세요",
       (h==="mom"?"친정어머니":"시어머니")+"께서 저희 소속 제공인력로 등록하시면 <b>국가지원을 받으면서</b> 돌봐주실 수 있습니다."]);
-  else if (h === "none") recos.push(["기간을 넉넉히","도와주실 분이 없으면 짧게 잡으셨다 힘들어하시는 경우가 많습니다."]);
+  else if (ha.indexOf("none") >= 0) recos.push(["기간을 넉넉히","도와주실 분이 없으면 짧게 잡으셨다 힘들어하시는 경우가 많습니다."]);
   else recos.push(["남편분과 함께","오시는 시간과 해주시는 범위를 두 분이 같이 아셔야 편합니다."]);
   if (j === "center") recos.push(["조리원 다음이 진짜","바우처는 <b>출산일부터 90일</b> 안에 쓰시면 됩니다."]);
   else if (j === "home") recos.push(["집에서 하시면 기간이 중요","제공인력과 보내는 시간이 산후조리 그 자체가 됩니다."]);
@@ -960,7 +967,8 @@ function s_typefinder(){
         '<span class="tl2">'+o[2]+'</span>'+(o[3]?'<span class="sb">'+o[3]+'</span>':'')+'</button>';
     });
     h += '</div>';
-    if (q.multi) h += '<p class="pickinfo" style="text-align:center;"><b>'+(TF[q.k]||[]).length+' / '+MAXPICK+'</b>개 선택 — 2개를 고르시면 다음으로 넘어갑니다.</p>';
+    if (q.multi && q.k === "help") h += '<p class="pickinfo" style="text-align:center;">여러 명 계시면 <b>모두</b> 눌러주세요 — 고르셨으면 <b>다음</b>을 눌러주세요.</p>';
+    else if (q.multi) h += '<p class="pickinfo" style="text-align:center;"><b>'+(TF[q.k]||[]).length+' / '+MAXPICK+'</b>개 선택 — 2개를 고르시면 다음으로 넘어갑니다.</p>';
   } else if (tfDone()){
     var r = tfResult();
     h += '<div class="split" style="margin-bottom:12px;">' +
@@ -990,7 +998,7 @@ function s_matching(){
   var wants = TF.want || [], chips = "";
   if (TF.birth) chips += chip(tfLabel("birth", TF.birth));
   if (TF.jori) chips += chip(tfLabel("jori", TF.jori));
-  if (TF.help) chips += chip(tfLabel("help", TF.help));
+  (TF.help||[]).forEach(function(v){ chips += chip(tfLabel("help", v)); });
   wants.forEach(function(v){ chips += chip(tfLabel("want", v), true); });
   (TF.focus||[]).forEach(function(v){ chips += chip("신경 — " + tfLabel("focus", v)); });
   var wantTxt = wants.length ? wants.map(function(v){ return tfLabel("want", v); }).join(" · ") : "산모님께 맞는";
@@ -1064,15 +1072,15 @@ function s_company(){
       '<div class="box hi" style="padding:18px 20px;"><h3 style="margin-bottom:5px;">가장 많은 서비스를 진행했습니다</h3>' +
       '<p>이용 산모님 수 <b class="hl">경남 1위</b> — 그만큼 많은 분들이 믿고 맡기셨습니다.</p></div>' +
       '<div class="box hi" style="padding:18px 20px;"><h3 style="margin-bottom:5px;">가장 많은 제공인력을 보유하고 있습니다</h3>' +
-      '<p>제공인력 수 <b class="hl">경남 1위</b> — 원하시는 조건에 <b>맞춤으로 배정</b>받으실 수 있습니다.</p></div>' +
+      '<p>산모님이 <b>걱정하시는 부분에 맞춰</b> 진행해 드릴 <b class="hl">좋은 제공인력이 많은 회사</b> — 그게 저희입니다.</p></div>' +
     '</div></div>' +
   script([
     "저희 참사랑어머니회는 산모·신생아 건강관리만 전문으로 해온 기관이에요.",
     "정부 공식 사이트에서 보시면 경남에서 서비스를 가장 많이 진행했고, 제공인력도 가장 많이 보유하고 있어요.",
     "많이 진행했다는 건 그만큼 많은 분들이 믿고 맡기셨다는 뜻이고요,",
-    "제공인력이 많다는 건, 산모님이 원하시는 조건에 맞는 분을 맞춤으로 배정해 드릴 수 있다는 뜻이에요."
+    "저희가 드리고 싶은 말씀은 이거예요 — 지금 걱정하시는 것들에 맞춰서 진행해 드릴 수 있는, 좋은 제공인력이 많은 회사가 저희 참사랑이에요."
   ], "이 화면은 딱 두 가지만 — <b>가장 많이 진행 · 가장 많이 보유</b>. 캡처의 빨간 박스를 짚어주세요.") +
-  checklist("company", ["가장 많은 서비스 진행 (이용자 1위)","제공인력 1위 → 조건에 맞는 맞춤 배정","정부 공식 집계라는 점"]);
+  checklist("company", ["가장 많은 서비스 진행 (이용자 1위)","좋은 인력이 많다 → 걱정에 맞춰 진행","정부 공식 집계라는 점"]);
 }
 
 /* ══════════ 5. 품질평가 A등급 ══════════ */
@@ -1117,7 +1125,7 @@ function s_compare(){
     photo("compare-teach.jpg","② 교육원 직접 운영") +
     photo("consult-manager.jpg","③ 전문 담당자 밀착") + '</div>' +
   '<div class="cards c3">' +
-    '<div class="box hi"><h3>① 나에게 맞는 제공인력</h3>' +
+    '<div class="box"><h3>① 나에게 맞는 제공인력</h3>' +
       '<p>같은 값이면 <b>내 요구에 맞는 분</b>이 오셔야 합니다. 사람이 하는 서비스라 <b>안 맞으시면 교체</b>도 됩니다.</p></div>' +
     '<div class="box"><h3>② 교육원을 직접 운영</h3>' +
       '<p><b>창원참사랑평생교육원</b>을 함께 운영합니다. 제공인력의 <b>실력과 체계적 관리</b>가 다릅니다.</p></div>' +
@@ -1170,7 +1178,7 @@ function s_day(){
   script([
     "하루 일과를 그림으로 보여드릴게요. 9시에 오셔서 앞치마 갈아입고 손 씻는 것부터 시작해요.",
     "오전에는 아침 준비하고 체온 체크하고, 수유 도와드리고요. 12시부터 1시까지는 제공인력 식사 겸 휴게시간이에요.",
-    "오후에는 스트레칭 돕고, 3시에 아기 목욕이랑 배꼽소독 해드려요. 4시부터는 좌욕 도와드리고요.",
+    "오후에는 아기 돌봐드리면서 산모님 쉬시게 해드리고, 3시에 아기 목욕이랑 배꼽소독 해드려요. 4시부터는 좌욕 도와드리고요.",
     "5시부터는 저녁 준비하고 기록지 쓰고 마무리해요.",
     "이 일정은 산모님 상황에 맞게 조정돼요. 꼭 이대로만 하는 건 아니에요."
   ], "<b>실제 표준일정표</b>입니다. 산모님이 가장 궁금해하시는 부분이니 그림을 짚어가며 천천히 설명하세요. " +
@@ -1388,7 +1396,7 @@ function s_summary(){
   function j(k){ return (TF[k]||[]).map(function(v){ return tfLabel(k,v); }).join(" · "); }
   var sum = '<div class="sum"><h3>오늘 상담 요약</h3>';
   sum += row("상황", situation() + (TF.jori ? "  ·  " + tfLabel("jori", TF.jori) : "") +
-                     (TF.help ? "  ·  " + tfLabel("help", TF.help) : ""));
+                     ((TF.help&&TF.help.length) ? "  ·  " + TF.help.map(function(v){return tfLabel("help",v);}).join(", ") : ""));
   if (j("focus")) sum += row("중점 케어", j("focus"));
   if (j("want")) sum += row("바라시는 분", j("want"));
   if (j("fear")) sum += row("걱정하신 것", j("fear"));
@@ -1439,56 +1447,33 @@ function guPhone(){
   return GU_PHONE_DEFAULT[g] || GU_PHONE_DEFAULT["기타지역"];
 }
 function s_close(){
-  function fld(k,label,ph,type){
-    return '<div><span class="lab">'+label+'</span><input type="'+(type||"text")+'" data-s="'+k+'" ' +
-      'value="'+esc(S[k])+'" placeholder="'+(ph||"")+'"></div>';
-  }
-  var form = "";
-  if (closeMode === "reserve"){
-    form = '<div class="box" style="padding:14px 17px;margin-bottom:12px;">' +
-      '<p class="sm" style="margin-bottom:9px;"><b>예약은 예약금 입금과 동시에 확정</b>됩니다 — 지금은 기본 정보만 적어두시면 돼요. ' +
-      '예약금 입금은 담당자가 개별 안내드립니다.</p>' +
-      '<div class="form f3" style="margin:0;">' +
-        fld("name","성함","산모님 성함") + fld("phone","연락처","010-0000-0000") + fld("birth","생년월일","1995-01-01") +
-        fld("addr","주소","창원시 …") + fld("due","출산 예정일","","date") + fld("startWish","서비스 희망 시작일","출산 후 바로 등") +
-        '<div><span class="lab">출산 방법</span><div class="seg mini">' +
-          seg("deliv","natural","자연분만") + seg("deliv","cesarean","제왕절개") + '</div></div>' +
-        fld("memo","특이사항","반려동물 · 큰아이 · 알레르기 등") + '</div>' +
-      '<div style="margin-top:10px;display:flex;gap:9px;flex-wrap:wrap;">' +
-        '<button class="btn pri lg" id="saveBtn" type="button">등록하고 저장하기</button>' +
-        '<button class="btn lg" id="homeSiteBtn" type="button">🌐 본사 예약 사이트 열기</button></div></div>';
-  }
   return head("마무리", "오늘 함께해 주셔서 감사합니다") +
-  '<div class="split closesplit">' + photo("closing-bless.jpg","산모님과 아기의 모든 날을 응원합니다","tall") +
-    '<div>' +
-      '<div class="punch"><div class="lab">부담 갖지 않으셔도 됩니다</div>' +
-      '<div class="txt">오늘 꼭 결정하지 않으셔도 돼요. <b class="hl">언제든 전화 주시면</b> 오늘 나눈 내용 그대로 ' +
-      '<b>이어서</b> 상담해 드립니다.</div></div>' +
-      '<div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:12px;">' +
-        '<button class="btn pri" id="reserveToggle" type="button">📝 현장 예약 진행하기</button>' +
-        '<button class="btn" id="smsOpenBtn" type="button">📨 상담 내용 문자로 보내기</button></div>' +
-      '<div class="form" style="margin:0 0 10px;max-width:340px;">' + fld("phone4","(선택) 연락처 뒷 네 자리","0000") + '</div>' +
-      '<p class="sm" style="margin-bottom:10px;">뒷 네 자리만 남기시면 다음에 <b>오늘 내용을 찾아 이어서</b> 상담해 드려요. ' +
-      (closeMode === "reserve" ? '' : '<button class="btn" id="saveBtn" type="button" style="margin-left:6px;">저장</button>') + '</p>' +
-      '<div class="telline" style="margin-bottom:0;"><b>'+esc(S.region||"우리 지역")+' 담당자</b> '+guPhone()+'</div>' +
-    '</div></div>' + form +
-  '<div class="box" style="padding:11px 15px;margin-bottom:10px;">' +
-    '<span class="lab">상담 추가 메모 — 저장·문자에 함께 담깁니다</span>' +
-    '<textarea id="closeMemo" rows="2" style="width:100%;margin-top:5px;font-family:inherit;font-size:15px;padding:8px 11px;' +
-    'border:1.5px solid var(--line-2);border-radius:10px;resize:vertical;" ' +
-    'placeholder="예: 첫째 4살 · 10월 초 시작 희망 · OO 관리사님 문의">' + esc(S.consultMemo) + '</textarea></div>' +
-  (justSaved ? '<div class="saved">✓ 저장했습니다. 다음에 찾아서 이어서 상담하실 수 있습니다.</div>' : '') +
-  '<button class="btn" id="newBtn2" type="button">새 상담 시작</button>' +
+  '<div class="closewrap">' +
+    photo("closing-bless.jpg","","tall") +
+    '<div class="bless">' +
+      '<div class="b1">엄마가 된 당신을<br>응원합니다</div>' +
+      '<div class="b2">산모님과 아기의 모든 날이<br>건강하고 따뜻하기를</div>' +
+      '<div class="b3">참사랑어머니회 드림</div>' +
+    '</div></div>' +
+  (justSaved ? '<div class="saved" style="text-align:center;">✓ 오늘 상담을 저장했습니다.</div>' : '') +
+  '<div style="text-align:center;margin-top:6px;"><button class="btn" id="newBtn2" type="button">새 상담 시작</button></div>' +
+  '<div class="chk" data-staff hidden><h4>상담자 마무리 체크 <span class="cnt">저장·전달</span></h4>' +
+    '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">' +
+    '<input type="text" data-s="phone4" value="' + esc(S.phone4) + '" placeholder="연락처 뒷 네 자리" ' +
+    'style="width:170px;padding:9px 12px;border-radius:9px;border:1.5px solid #2A4A6E;background:#0F2038;color:#EAF1F8;font-family:inherit;font-size:15px;">' +
+    '<button class="btn pri" id="saveBtn" type="button">오늘 상담 저장</button></div>' +
+    '<p style="margin:0;font-size:14px;color:#9FB4CE;">예약 원하시면 본사 사이트에서 바로 진행(예약금은 담당자 안내) · ' +
+    '상담 내용 전달은 <b style="color:#FFD3E4;">F키 → 문자 템플릿</b> · 망설이시면 &ldquo;다음에 이어서 상담 가능&rdquo;만 안내</p></div>' +
   script([
-    "오늘 이야기는 여기까지예요. 시간 내주셔서 정말 감사합니다.",
-    "예약하고 가시려면 지금 바로 도와드릴게요. 기본 정보만 적어두시면 되고, 확정은 예약금 입금하실 때예요.",
+    "오늘 이야기는 여기까지예요. 귀한 시간 내주셔서 정말 감사합니다.",
+    "예약하고 가시려면 지금 바로 도와드릴게요. 확정은 예약금 입금하실 때니까 부담은 없으세요.",
     "조금 더 생각해 보고 싶으시면 그것도 좋아요. 언제든 전화 주시면 오늘 나눈 내용 그대로 보면서 이어서 상담해 드려요.",
-    "산모님, 남은 기간 몸 편안하게 보내시고요 — 산모님과 아기의 모든 날이 건강하고 따뜻하기를 참사랑이 응원할게요."
-  ], "<b>감사 인사로 끝내세요.</b> 예약을 재촉하지 말고 — 예약하실 분은 📝 버튼으로 바로, " +
-     "망설이는 분께는 <b>&lsquo;다음에 이어서 상담 가능&rsquo;</b>만 따뜻하게 안내하면 충분합니다.") +
+    "산모님 — 엄마가 된 당신을 응원합니다. 산모님과 아기의 모든 날이 건강하고 따뜻하기를 바랄게요."
+  ], "<b>이 화면은 산모님을 위한 마무리입니다.</b> 버튼도 절차도 없이 응원 문구로 끝내세요. " +
+     "저장·문자·예약 처리는 아래 상담자 체크(이 서랍)에서 하시면 됩니다.") +
   checklist("close", [
-    "감사 인사 먼저","예약 원하면 📝 바로 진행 (확정은 입금 때)","망설이면 &lsquo;이어서 상담 가능&rsquo; 안내",
-    "뒷 네 자리 저장 권유","📨 복사 → 카톡 나와의 채팅 → 폰에서 문자","건강 기원 문구로 마무리"
+    "감사 인사 먼저","예약 원하면 본사 사이트에서 바로 진행","망설이면 &lsquo;이어서 상담 가능&rsquo; 안내",
+    "뒷 네 자리 저장 (위 입력칸)","문자 전달: F키 → 복사 → 카톡 나와의 채팅 → 폰","응원 문구 읽어드리며 마무리"
   ]);
 }
 
@@ -1951,6 +1936,7 @@ function restoreLog(id){
   S.consultMemo = rec.consultMemo || ""; S.region = rec.region || "";
   S.fetus = rec.fetus; S.order = rec.order; S.band = rec.band; S.period = rec.period;
   TF = JSON.parse(JSON.stringify(rec.tf || {}));
+  if (typeof TF.help === "string") TF.help = [TF.help];
   tfIdx = TFQ.length;
   checks = {}; QA_STATE = {}; GUESS = null; justSaved = false;
   openLog(false);
@@ -2096,7 +2082,7 @@ function renderMomBar(){
   if (!mb) return;
   var bits = [];
   if (TF.birth) bits.push([tfLabel("birth", TF.birth), false]);
-  if (TF.help) bits.push([tfLabel("help", TF.help), false]);
+  (TF.help||[]).forEach(function(v){ bits.push([tfLabel("help", v), false]); });
   (TF.focus||[]).forEach(function(v){ bits.push(["신경 " + tfLabel("focus", v), false]); });
   (TF.want||[]).forEach(function(v){ bits.push([tfLabel("want", v), false]); });
   (TF.fear||[]).forEach(function(v){ bits.push(["걱정 " + tfLabel("fear", v), true]); });
@@ -2265,6 +2251,15 @@ document.addEventListener("click", function(e){
   var tf = e.target.closest("[data-tf]");
   if (tf){
     var k = tf.dataset.tf, v = tf.dataset.tv;
+    if (k === "help"){
+      var ha = TF.help || [], hi = ha.indexOf(v);
+      if (v === "none"){ TF.help = (hi >= 0) ? [] : ["none"]; }
+      else {
+        if (hi >= 0) ha.splice(hi,1); else ha.push(v);
+        TF.help = ha.filter(function(x){ return x !== "none"; });
+      }
+      render(); return;
+    }
     if (tf.dataset.multi){
       var arr = TF[k] || [], at = arr.indexOf(v);
       if (at >= 0) arr.splice(at,1);
