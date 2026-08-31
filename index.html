@@ -202,13 +202,18 @@ figure.shot figcaption{font-size:13.5px;color:var(--text-3);margin-top:5px;line-
   background:var(--brand);color:#fff;font-weight:700;font-size:16px;margin-bottom:8px;}
 .modecard .mt{display:block;font-size:18.5px;font-weight:700;margin-bottom:5px;color:var(--navy-d);}
 .modecard .ms{display:block;font-size:13.5px;color:var(--text-3);line-height:1.4;}
+.caprow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:4px;}
 .pk.regionpk{padding:13px 6px;border-radius:12px;}
 .pk.regionpk .tl2{font-size:17px;}
 .capgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-.closewrap{display:flex;justify-content:center;margin:0 auto;}
-.closewrap figure.shot{margin:0;}
-.closewrap figure.shot img{max-height:none;height:calc(100vh - 240px);min-height:430px;width:auto;
-  box-shadow:0 22px 50px -24px rgba(150,25,80,.45);}
+.blesspage{min-height:calc(100vh - 170px);display:flex;flex-direction:column;justify-content:center;align-items:center;
+  text-align:center;gap:0;background:radial-gradient(900px 480px at 50% 8%, rgba(194,24,91,.06), transparent 65%),
+  radial-gradient(760px 420px at 50% 100%, rgba(30,58,95,.05), transparent 60%);border-radius:24px;}
+.bpsmall{font-size:19px;color:var(--text-3);letter-spacing:.14em;margin-bottom:26px;}
+.bp1{font-family:"Gowun Batang",serif;font-size:76px;font-weight:700;color:var(--brand-d);line-height:1.28;letter-spacing:-.02em;}
+.bp2{font-size:30px;color:var(--navy-d);line-height:1.7;margin-top:26px;}
+.bplogo{height:44px;width:auto;margin-top:44px;}
+@media (max-width:900px){.bp1{font-size:44px;}.bp2{font-size:22px;}}
 .procwide{display:flex;justify-content:center;}
 .procwide figure.shot{margin:0;max-width:1050px;width:100%;}
 .procwide figure.shot img{max-height:540px;width:100%;object-fit:contain;background:transparent;}
@@ -584,11 +589,10 @@ figure.shot.short img{max-height:210px;}
 .kbd{font-family:"IBM Plex Mono",monospace;font-size:12px;background:var(--surface-2);
   border:1px solid var(--line-2);border-radius:5px;padding:1px 6px;color:var(--text-2);}
 
-.pagelogo{position:fixed;right:76px;top:22px;z-index:60;height:27px;width:auto;opacity:.92;
-  background:rgba(255,255,255,.85);border-radius:8px;padding:5px 10px;box-shadow:0 2px 10px -4px rgba(120,30,70,.18);}
+.pagelogo{position:fixed;right:22px;top:18px;z-index:60;height:42px;width:auto;}
 body:not(.presenting) .pagelogo{display:none;}
 @media print{.pagelogo{display:none;}}
-.fsbtn{position:fixed;right:20px;top:14px;z-index:65;width:44px;height:44px;border-radius:11px;
+.fsbtn{position:fixed;right:20px;top:72px;z-index:65;width:44px;height:44px;border-radius:11px;
   background:rgba(19,37,64,.88);border:1.5px solid rgba(255,255,255,.2);color:#EAF1F8;
   font-size:20px;cursor:pointer;line-height:1;}
 .fsbtn:hover{border-color:#E24B86;color:#FFC1DA;}
@@ -1459,8 +1463,12 @@ function guPhone(){
   return GU_PHONE_DEFAULT[g] || GU_PHONE_DEFAULT["기타지역"];
 }
 function s_close(){
-  return head("마무리", "오늘 함께해 주셔서 감사합니다") +
-  '<div class="closewrap">' + photo("closing-bless.jpg","","tall") + '</div>' +
+  return '<div class="blesspage">' +
+    '<div class="bpsmall">오늘 함께해 주셔서 감사합니다</div>' +
+    '<div class="bp1">엄마가 된 당신을<br>응원합니다</div>' +
+    '<div class="bp2">산모님과 아기의 모든 날이<br>건강하고 따뜻하기를</div>' +
+    '<img class="bplogo" src="images/logo.png" alt="참사랑어머니회">' +
+  '</div>' +
   (justSaved ? '<div class="saved" style="text-align:center;">✓ 오늘 상담을 저장했습니다.</div>' : '') +
   '<div class="chk" data-staff hidden><h4>상담자 마무리 체크 <span class="cnt">저장·전달</span></h4>' +
     '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">' +
@@ -1475,8 +1483,8 @@ function s_close(){
     "예약하고 가시려면 지금 바로 도와드릴게요. 확정은 예약금 입금하실 때니까 부담은 없으세요.",
     "조금 더 생각해 보고 싶으시면 그것도 좋아요. 언제든 전화 주시면 오늘 나눈 내용 그대로 보면서 이어서 상담해 드려요.",
     "산모님 — 엄마가 된 당신을 응원합니다. 산모님과 아기의 모든 날이 건강하고 따뜻하기를 바랄게요."
-  ], "<b>이 화면은 산모님을 위한 마무리입니다.</b> 버튼도 절차도 없이 응원 문구로 끝내세요. " +
-     "저장·문자·예약 처리는 아래 상담자 체크(이 서랍)에서 하시면 됩니다.") +
+  ], "<b>이 화면은 산모님을 위한 마무리입니다.</b> 응원 문구를 읽어드리며 끝내세요. " +
+     "저장·문자·예약 처리는 이 서랍의 상담자 체크에서 하시면 됩니다.") +
   checklist("close", [
     "감사 인사 먼저","예약 원하면 본사 사이트에서 바로 진행","망설이면 &lsquo;이어서 상담 가능&rsquo; 안내",
     "뒷 네 자리 저장 (위 입력칸)","문자 전달: F키 → 복사 → 카톡 나와의 채팅 → 폰","응원 문구 읽어드리며 마무리"
@@ -1515,7 +1523,7 @@ function capFetch(){
 }
 var CAP_REGIONS = ["의창구","성산구","진해구","마산합포구","마산회원구","김해","양산","기타지역"];
 function capBox(){
-  if (!S.region) return '<div class="note"><span class="ic">·</span><span>지역을 골라주시면 <b>지금 예약 여유</b>를 바로 보여드립니다.</span></div>';
+  if (!S.region) return "";
   if (S.region === "김해" || S.region === "양산")
     return '<div class="note w"><span class="ic">!</span><span><b>'+S.region+'</b>는 지사에서 배정합니다 — 상담자가 <b>'+(S.region==="김해"?"055-329-3579":"055-384-5008")+'</b>로 바로 확인해 드립니다.</span></div>';
   if (CAPERR) return '<div class="note w"><span class="ic">!</span><span>지금 인터넷 연결이 원활하지 않아요 — 상담자가 <b>본사 배정 프로그램</b>에서 바로 확인해 드립니다.</span></div>';
@@ -1605,33 +1613,35 @@ function s_capacity(){
       '<span class="tl2">'+g+'</span></button>';
   }).join("");
   return head("예정일 확인", "예정일이 언제실까요?",
-    "예정일과 지역만 알려주시면 <b>지금 예약 여유</b>를 바로 보여드립니다.") +
+    "예정일과 지역만 알려주시면 <b>지금 예약 여유</b>를 바로 확인해 드립니다.") +
   '<div class="punch"><div class="lab">먼저 알려드릴 것</div>' +
     '<div class="txt">보통 <b class="hl">예정일 한 달~한 달 반 전</b>에 예약하세요 — ' +
     '<b>미리 예약하신 분부터</b> 원하시는 날짜에 배정되기 때문입니다.</div></div>' +
-  '<div class="split" style="grid-template-columns:0.8fr 1.2fr;align-items:start;">' +
-    '<div><div class="form" style="margin:0 0 10px;">' +
-      '<div><span class="lab">출산 예정일</span><input type="date" data-s="due" value="'+esc(S.due)+'"></div></div>' +
-      '<span class="lab">사시는 지역</span>' +
-      '<div class="pick" style="grid-template-columns:repeat(4,1fr);gap:8px;margin:6px 0 0;">'+chips+'</div></div>' +
-    '<div><span class="lab">지금 예약 여유</span><div id="capBoxWrap" style="margin-top:6px;">'+capBox()+'</div>' +
-      '<div style="margin-top:12px;"><span class="lab">제공인력 현황 — &ldquo;혹시 OO 관리사님 되나요?&rdquo;</span>' +
-      '<input type="text" id="wkSearch" placeholder="이름이나 구 이름으로 검색 · 지역을 고르면 그 지역만 보여요" ' +
-      'style="width:100%;margin:6px 0 8px;padding:10px 12px;border:1.5px solid var(--line-2);border-radius:10px;font-size:16px;font-family:inherit;">' +
-      '<div id="wkList"></div></div></div>' +
+  '<div class="caprow">' +
+    '<div><span class="lab">출산 예정일 — 숫자만 쭉 입력 (예: 20260101)</span>' +
+      '<input type="text" id="dueIn" inputmode="numeric" value="'+esc(S.due)+'" placeholder="2026-01-01" ' +
+      'style="width:100%;padding:12px 13px;border:1.5px solid var(--line-2);border-radius:11px;font-size:19px;' +
+      'font-family:\'IBM Plex Mono\',monospace;letter-spacing:.06em;"></div>' +
+    '<div><span class="lab">제공인력(관리사) 이름 검색</span>' +
+      '<input type="text" id="wkSearch" placeholder="성함 입력 — 지정 가능 여부 바로 확인" ' +
+      'style="width:100%;padding:12px 13px;border:1.5px solid var(--line-2);border-radius:11px;font-size:17px;font-family:inherit;"></div>' +
   '</div>' +
+  '<span class="lab" style="margin-top:10px;">사시는 지역</span>' +
+  '<div class="pick" style="grid-template-columns:repeat(8,1fr);gap:7px;margin:5px 0 10px;">'+chips+'</div>' +
+  '<div id="capBoxWrap">'+capBox()+'</div>' +
+  '<div id="wkList" style="margin-top:9px;"></div>' +
   script([
     "혹시 예정일이 언제실까요? 아, 그러시구나 — 축하드려요!",
     "보통 예정일 한 달에서 한 달 반 전에 예약을 하세요. 왜냐하면 미리 예약해 두신 분들께 먼저 배정을 해드리거든요. 원하시는 날짜에 받으시려면 미리가 유리해요.",
     "사시는 지역이 어디세요? 지금 화면에서 그 지역 예약 여유를 바로 보여드릴게요.",
     "혹시 집에 강아지나 고양이 키우세요? 반려동물이 있으면 가능한 제공인력으로 맞춰서 배정해 드리거든요.",
     "특정 관리사님을 지정하고 싶으시면 성함 말씀해 주세요 — 그분 지역이랑 자차 여부 보고 가능한지 바로 알려드릴게요.",
-    "이 시기에는 여유가 있네요 — 그러면 오늘 원하시는 조건까지 같이 정해두시면, 그 조건에 맞는 제공인력으로 배정을 잡아드릴 수 있어요.",
-    "여유가 얼마 없는 시기면, 오늘 간편 예약이라도 걸어두시는 게 유리해요."
+    "여유가 얼마 없는 시기면, 오늘 예약이라도 걸어두시는 게 유리해요."
   ], "현장 핵심 멘트입니다. <b>예정일 → 한 달~한 달 반 전 예약 프레임 → 지역 여유 확인 → 예약 유도</b> 순서로 자연스럽게 이어가세요. " +
      "여유가 없어 보여도 단정하지 말고 <b>&lsquo;본사에서 정확히 확인해 드릴게요&rsquo;</b>로 받으세요.") +
-  checklist("cap", ["예정일 여쭙고 축하 인사","한 달~한 달 반 전 예약 이유 설명","지역 여유 같이 보기","반려동물 여부 확인","지정 문의는 현황 검색으로 바로 답","여유 적으면 간편 예약 권유"]);
+  checklist("cap", ["예정일 여쭙고 축하 인사","한 달~한 달 반 전 예약 이유 설명","지역 여유 같이 보기","반려동물 여부 확인","지정 문의는 이름 검색으로 즉답","여유 적으면 오늘 예약 권유"]);
 }
+
 
 /* ══════════ 단계 ══════════ */
 var STEPS = [
@@ -2078,6 +2088,18 @@ function render(){
     wkFetch(); wkRender();
     var ws = document.getElementById("wkSearch");
     if (ws) ws.addEventListener("input", wkRender);
+    var di = document.getElementById("dueIn");
+    if (di) di.addEventListener("input", function(){
+      var d = di.value.replace(/[^0-9]/g, "").slice(0, 8);
+      var f = d;
+      if (d.length > 6) f = d.slice(0,4) + "-" + d.slice(4,6) + "-" + d.slice(6);
+      else if (d.length > 4) f = d.slice(0,4) + "-" + d.slice(4);
+      di.value = f;
+      S.due = (d.length === 8) ? (d.slice(0,4) + "-" + d.slice(4,6) + "-" + d.slice(6)) : "";
+      var cw = document.getElementById("capBoxWrap");
+      if (cw) cw.innerHTML = capBox();
+      renderMomBar();
+    });
   }
   var cm2 = document.getElementById("closeMemo");
   if (cm2) cm2.addEventListener("input", function(){ S.consultMemo = cm2.value; });
