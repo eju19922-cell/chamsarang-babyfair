@@ -201,6 +201,11 @@ figure.shot figcaption{font-size:13.5px;color:var(--text-3);margin-top:5px;line-
 .pk.regionpk{padding:13px 6px;border-radius:12px;}
 .pk.regionpk .tl2{font-size:17px;}
 .capgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.closesplit{grid-template-columns:0.9fr 1.1fr;align-items:center;}
+.closesplit figure.shot img{max-height:430px;}
+.procwide{display:flex;justify-content:center;}
+.procwide figure.shot{margin:0;max-width:1050px;width:100%;}
+.procwide figure.shot img{max-height:540px;width:100%;object-fit:contain;background:transparent;}
 .capcell{border:2px solid var(--line-2);border-radius:14px;padding:13px 10px;text-align:center;background:var(--surface);box-shadow:0 3px 12px -8px rgba(150,25,80,.14);}
 .capcell .cb{font-size:14.5px;color:var(--text-3);margin-bottom:4px;}
 .capcell .cs{font-size:20px;font-weight:700;}
@@ -1314,10 +1319,11 @@ function s_class(){
     "그리고 하나 더, 산모님께 드리는 혜택이 있어요. 저희가 무료 산모교실을 정기적으로 운영해요.",
     "저희 서비스 예약은 안 하셔도 돼요. 산모교실 신청만 하시면 무료로 참여하시고, 준비된 사은품도 받아 가세요.",
     "이번에는 AI로 태교 동화를 만들어보는 시간이에요. 사진 보시면 매번 이렇게 많이 오세요.",
-    "매월 마지막 주에 열리니까, 카카오채널 친구추가 해두시면 일정을 알려드려요."
+    "매월 마지막 주에 열리니까, 카카오채널 친구추가 해두시면 일정을 알려드려요.",
+    "산모교실 오시면 사은품만이 아니라 실제 육아 정보도 실속 있게 얻어가실 수 있어요. 선배 산모님들 얘기도 듣고요."
   ], "<b>&lsquo;무료로 참여하고 사은품 받아 가세요&rsquo;</b>가 이 장의 전부입니다. " +
      "&lsquo;서비스 예약은 필요 없지만 산모교실 신청은 해야 한다&rsquo;를 헷갈리지 않게 말하세요.") +
-  checklist("class", ["무료 + 사은품이 포인트","서비스 예약은 불필요, 산모교실 신청은 필요","현장 사진 짚어주기","카카오채널 친구추가 안내"]);
+  checklist("class", ["무료 + 사은품이 포인트","육아 정보 니즈 → 산모교실로 연결","서비스 예약은 불필요, 산모교실 신청은 필요","현장 사진 짚어주기","카카오채널 친구추가 안내"]);
 }
 
 /* ══════════ 18. 가족 산후관리사 ══════════ */
@@ -1328,6 +1334,8 @@ function s_family(){
   '<div class="gal g2 big">' + photo("poster-family.jpg","딸과 며느리의 산후조리 — 2026년 교육일정","tall") +
     photo("poster-extra.jpg","영유아 · 정리수납 · AI 실무 활용교육","tall") + '</div>' +
   script([
+    "혹시 친정어머니나 시어머니가 집에 계시면서 도와주실 수 있는 상황이세요? 그러면 이 제도를 꼭 아셔야 해요.",
+    "어머니가 교육을 받으시면, 국가 지원을 받으면서 우리 딸·우리 손주를 직접 돌봐주실 수 있거든요. 수당도 어머니께 나가고요.",
     "혹시 친정어머니나 시어머니께서 산후조리를 도와주실 계획 있으세요?",
     "어머니가 저희 소속 제공인력로 등록하시면 국가지원을 받으면서 근무하실 수 있어요.",
     "저희는 지정 교육기관이라 교육 접수부터 이수, 제공인력 등록, 바우처 신청까지 저희가 한 번에 다 도와드려요. 다른 데는 교육은 외부에 가시고 행정도 각자 하셔야 해요.",
@@ -1360,29 +1368,18 @@ function s_why(){
 
 /* ══════════ 20. 이용 절차 ══════════ */
 function s_process(){
-  var steps = [
-    ["예약금","총 서비스요금의 <b>10%</b>"],
-    ["잔액 입금","서비스 시작 <b>평일 기준 4일 전</b>까지"],
-    ["제공인력 파견안내","시작 <b>전날 오후 5~7시</b> 알림 전화"],
-    ["계약서 서명","전날 <b>카카오톡</b>으로 링크 발송"],
-    ["모니터링","서비스 당일 카카오톡으로 확인"],
-    ["환급 신청","종료 후 <b>90일 이내</b> 보건소 방문"]
-  ];
-  var h = '<div class="split procsplit">' + photo("process-official.jpg","참사랑 공식 서비스 절차 안내","tall") + '<div class="grid32 flow32">';
-  steps.forEach(function(x,i){
-    h += '<div class="fstep"><div class="n">'+(i+1)+'</div><h4>'+x[0]+'</h4><p>'+x[1]+'</p>' +
-         ((i===0||i===1||i===3||i===4) ? '<span class="fnext">→</span>' : '') + '</div>';
-  });
-  h += '</div></div>';
-  return head("이용 절차", "예약하시면 이렇게 진행됩니다") + h +
-  '<div class="note g"><span class="ic">✓</span><span>제공인력은 오늘 말씀해 주신 내용을 반영해 배정해 드립니다.</span></div>' +
+  return head("이용 절차", "예약하시면 이렇게 진행됩니다") +
+  '<div class="procwide">' + photo("process-wide.jpg","예약 접수부터 환급 신청까지 — 순서대로 진행됩니다","fill") + '</div>' +
+  '<div class="note g"><span class="ic">✓</span><span>제공인력은 오늘 말씀해 주신 내용을 반영해 배정해 드립니다. ' +
+    '<b>예약금 입금은 담당자가 개별 안내</b> — 입금 확인 후 예약이 확정됩니다.</span></div>' +
   script([
-    "예약하시게 되면 총 서비스요금의 10%만 예약금으로 먼저 넣어주세요.",
-    "잔액은 서비스 시작 평일 기준 4일 전까지 넣어주시면 되고요, 시작 전날 오후 5시에서 7시 사이에 제공인력 파견 안내 전화를 드려요.",
-    "계약서도 전날 카카오톡으로 링크 보내드려서 간편하게 서명하실 수 있어요.",
-    "서비스 당일에는 잘 진행되고 있는지 카카오톡으로 확인도 드려요. 끝나고 환급 신청은 보건소에 가시면 자세히 안내해 주세요."
-  ], "재촉하지 마세요. <b>&lsquo;결정하시면 이렇게 진행됩니다&rsquo;</b>로 담담하게 안내하면 충분합니다.") +
-  checklist("process", ["예약금 10% · 잔액 평일 4일 전","전날 오후 5~7시 파견 안내","계약서는 카카오톡","환급까지 안내"]);
+    "예약하시면 이렇게 순서대로 진행돼요. 그림 따라 한 번만 같이 볼게요.",
+    "예약 접수하시고, 총 요금의 10%만 예약금으로 넣어주시면 예약 확정이에요.",
+    "출산하시면 서비스 날짜를 정하고, 오늘 말씀해 주신 내용으로 제공인력을 배정해 드려요. 잔액은 시작 평일 4일 전까지고요.",
+    "시작 전날 오후 5시에서 7시 사이에 파견 안내 전화를 드리고, 계약서는 카카오톡 링크로 간편하게 서명하세요.",
+    "서비스 중에는 카카오톡으로 모니터링해 드리고, 끝나면 90일 안에 보건소에서 환급 신청하시면 돼요."
+  ], "그림의 <b>순서를 손으로 짚어가며</b> 안내하세요. 재촉하지 말고 &lsquo;결정하시면 이렇게 진행됩니다&rsquo;로 담담하게.") +
+  checklist("process", ["그림 순서대로 짚어주기","예약금 10% · 잔액 평일 4일 전","계약서는 카카오톡 링크","환급은 종료 후 90일 이내 보건소"]);
 }
 
 /* ══════════ 21. 상담 요약 ══════════ */
@@ -1446,72 +1443,73 @@ function s_close(){
     return '<div><span class="lab">'+label+'</span><input type="'+(type||"text")+'" data-s="'+k+'" ' +
       'value="'+esc(S[k])+'" placeholder="'+(ph||"")+'"></div>';
   }
-  function way(id, num, tl, sb){
-    return '<button type="button" class="pk way'+(closeMode===id?" sel":"")+'" data-way="'+id+'">' +
-      '<span class="em">'+num+'</span><span class="tl2">'+tl+'</span><span class="sb">'+sb+'</span></button>';
-  }
-  var detail = "";
+  var form = "";
   if (closeMode === "reserve"){
-    detail = '<div class="box" style="padding:14px 17px;">' +
-      '<div class="punch" style="margin-bottom:11px;"><div class="lab">부담 갖지 마세요</div>' +
-      '<div class="txt">오늘 꼭 예약하지 않으셔도 됩니다. 예약은 <b class="hl">예약금 입금과 동시에 확정</b>되는 거라서, ' +
-      '지금은 <b>기본 정보만 적어두시면</b> 됩니다.</div></div>' +
-      '<p class="sm" style="margin-bottom:9px;">상담자가 대신 적어드립니다. 이후 담당자가 전화로 자세히 안내드려요.</p>' +
+    form = '<div class="box" style="padding:14px 17px;margin-bottom:12px;">' +
+      '<p class="sm" style="margin-bottom:9px;"><b>예약은 예약금 입금과 동시에 확정</b>됩니다 — 지금은 기본 정보만 적어두시면 돼요. ' +
+      '예약금 입금은 담당자가 개별 안내드립니다.</p>' +
       '<div class="form f3" style="margin:0;">' +
         fld("name","성함","산모님 성함") + fld("phone","연락처","010-0000-0000") + fld("birth","생년월일","1995-01-01") +
         fld("addr","주소","창원시 …") + fld("due","출산 예정일","","date") + fld("startWish","서비스 희망 시작일","출산 후 바로 등") +
         '<div><span class="lab">출산 방법</span><div class="seg mini">' +
           seg("deliv","natural","자연분만") + seg("deliv","cesarean","제왕절개") + '</div></div>' +
         fld("memo","특이사항","반려동물 · 큰아이 · 알레르기 등") + '</div>' +
-      '<div style="margin-top:10px;display:flex;gap:9px;flex-wrap:wrap;align-items:center;">' +
-      '<button class="btn pri lg" id="saveBtn" type="button">등록하고 저장하기</button>' +
-      '<button class="btn lg" id="homeSiteBtn" type="button">🌐 본사 예약 사이트 열기</button></div>' +
-      '<div class="note" style="margin-top:10px;"><span class="ic">·</span><span>현장에서 바로 예약을 원하시면 본사 사이트에서 예약을 진행하세요. ' +
-      '<b>예약금 입금은 담당자가 개별 안내</b>드리고, 입금 확인 후 예약이 확정됩니다.</span></div></div>';
-  } else if (closeMode === "info"){
-    detail = '<div class="box" style="padding:16px 19px;"><h3 style="margin-bottom:6px;">오늘 상담 내용을 문자로 보내드립니다</h3>' +
-      '<p class="sm" style="margin-bottom:9px;">선택하신 것 · 유형별 예상 금액 · 상담 메모와 함께 ' +
-      '<b>'+esc(S.region || "지역")+' 담당자 연락처('+guPhone()+')</b>를 같이 넣어드려요.</p>' +
-      '<p class="sm" style="margin-bottom:10px;">더 궁금한 게 생기면 <b>언제든 전화</b> 주세요 — ' +
-      '오늘 상담 내용을 그대로 확인하면서 <b>이어서</b> 도와드립니다.</p>' +
-      '<div class="split" style="grid-template-columns:1.4fr 1fr;align-items:center;">' +
-        '<div><div class="form" style="margin:0 0 9px;">' + fld("phone4","(선택) 연락처 뒷 네 자리","0000") + '</div>' +
-        '<p class="sm">뒷 네 자리만 남기시면, 다음에 문의하실 때 <b>오늘 내용을 찾아 이어서</b> 상담해 드립니다. 전체 번호는 저장하지 않아요.</p>' +
-        '<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">' +
-          '<button class="btn pri" id="smsOpenBtn" type="button">📨 문자 내용 만들기 · 복사</button>' +
-          '<button class="btn" id="saveBtn" type="button">뒷 네 자리로 저장</button></div></div>' +
-        '<div style="text-align:center;">' + photo("qr-kakao.png","카카오채널 친구추가","qr") + '</div></div></div>';
+      '<div style="margin-top:10px;display:flex;gap:9px;flex-wrap:wrap;">' +
+        '<button class="btn pri lg" id="saveBtn" type="button">등록하고 저장하기</button>' +
+        '<button class="btn lg" id="homeSiteBtn" type="button">🌐 본사 예약 사이트 열기</button></div></div>';
   }
-  return head("마무리", "어떻게 도와드릴까요?",
-    "오늘 결정하지 않으셔도 됩니다. <b>편한 쪽</b>을 골라주세요.") +
-  '<div class="pick" style="grid-template-columns:1fr 1fr;margin-bottom:13px;max-width:900px;margin-left:auto;margin-right:auto;">' +
-    way("reserve","①","예약 진행하기","기본 정보만 적어두세요 — 확정은 예약금 입금 때") +
-    way("info","②","상담 내용만 받기","요약 · 유형별 금액 · 담당자 연락처를 문자로") +
-  '</div>' + detail +
-  '<div class="box" style="padding:12px 16px;margin-bottom:12px;">' +
-    '<span class="lab">상담 추가 메모 — 프로그램 밖에서 나눈 이야기도 여기 적으면 저장·문자에 함께 담깁니다</span>' +
-    '<textarea id="closeMemo" rows="2" style="width:100%;margin-top:5px;font-family:inherit;font-size:15px;padding:9px 11px;' +
+  return head("마무리", "오늘 함께해 주셔서 감사합니다") +
+  '<div class="split closesplit">' + photo("closing-bless.jpg","산모님과 아기의 모든 날을 응원합니다","tall") +
+    '<div>' +
+      '<div class="punch"><div class="lab">부담 갖지 않으셔도 됩니다</div>' +
+      '<div class="txt">오늘 꼭 결정하지 않으셔도 돼요. <b class="hl">언제든 전화 주시면</b> 오늘 나눈 내용 그대로 ' +
+      '<b>이어서</b> 상담해 드립니다.</div></div>' +
+      '<div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:12px;">' +
+        '<button class="btn pri" id="reserveToggle" type="button">📝 현장 예약 진행하기</button>' +
+        '<button class="btn" id="smsOpenBtn" type="button">📨 상담 내용 문자로 보내기</button></div>' +
+      '<div class="form" style="margin:0 0 10px;max-width:340px;">' + fld("phone4","(선택) 연락처 뒷 네 자리","0000") + '</div>' +
+      '<p class="sm" style="margin-bottom:10px;">뒷 네 자리만 남기시면 다음에 <b>오늘 내용을 찾아 이어서</b> 상담해 드려요. ' +
+      (closeMode === "reserve" ? '' : '<button class="btn" id="saveBtn" type="button" style="margin-left:6px;">저장</button>') + '</p>' +
+      '<div class="telline" style="margin-bottom:0;"><b>'+esc(S.region||"우리 지역")+' 담당자</b> '+guPhone()+'</div>' +
+    '</div></div>' + form +
+  '<div class="box" style="padding:11px 15px;margin-bottom:10px;">' +
+    '<span class="lab">상담 추가 메모 — 저장·문자에 함께 담깁니다</span>' +
+    '<textarea id="closeMemo" rows="2" style="width:100%;margin-top:5px;font-family:inherit;font-size:15px;padding:8px 11px;' +
     'border:1.5px solid var(--line-2);border-radius:10px;resize:vertical;" ' +
-    'placeholder="예: 첫째 아이 4살 함께 지냄 · 10월 초 시작 희망 · OO 관리사님 문의">' + esc(S.consultMemo) + '</textarea></div>' +
-  '<div class="telline"><b>창원</b> 055-293-5008 &nbsp;·&nbsp; <b>김해</b> 055-329-3579 &nbsp;·&nbsp; ' +
-    '<b>양산</b> 055-384-5008</div>' +
+    'placeholder="예: 첫째 4살 · 10월 초 시작 희망 · OO 관리사님 문의">' + esc(S.consultMemo) + '</textarea></div>' +
   (justSaved ? '<div class="saved">✓ 저장했습니다. 다음에 찾아서 이어서 상담하실 수 있습니다.</div>' : '') +
-  '<div style="display:flex;gap:9px;flex-wrap:wrap;">' +
-    '<button class="btn" id="newBtn2" type="button">새 상담 시작</button></div>' +
+  '<button class="btn" id="newBtn2" type="button">새 상담 시작</button>' +
   script([
-    "오늘 설명은 여기까지예요. 마지막으로 편한 쪽을 골라주세요.",
-    "예약을 진행하고 싶으시면, 오늘 꼭 확정하는 게 아니에요. 기본 정보만 적어두시면 되고, 예약은 예약금 입금하실 때 확정돼요. 부담 갖지 않으셔도 돼요.",
-    "지금 바로 예약하고 싶으시면 본사 사이트를 열어서 그 자리에서 예약까지 도와드릴게요. 예약금 입금은 담당자가 따로 안내드려요.",
-    "오늘은 내용만 받아보고 싶으시면, 상담 요약이랑 유형별 예상 금액, 그리고 사시는 구 담당자 연락처까지 문자로 보내드릴게요.",
-    "나중에 궁금한 게 생기면 그 번호로 전화 주세요. 오늘 상담 내용을 그대로 보면서 이어서 도와드려요.",
-    "오늘 방문해 주셔서 정말 감사합니다."
-  ], "<b>재촉하지 마세요.</b> ①은 <b>&lsquo;적어만 두는 것, 확정은 입금 때&rsquo;</b>를 분명히 — 부담을 내려놓게 하는 게 핵심입니다. " +
-     "②는 저장(뒷 네 자리) 후 <b>📨 버튼</b>으로 복사 → 카톡 <b>나와의 채팅</b>에 붙여넣기 → 폰에서 복사해 <b>문자로</b> 보내세요.") +
+    "오늘 이야기는 여기까지예요. 시간 내주셔서 정말 감사합니다.",
+    "예약하고 가시려면 지금 바로 도와드릴게요. 기본 정보만 적어두시면 되고, 확정은 예약금 입금하실 때예요.",
+    "조금 더 생각해 보고 싶으시면 그것도 좋아요. 언제든 전화 주시면 오늘 나눈 내용 그대로 보면서 이어서 상담해 드려요.",
+    "산모님, 남은 기간 몸 편안하게 보내시고요 — 산모님과 아기의 모든 날이 건강하고 따뜻하기를 참사랑이 응원할게요."
+  ], "<b>감사 인사로 끝내세요.</b> 예약을 재촉하지 말고 — 예약하실 분은 📝 버튼으로 바로, " +
+     "망설이는 분께는 <b>&lsquo;다음에 이어서 상담 가능&rsquo;</b>만 따뜻하게 안내하면 충분합니다.") +
   checklist("close", [
-    "① 예약 진행 — 확정은 예약금 입금 때라고 안심시키기","바로 예약 원하면 🌐 본사 사이트에서 즉시 진행",
-    "예약금 입금은 담당자 개별 안내 · 입금 확인까지 담당자 몫","② 상담 내용만 — 담당자 연락처 같이 간다고 안내",
-    "추가 메모 칸에 프로그램 밖 이야기도 기록","뒷 네 자리 저장 권유 (이어서 상담용)","📨 복사 → 카톡 나와의 채팅 → 폰에서 문자"
+    "감사 인사 먼저","예약 원하면 📝 바로 진행 (확정은 입금 때)","망설이면 &lsquo;이어서 상담 가능&rsquo; 안내",
+    "뒷 네 자리 저장 권유","📨 복사 → 카톡 나와의 채팅 → 폰에서 문자","건강 기원 문구로 마무리"
   ]);
+}
+
+/* ══════════ 0. 제도 소개 ══════════ */
+function s_intro(){
+  return head("이게 뭐예요?", "정부지원 산후도우미, 처음이셔도 괜찮아요",
+    "<b>보건복지부</b>가 하는 산모·신생아 건강관리 지원사업 — 오늘 쉽게 풀어드릴게요.") +
+  '<div class="procwide">' + photo("intro-program.jpg","정부 지원 → 우리 집 방문 → 산모·신생아 케어","fill") + '</div>' +
+  '<div class="cards c3" style="margin-top:12px;">' +
+    '<div class="box soft"><h3>누가 받나요</h3><p><b>산모와 신생아</b>가 대상 — 소득 기준이 있지만 대부분 해당됩니다.</p></div>' +
+    '<div class="box soft"><h3>언제 신청하나요</h3><p>출산예정일 <b>40일 전</b>부터 출산 후 <b>60일</b>까지 — 보건소·복지로에서.</p></div>' +
+    '<div class="box soft"><h3>언제까지 쓰나요</h3><p>바우처는 <b>출산일부터 90일</b> 안에 — 조리원 퇴실 후 시작하면 딱 맞아요.</p></div></div>' +
+  script([
+    "혹시 정부지원 산후도우미라고 들어보셨어요? 처음이셔도 괜찮아요, 쉽게 설명드릴게요.",
+    "보건복지부가 하는 국가 지원사업이에요. 출산하고 조리원에서 퇴실하시면, 교육받은 제공인력이 산모님 댁으로 직접 가서 산모님이랑 아기를 같이 돌봐드리는 서비스예요.",
+    "비용은 대부분 정부가 지원해줘요. 그래서 실제로 내시는 돈이 생각보다 훨씬 적어요.",
+    "신청은 출산예정일 40일 전부터 출산 후 60일까지 보건소나 복지로에서 하시면 되고, 서비스는 출산일부터 90일 안에 이용하시면 돼요.",
+    "그럼 이제 산모님께 딱 맞는 방향부터 같이 찾아볼게요."
+  ], "처음 듣는 산모님용 <b>제도 설명 화면</b>입니다. 핵심 4가지 — <b>국가사업 · 집으로 방문 · 산모+아기 · 기간</b>만 담담하게. " +
+     "이미 아시는 분이면 이 화면은 넘기고 시작하세요.") +
+  checklist("intro", ["보건복지부 국가사업이라는 것","조리원 퇴실 후 집으로 온다는 것","산모와 신생아가 대상","신청·이용 기간 안내"]);
 }
 
 /* ══════════ 예약 가능 확인 ══════════ */
@@ -1646,6 +1644,7 @@ function s_capacity(){
 
 /* ══════════ 단계 ══════════ */
 var STEPS = [
+{ group:"산모님 먼저", nav:"정부지원 산후도우미란?", render:s_intro },
 { group:"산모님 먼저", nav:"내 산후조리 유형 찾기", render:s_typefinder },
 { group:"산모님 먼저", nav:"이걸로 제공인력을 배정합니다", render:s_matching },
 { group:"산모님 먼저", nav:"예정일 확인 · 예약 여유", render:s_capacity },
@@ -1771,13 +1770,15 @@ var OBJ = [
  "→ &ldquo;오늘 말씀해 주신 내용 그대로 반영해서 배정해요.&rdquo;<br>→ &ldquo;시작 전날 제공인력이 직접 전화로 인사드려요.&rdquo;"]
 ];
 var QJUMP = [
+  ["이 제도가 뭐예요?", s_intro],
   ["요금이 어떻게 되나요?", s_calc],
   ["참사랑은 뭐가 달라요?", s_compare],
-  ["이 서비스가 뭐예요?", s_service],
   ["예약은 어떻게 해요?", s_process],
   ["언제 예약해야 하나요?", s_capacity],
   ["OO 관리사님 되나요?", s_capacity],
-  ["관리사님은 뭘 해주나요?", s_day],
+  ["제공인력은 뭘 해주나요?", s_day],
+  ["육아 정보도 얻을 수 있나요?", s_class],
+  ["친정어머니가 도와주실 수 있는데요", s_family],
   ["믿을 만한 곳인가요?", s_company]
 ];
 function renderQjump(){
@@ -2211,6 +2212,9 @@ document.addEventListener("click", function(e){
       window.prompt("아래 내용을 길게 눌러 복사하세요", txt);
     });
     return;
+  }
+  if (e.target.id === "reserveToggle"){
+    closeMode = (closeMode === "reserve") ? "" : "reserve"; render(); return;
   }
   if (e.target.id === "homeSiteBtn"){
     var d = smsLoad();
