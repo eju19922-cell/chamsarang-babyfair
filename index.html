@@ -39,7 +39,8 @@ body.presenting.menu .rail{display:flex;position:fixed;left:0;top:0;bottom:0;wid
 .railveil{position:fixed;inset:0;background:rgba(35,26,30,.42);z-index:81;display:none;}
 body.presenting.menu .railveil{display:block;}
 .rail-h{padding:20px 20px 14px;border-bottom:1px solid rgba(255,255,255,.1);}
-.rail-h .logo{font-family:"Gowun Batang",serif;font-weight:700;font-size:21px;color:#FFFFFF;letter-spacing:-.02em;}
+.raillogo{background:#FFFFFF;border-radius:11px;padding:8px 12px;display:inline-block;}
+.raillogo img{height:25px;width:auto;display:block;}
 .rail-h .tag{font-size:13px;color:#9FB4CE;margin-top:2px;}
 .prog{height:5px;background:rgba(255,255,255,.14);border-radius:99px;margin-top:12px;overflow:hidden;}
 .prog i{display:block;height:100%;background:linear-gradient(90deg,#E24B86,#C2185B);border-radius:99px;transition:width .3s;}
@@ -50,6 +51,8 @@ body.presenting.menu .railveil{display:block;}
 .snav:hover{background:rgba(255,255,255,.09);color:#FFFFFF;}
 .snav.on{background:var(--brand);color:#fff;}
 .snav.done .sn{background:#2E7D53;color:#fff;border-color:#2E7D53;}
+.snav.off{opacity:.5;}
+.snav.off:hover{opacity:.95;}
 .snav.on .sn{background:rgba(255,255,255,.22);color:#fff;border-color:transparent;}
 .sn{flex:0 0 24px;width:24px;height:24px;border-radius:7px;border:1.5px solid rgba(255,255,255,.22);
   background:rgba(255,255,255,.06);display:grid;place-items:center;font-size:12px;font-weight:600;
@@ -188,7 +191,8 @@ figure.shot figcaption{font-size:13.5px;color:var(--text-3);margin-top:5px;line-
 .procsplit{grid-template-columns:0.52fr 1.48fr;align-items:start;}
 .procsplit figure.shot img{max-height:600px;}
 .pk.way{padding:16px 12px;}
-.lgtop{font-size:12px;font-weight:600;letter-spacing:.3em;color:var(--navy);opacity:.8;margin-bottom:6px;}
+.coverlogo{height:52px;width:auto;margin-bottom:9px;}
+.lgtop{font-size:12px;font-weight:600;letter-spacing:.22em;color:var(--navy);opacity:.8;margin-bottom:4px;}
 .modes{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin:4px 0 8px;max-width:820px;margin-left:auto;margin-right:auto;}
 @media (max-width:760px){.modes{grid-template-columns:1fr;}}
 .modecard{background:linear-gradient(180deg,#FFFFFF,#FFFAFC);border:2px solid var(--line-2);border-radius:18px;padding:14px 13px;box-shadow:0 4px 16px -10px rgba(150,25,80,.15);
@@ -201,14 +205,9 @@ figure.shot figcaption{font-size:13.5px;color:var(--text-3);margin-top:5px;line-
 .pk.regionpk{padding:13px 6px;border-radius:12px;}
 .pk.regionpk .tl2{font-size:17px;}
 .capgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-.closewrap{display:grid;grid-template-columns:auto 1fr;gap:36px;align-items:center;max-width:960px;margin:4px auto 10px;}
+.closewrap{display:flex;justify-content:center;margin:2px auto 8px;}
 .closewrap figure.shot{margin:0;}
-.closewrap figure.shot img{max-height:520px;box-shadow:0 22px 50px -24px rgba(150,25,80,.45);}
-.bless{text-align:center;}
-.bless .b1{font-family:"Gowun Batang",serif;font-size:52px;font-weight:700;color:var(--brand-d);line-height:1.3;letter-spacing:-.02em;}
-.bless .b2{font-size:26px;color:var(--navy-d);line-height:1.65;margin-top:18px;}
-.bless .b3{margin-top:22px;font-size:15px;color:var(--text-3);letter-spacing:.22em;}
-@media (max-width:900px){.closewrap{grid-template-columns:1fr;}.bless .b1{font-size:34px;}.bless .b2{font-size:20px;}}
+.closewrap figure.shot img{max-height:620px;box-shadow:0 22px 50px -24px rgba(150,25,80,.45);}
 .procwide{display:flex;justify-content:center;}
 .procwide figure.shot{margin:0;max-width:1050px;width:100%;}
 .procwide figure.shot img{max-height:540px;width:100%;object-fit:contain;background:transparent;}
@@ -650,8 +649,9 @@ figure.shot.short img{max-height:210px;}
   <div class="cover-in">
     <figure class="shot cover-ph" data-ph="hero-consult.jpg" data-cap="">
       <div class="ph"><div class="pt">상담 첫 화면 사진<span class="pf">images / hero-consult.jpg</span></div></div></figure>
-    <div class="lgtop">CHAMSARANG · SINCE 1998</div>
-      <div class="lg">참사랑어머니회<br>맞춤 상담</div>
+    <img class="coverlogo" src="images/logo.png" alt="참사랑어머니회">
+      <div class="lgtop">SINCE 1998 · 산모신생아 건강관리</div>
+      <div class="lg">맞춤 상담</div>
     <div class="sb">산모님 한 분 한 분, 상황에 맞춰 설계해 드리는 상담입니다.<br><b>지금 상황에 가까운 쪽</b>을 골라 시작하세요.</div>
     <div class="modes">
       <button class="modecard" data-mode="first" type="button">
@@ -675,7 +675,7 @@ figure.shot.short img{max-height:210px;}
 <div class="app">
   <nav class="rail">
     <div class="rail-h">
-      <div class="logo">참사랑어머니회</div>
+      <div class="raillogo"><img src="images/logo.png" alt="참사랑어머니회"></div>
       <div class="tag">베이비페어 상담 · 창원</div>
       <div class="prog"><i id="progBar" style="width:0%"></i></div>
       <div class="prog-t" id="progTxt">0 / 0</div>
@@ -1448,13 +1448,7 @@ function guPhone(){
 }
 function s_close(){
   return head("마무리", "오늘 함께해 주셔서 감사합니다") +
-  '<div class="closewrap">' +
-    photo("closing-bless.jpg","","tall") +
-    '<div class="bless">' +
-      '<div class="b1">엄마가 된 당신을<br>응원합니다</div>' +
-      '<div class="b2">산모님과 아기의 모든 날이<br>건강하고 따뜻하기를</div>' +
-      '<div class="b3">참사랑어머니회 드림</div>' +
-    '</div></div>' +
+  '<div class="closewrap">' + photo("closing-bless.jpg","","tall") + '</div>' +
   (justSaved ? '<div class="saved" style="text-align:center;">✓ 오늘 상담을 저장했습니다.</div>' : '') +
   '<div style="text-align:center;margin-top:6px;"><button class="btn" id="newBtn2" type="button">새 상담 시작</button></div>' +
   '<div class="chk" data-staff hidden><h4>상담자 마무리 체크 <span class="cnt">저장·전달</span></h4>' +
@@ -2025,11 +2019,13 @@ function exportCsv(){
 var showScript = false;
 function renderNav(){
   var v = visible(), pos = v.indexOf(cur), h = "", lastG = null;
-  v.forEach(function(i, n){
-    var s = STEPS[i];
+  STEPS.forEach(function(s, i){
+    var ci = v.indexOf(i);           // 코스 내 순서 (-1이면 코스 밖)
     if (s.group !== lastG){ h += '<div class="sgroup">'+s.group+'</div>'; lastG = s.group; }
-    h += '<button class="snav'+(i===cur?" on":(n<pos?" done":""))+'" data-go="'+i+'" type="button">' +
-      '<span class="sn">'+(n<pos?"✓":(n+1))+'</span><span class="st">'+s.nav+'</span></button>';
+    var cls = "snav" + (i===cur ? " on" : (ci>=0 && ci<pos ? " done" : "")) + (ci<0 ? " off" : "");
+    var num = ci<0 ? "·" : (ci<pos ? "✓" : (ci+1));
+    h += '<button class="'+cls+'" data-go="'+i+'" type="button">' +
+      '<span class="sn">'+num+'</span><span class="st">'+s.nav+'</span></button>';
   });
   document.getElementById("stepNav").innerHTML = h;
   var pct = v.length>1 ? Math.round(pos/(v.length-1)*100) : 0;
