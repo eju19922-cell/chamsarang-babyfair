@@ -1463,7 +1463,11 @@ function s_close(){
         '<div><span class="lab">출산 방법</span><div class="seg mini">' +
           seg("deliv","natural","자연분만") + seg("deliv","cesarean","제왕절개") + '</div></div>' +
         fld("memo","특이사항","반려동물 · 큰아이 · 알레르기 등") + '</div>' +
-      '<div style="margin-top:10px;"><button class="btn pri lg" id="saveBtn" type="button">등록하고 저장하기</button></div></div>';
+      '<div style="margin-top:10px;display:flex;gap:9px;flex-wrap:wrap;align-items:center;">' +
+      '<button class="btn pri lg" id="saveBtn" type="button">등록하고 저장하기</button>' +
+      '<button class="btn lg" id="homeSiteBtn" type="button">🌐 본사 예약 사이트 열기</button></div>' +
+      '<div class="note" style="margin-top:10px;"><span class="ic">·</span><span>현장에서 바로 예약을 원하시면 본사 사이트에서 예약을 진행하세요. ' +
+      '<b>예약금 입금은 담당자가 개별 안내</b>드리고, 입금 확인 후 예약이 확정됩니다.</span></div></div>';
   } else if (closeMode === "info"){
     detail = '<div class="box" style="padding:16px 19px;"><h3 style="margin-bottom:6px;">오늘 상담 내용을 문자로 보내드립니다</h3>' +
       '<p class="sm" style="margin-bottom:9px;">선택하신 것 · 유형별 예상 금액 · 상담 메모와 함께 ' +
@@ -1484,6 +1488,11 @@ function s_close(){
     way("reserve","①","예약 진행하기","기본 정보만 적어두세요 — 확정은 예약금 입금 때") +
     way("info","②","상담 내용만 받기","요약 · 유형별 금액 · 담당자 연락처를 문자로") +
   '</div>' + detail +
+  '<div class="box" style="padding:12px 16px;margin-bottom:12px;">' +
+    '<span class="lab">상담 추가 메모 — 프로그램 밖에서 나눈 이야기도 여기 적으면 저장·문자에 함께 담깁니다</span>' +
+    '<textarea id="closeMemo" rows="2" style="width:100%;margin-top:5px;font-family:inherit;font-size:15px;padding:9px 11px;' +
+    'border:1.5px solid var(--line-2);border-radius:10px;resize:vertical;" ' +
+    'placeholder="예: 첫째 아이 4살 함께 지냄 · 10월 초 시작 희망 · OO 관리사님 문의">' + esc(S.consultMemo) + '</textarea></div>' +
   '<div class="telline"><b>창원</b> 055-293-5008 &nbsp;·&nbsp; <b>김해</b> 055-329-3579 &nbsp;·&nbsp; ' +
     '<b>양산</b> 055-384-5008</div>' +
   (justSaved ? '<div class="saved">✓ 저장했습니다. 다음에 찾아서 이어서 상담하실 수 있습니다.</div>' : '') +
@@ -1492,14 +1501,16 @@ function s_close(){
   script([
     "오늘 설명은 여기까지예요. 마지막으로 편한 쪽을 골라주세요.",
     "예약을 진행하고 싶으시면, 오늘 꼭 확정하는 게 아니에요. 기본 정보만 적어두시면 되고, 예약은 예약금 입금하실 때 확정돼요. 부담 갖지 않으셔도 돼요.",
+    "지금 바로 예약하고 싶으시면 본사 사이트를 열어서 그 자리에서 예약까지 도와드릴게요. 예약금 입금은 담당자가 따로 안내드려요.",
     "오늘은 내용만 받아보고 싶으시면, 상담 요약이랑 유형별 예상 금액, 그리고 사시는 구 담당자 연락처까지 문자로 보내드릴게요.",
     "나중에 궁금한 게 생기면 그 번호로 전화 주세요. 오늘 상담 내용을 그대로 보면서 이어서 도와드려요.",
     "오늘 방문해 주셔서 정말 감사합니다."
   ], "<b>재촉하지 마세요.</b> ①은 <b>&lsquo;적어만 두는 것, 확정은 입금 때&rsquo;</b>를 분명히 — 부담을 내려놓게 하는 게 핵심입니다. " +
      "②는 저장(뒷 네 자리) 후 <b>📨 버튼</b>으로 복사 → 카톡 <b>나와의 채팅</b>에 붙여넣기 → 폰에서 복사해 <b>문자로</b> 보내세요.") +
   checklist("close", [
-    "① 예약 진행 — 확정은 예약금 입금 때라고 안심시키기","② 상담 내용만 — 담당자 연락처 같이 간다고 안내",
-    "뒷 네 자리 저장 권유 (이어서 상담용)","📨 문자 복사해서 상담자 폰으로 발송","QR 카카오채널 안내"
+    "① 예약 진행 — 확정은 예약금 입금 때라고 안심시키기","바로 예약 원하면 🌐 본사 사이트에서 즉시 진행",
+    "예약금 입금은 담당자 개별 안내 · 입금 확인까지 담당자 몫","② 상담 내용만 — 담당자 연락처 같이 간다고 안내",
+    "추가 메모 칸에 프로그램 밖 이야기도 기록","뒷 네 자리 저장 권유 (이어서 상담용)","📨 복사 → 카톡 나와의 채팅 → 폰에서 문자"
   ]);
 }
 
@@ -1777,7 +1788,7 @@ function renderQjump(){
   }).join("");
 }
 var SMS_DEFAULT = {
-  consult: "[참사랑어머니회] {이름}님, 오늘 상담 감사합니다.\n\n{요약}\n{메모}\n간편 예약: {간편예약링크}\n\n더 궁금하신 점은 {구} 담당자에게 전화 주세요.\n담당자: {담당자연락처}\n오늘 상담 내용을 확인하고 이어서 도와드립니다.",
+  consult: "[참사랑어머니회] {이름}님, 오늘 상담 감사합니다.\n\n{요약}\n{메모}\n\n더 궁금하신 점은 {구} 담당자에게 전화 주세요.\n담당자: {담당자연락처}\n오늘 상담 내용을 확인하고 이어서 도와드립니다.",
   typeO: "[참사랑어머니회] {이름}님, 예약 안내드립니다.\n\n바우처 유형이 이미 발급되어 있어 예약금 입금만 하시면 예약이 확정됩니다.\n입금 계좌와 금액은 개별 안내드립니다.\n\n{구} 담당자가 예정일({예정일})에 맞춰 다시 연락드리겠습니다.",
   typeX: "[참사랑어머니회] {이름}님, 예약 안내드립니다.\n\n서비스 이용 전에 {구} 관할 보건소에서 바우처 유형 발급 신청이 먼저 필요합니다.\n(복지로 www.bokjiro.go.kr 온라인 신청도 가능)\n신청 방법이 어려우시면 전화 주세요 — 차근차근 도와드립니다.\n\n발급 후 예약금 입금하시면 예약이 확정됩니다."
 };
@@ -1845,7 +1856,7 @@ function renderSms(){
        'border:1.5px solid var(--line-2);border-radius:10px;padding:10px;">' + esc(smsLoad()[smsKind] || "") + '</textarea>' +
        '<div style="display:flex;gap:8px;margin-top:6px;align-items:center;flex-wrap:wrap;">' +
        '<button class="btn pri" id="smsTplSave" type="button">이 노트북에 저장</button>' +
-       '<input type="text" id="smsLink" placeholder="간편예약 링크 주소" value="' + esc(smsLoad().link || "") + '" ' +
+       '<input type="text" id="homeUrlIn" placeholder="본사 예약 사이트 주소 (현장 예약 버튼에 연결)" value="' + esc(smsLoad().homeUrl || "") + '" ' +
        'style="flex:1;min-width:200px;padding:9px 11px;border:1.5px solid var(--line-2);border-radius:9px;font-size:14px;font-family:inherit;"></div>' +
        '<div class="hint2" style="margin-top:10px;">구별 담당자 연락처 — {담당자연락처} 자리에 산모님 지역구에 맞춰 자동으로 들어갑니다</div>' +
        '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;">' +
@@ -2071,6 +2082,8 @@ function render(){
     var ws = document.getElementById("wkSearch");
     if (ws) ws.addEventListener("input", wkRender);
   }
+  var cm2 = document.getElementById("closeMemo");
+  if (cm2) cm2.addEventListener("input", function(){ S.consultMemo = cm2.value; });
   document.getElementById("slide").scrollTop = 0;
   fb.classList.remove("slide-anim"); void fb.offsetWidth; fb.classList.add("slide-anim");
   fitScreen();
@@ -2199,6 +2212,18 @@ document.addEventListener("click", function(e){
     });
     return;
   }
+  if (e.target.id === "homeSiteBtn"){
+    var d = smsLoad();
+    var u = d.homeUrl || "";
+    if (!u){
+      u = window.prompt("본사 예약 사이트 주소를 입력해 주세요 (한 번만 입력하면 저장됩니다)", "https://");
+      if (!u || u === "https://") return;
+      d.homeUrl = u.trim(); smsSave(d);
+    }
+    if (!/^https?:\/\//.test(u)) u = "https://" + u;
+    window.open(u, "_blank");
+    return;
+  }
   if (e.target.id === "smsOpenBtn"){
     smsKind = "consult"; faqTab = "sms"; openFaq(true);
     var tb = document.querySelectorAll("#faqSheet .sheet-tabs button");
@@ -2212,7 +2237,7 @@ document.addEventListener("click", function(e){
   if (e.target.id === "smsTplSave"){
     var d = smsLoad();
     d[smsKind] = document.getElementById("smsTa").value;
-    d.link = document.getElementById("smsLink").value.trim();
+    var hu = document.getElementById("homeUrlIn"); if (hu) d.homeUrl = hu.value.trim();
     d.guPhone = d.guPhone || {};
     document.querySelectorAll(".guPhoneIn").forEach(function(inp){ d.guPhone[inp.dataset.gu] = inp.value.trim(); });
     smsSave(d); renderSms(); return;
