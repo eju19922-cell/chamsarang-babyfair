@@ -203,11 +203,14 @@ figure.shot figcaption{font-size:13.5px;color:var(--text-3);margin-top:5px;line-
   background:var(--brand);color:#fff;font-weight:700;font-size:16px;margin-bottom:8px;}
 .modecard .mt{display:block;font-size:18.5px;font-weight:700;margin-bottom:5px;color:var(--navy-d);}
 .modecard .ms{display:block;font-size:13.5px;color:var(--text-3);line-height:1.4;}
-.covermenu{max-width:940px;margin:12px auto 6px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center;}
-.cmg{font-size:11.5px;font-weight:700;color:var(--navy);letter-spacing:.08em;margin:0 2px 0 10px;opacity:.75;}
-.cmi{background:var(--surface);border:1.5px solid var(--line-2);border-radius:99px;padding:6px 13px;
-  font-size:13.5px;font-weight:500;color:var(--text-2);cursor:pointer;font-family:inherit;}
-.cmi:hover{border-color:var(--brand);color:var(--brand-d);background:var(--brand-soft);}
+.covermenu{max-width:1040px;margin:6px auto;display:grid;grid-template-columns:repeat(4,1fr);gap:9px;align-items:stretch;}
+.cmg{grid-column:1 / -1;text-align:left;font-size:12.5px;font-weight:700;color:var(--navy);letter-spacing:.1em;margin:8px 2px 0;opacity:.8;}
+.cmg:first-child{margin-top:0;}
+.cmi{background:linear-gradient(180deg,#FFFFFF,#FFFAFC);border:1.5px solid var(--line-2);border-radius:13px;padding:13px 10px;
+  font-size:15.5px;font-weight:600;color:var(--ink);cursor:pointer;font-family:inherit;text-align:center;
+  box-shadow:0 3px 12px -8px rgba(150,25,80,.15);transition:.13s;}
+.cmi:hover{border-color:var(--brand);color:var(--brand-d);background:var(--brand-soft);transform:translateY(-2px);}
+@media (max-width:900px){.covermenu{grid-template-columns:repeat(2,1fr);}}
 .caprow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:4px;}
 .datechk{display:flex;gap:9px;align-items:center;font-size:15.5px;color:var(--text-2);cursor:pointer;}
 .datechk input{width:19px;height:19px;accent-color:var(--brand);}
@@ -665,17 +668,7 @@ body:not(.presenting) .pagelogo{display:none;}
   <div class="cover-in">
     <img class="coverlogo" src="images/logo.png" alt="참사랑어머니회">
     <div class="lgtop">SINCE 1998 · 산모신생아 건강관리 · 베이비페어 상담</div>
-    <div class="modes">
-      <button class="modecard" data-startfn="reserve" type="button">
-        <span class="mn">1</span><span class="mt">이미 알고 오셨어요</span>
-        <span class="ms">둘째 · 참사랑 이용 경험 등<br><b>바로 예약 진행</b></span></button>
-      <button class="modecard" data-startfn="company" type="button">
-        <span class="mn">2</span><span class="mt">다른 부스 상담 받고 오셨어요</span>
-        <span class="ms">참사랑이 어떤 회사인지<br><b>소개부터 바로</b></span></button>
-      <button class="modecard" data-startfn="intro" type="button">
-        <span class="mn">3</span><span class="mt">처음 들어보세요</span>
-        <span class="ms">정부지원 산후도우미가 뭔지<br><b>차근차근 처음부터</b></span></button>
-    </div>
+    <div class="sb" style="margin:2px 0 10px;">상담자가 여쭤보며, <b>원하시는 내용을 눌러</b> 바로 보여드립니다.</div>
     <div id="coverMenu" class="covermenu"></div>
     <div class="hint"><span class="kbd">→</span> 다음 · <span class="kbd">N</span> 대본 · <span class="kbd">F</span> 질문·문자 · 원하는 화면을 눌러 바로 시작할 수도 있어요</div>
   </div>
@@ -1666,17 +1659,11 @@ var STEPS = [
 { group:"정리", nav:"왜 참사랑인가", render:s_why },
 { group:"정리", nav:"예약하시면 이렇게 진행됩니다", render:s_process },
 { group:"정리", nav:"이용요금 안내", render:s_calc },
-{ group:"예약·마무리", nav:"바로 예약 진행", render:s_reserve },
-{ group:"예약·마무리", nav:"오늘 상담 요약", render:s_summary },
-{ group:"예약·마무리", nav:"마무리", render:s_close }
+{ group:"마무리", nav:"마무리", render:s_close }
 ];
 var cur = 0;
 var MODE = "first";
-function visible(){
-  var v = [];
-  STEPS.forEach(function(st, i){ if (st.render !== s_reserve) v.push(i); });
-  return v;
-}
+function visible(){ return STEPS.map(function(_, i){ return i; }); }
 
 /* ══ 질문 패널 ══ */
 var FAQ = [
@@ -1770,7 +1757,7 @@ var QJUMP = [
   ["요금이 어떻게 되나요?", s_calc],
   ["참사랑은 뭐가 달라요?", s_compare],
   ["예약은 어떻게 해요?", s_process],
-  ["언제 예약해야 하나요?", s_reserve],
+  ["언제 예약해야 하나요?", s_process],
   ["제공인력은 뭘 해주나요?", s_day],
   ["믿을 만한 곳인가요?", s_company]
 ];
@@ -2340,12 +2327,6 @@ function stepIndexOf(fn){
   STEPS.forEach(function(st, i){ if (st.render === fn) idx = i; });
   return idx;
 }
-document.querySelectorAll(".modecard").forEach(function(b){
-  b.addEventListener("click", function(){
-    var m = b.dataset.startfn;
-    startAt(stepIndexOf(m === "reserve" ? s_reserve : (m === "company" ? s_company : s_intro)));
-  });
-});
 (function renderCoverMenu(){
   var el = document.getElementById("coverMenu");
   if (!el) return;
