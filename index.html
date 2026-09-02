@@ -888,7 +888,10 @@ function chip(t, strong){ return '<span class="cp'+(strong?" st":"")+'">'+t+'</s
 function situation(){
   var f = {single:"단태아", twin:"쌍태아", triplet:"삼태아 이상"}[S.fetus];
   var o = ["","첫째아","둘째아","셋째아 이상"][S.order];
-  return f + " · " + o + " · " + incomeOf().name + "(" + incomeOf().label + ")";
+  var st = "";
+  if (S.fetus === "twin") st = " · 관리사 " + S.staff + "명";
+  else if (S.fetus === "triplet") st = " · 관리사 2명(고정)";
+  return f + (S.fetus === "single" ? " · " + o : "") + st + " · " + incomeOf().name + "(" + incomeOf().label + ")";
 }
 function row(k,v){ return '<div class="sum-row"><span class="k">'+k+'</span><span class="v">'+v+'</span></div>'; }
 
@@ -1246,7 +1249,7 @@ function s_calc(){
   var ot = '<div class="seg">' +
     seg("order","1","첫째") + seg("order","2","둘째") + seg("order","3","셋째 이상") + '</div>';
   var st2 = '<div class="seg">' +
-    seg("staff","1","1명","비용이 적어요") + seg("staff","2","2명","두 아기를 함께") + '</div>';
+    seg("staff","1","관리사 1명","부담이 적어요") + seg("staff","2","관리사 2명","두 아기 동시 케어") + '</div>';
 
   return head("이용요금", "산모님 경우로 바로 확인해 보세요") +
   '<div class="calc"><div>' +
@@ -1254,6 +1257,7 @@ function s_calc(){
       '<div class="pickrow"><span class="pl2">태아</span>'+ft+'</div>' +
       '<div class="pickrow"><span class="pl2">순위</span>'+ot+'</div>' +
       (S.fetus === "twin" ? '<div class="pickrow"><span class="pl2">관리사</span>'+st2+'</div>' : '') +
+      (S.fetus === "triplet" ? '<p class="sm" style="margin:7px 0 0;">삼태아 이상은 <b>관리사 2명 · 최대 40일</b>로 정해져 있습니다 (선택 없음).</p>' : '') +
       '<div class="pickrow"><span class="pl2">소득</span>'+bt+'</div>' +
       '<p class="sm" style="margin:9px 0 0;">소득 구간은 <b>보건소 · 복지로에서 확정</b>됩니다. 여기서는 구간별 금액만 보여드립니다.</p></div>' +
     '<div class="box" style="padding:15px 18px;"><h3 style="margin-bottom:9px;">며칠 이용하시겠어요?</h3>' +
