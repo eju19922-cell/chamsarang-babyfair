@@ -203,13 +203,13 @@ figure.shot figcaption{font-size:13.5px;color:var(--text-3);margin-top:5px;line-
   background:var(--brand);color:#fff;font-weight:700;font-size:16px;margin-bottom:8px;}
 .modecard .mt{display:block;font-size:18.5px;font-weight:700;margin-bottom:5px;color:var(--navy-d);}
 .modecard .ms{display:block;font-size:13.5px;color:var(--text-3);line-height:1.4;}
-.covermenu{max-width:1040px;margin:6px auto;display:grid;grid-template-columns:repeat(4,1fr);gap:9px;align-items:stretch;}
-.cmg{grid-column:1 / -1;text-align:left;font-size:12.5px;font-weight:700;color:var(--navy);letter-spacing:.1em;margin:8px 2px 0;opacity:.8;}
-.cmg:first-child{margin-top:0;}
-.cmi{background:linear-gradient(180deg,#FFFFFF,#FFFAFC);border:1.5px solid var(--line-2);border-radius:13px;padding:13px 10px;
-  font-size:15.5px;font-weight:600;color:var(--ink);cursor:pointer;font-family:inherit;text-align:center;
-  box-shadow:0 3px 12px -8px rgba(150,25,80,.15);transition:.13s;}
-.cmi:hover{border-color:var(--brand);color:var(--brand-d);background:var(--brand-soft);transform:translateY(-2px);}
+.covermenu{max-width:1020px;margin:10px auto;display:grid;grid-template-columns:repeat(5,1fr);gap:12px;align-items:stretch;}
+.cms{background:linear-gradient(180deg,#FFFFFF,#FFFAFC);border:2px solid var(--line-2);border-radius:18px;padding:22px 12px 19px;
+  cursor:pointer;font-family:inherit;text-align:center;box-shadow:0 5px 18px -10px rgba(150,25,80,.18);transition:.14s;}
+.cms:hover{border-color:var(--brand);transform:translateY(-3px);box-shadow:0 14px 30px -14px rgba(194,24,91,.4);}
+.cms-t{display:block;font-family:"Gowun Batang",serif;font-size:24px;font-weight:700;color:var(--navy-d);margin-bottom:7px;}
+.cms:hover .cms-t{color:var(--brand-d);}
+.cms-d{display:block;font-size:13.5px;color:var(--text-3);line-height:1.45;}
 @media (max-width:900px){.covermenu{grid-template-columns:repeat(2,1fr);}}
 .caprow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:4px;}
 .datechk{display:flex;gap:9px;align-items:center;font-size:15.5px;color:var(--text-2);cursor:pointer;}
@@ -2330,10 +2330,20 @@ function stepIndexOf(fn){
 (function renderCoverMenu(){
   var el = document.getElementById("coverMenu");
   if (!el) return;
-  var h = "", lastG = null;
+  var DESC = {
+    "설문":"산모님께 맞는 방향부터 같이 찾기",
+    "회사소개":"참사랑은 어떤 회사인가",
+    "서비스안내":"무엇을, 어떻게 해드리나",
+    "요금안내":"내 본인부담금 바로 계산",
+    "예약":"절차 안내와 마무리"
+  };
+  var seen = {}, h = "";
   STEPS.forEach(function(st, i){
-    if (st.group !== lastG){ h += '<span class="cmg">'+st.group+'</span>'; lastG = st.group; }
-    h += '<button type="button" class="cmi" data-cstart="'+i+'">'+st.nav+'</button>';
+    if (seen[st.group] !== undefined) return;
+    seen[st.group] = i;
+    h += '<button type="button" class="cms" data-cstart="'+i+'">' +
+      '<span class="cms-t">'+st.group+'</span>' +
+      '<span class="cms-d">'+(DESC[st.group]||"")+'</span></button>';
   });
   el.innerHTML = h;
   el.addEventListener("click", function(e){
