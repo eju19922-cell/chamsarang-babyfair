@@ -2238,6 +2238,7 @@ document.addEventListener("change", function(e){
     if (t.type === "checkbox") S[k] = t.checked;
     else if (k === "order" || k === "staff" || k === "fam") S[k] = parseInt(t.value,10);
     else S[k] = t.value;
+    if (k === "fetus"){ render(); return; }
     refresh();
   }
   if (t.name === "period"){ S.period = parseInt(t.value,10); refresh(); }
