@@ -895,7 +895,7 @@ function situation(){
 }
 function row(k,v){ return '<div class="sum-row"><span class="k">'+k+'</span><span class="v">'+v+'</span></div>'; }
 
-/* ══════════ 1. 유형 찾기 ══════════ */
+/* ══ (삭제됨) 산모 설문 — 예전 상담 기록 표시용 라벨만 남김 ══ */
 var TFQ = [
   { k:"birth", q:"이번이 몇째 아기예요?", sub:"이걸로 지원 유형과 일수가 정해집니다",
     opts:[["first","1️⃣","첫째예요",""],["second","2️⃣","둘째예요",""],["third","3️⃣","셋째 이상이에요",""],
@@ -931,159 +931,6 @@ function tfLabel(k, v){
   var o = q.opts.filter(function(x){ return x[0] === v; })[0];
   return o ? o[2] : v;
 }
-function tfApply(){
-  var b = TF.birth;
-  if (b === "first"){ S.fetus="single"; S.order=1; }
-  else if (b === "second"){ S.fetus="single"; S.order=2; }
-  else if (b === "third"){ S.fetus="single"; S.order=3; }
-  else if (b === "twin"){ S.fetus="twin"; }
-  else if (b === "triplet"){ S.fetus="triplet"; }
-  if (TF.how === "short") S.period = 0;
-  else if (TF.how === "mid") S.period = 1;
-  else if (TF.how === "long") S.period = 2;
-}
-function tfDone(){ return TFQ.every(function(q){ return q.multi ? (TF[q.k]&&TF[q.k].length) : TF[q.k]; }); }
-function tfResult(){
-  var w = (TF.focus||[])[0], ha = TF.help || [], j = TF.jori, hw = TF.how;
-  var h = ha.length ? ha[0] : null;
-  var R = {
-    body:["회복 우선형","💗","산모님 몸 회복을 가장 신경 쓰고 계십니다.",
-      "산후풍·수유 문제는 <b>초기 2주</b>가 가장 중요합니다. 매일 상태를 확인하고 좌욕과 회복 식단까지 챙겨드립니다."],
-    baby:["신생아 집중형","👶","아기 돌보기를 가장 신경 쓰고 계십니다.",
-      "목욕 한 번도 처음엔 무섭습니다. <b>목욕·배꼽 관리·수유·응급 대응</b>까지 옆에서 알려드리며 해주십니다."],
-    house:["살림 부담형","🧺","집안일 부담을 가장 신경 쓰고 계십니다.",
-      "산모님 식사, 산모님과 아기 공간 청소, 세탁물을 해드립니다."],
-    feed:["수유 고민형","🍼","모유수유를 가장 신경 쓰고 계십니다.",
-      "젖몸살, 수유 자세, 양이 부족한 것 같은 불안 — <b>수유 지원</b>을 매일 도와드립니다."],
-    learn:["배우고 싶은 마음형","📚","혼자 남았을 때를 걱정하고 계십니다.",
-      "해드리기만 하는 게 아니라 <b>옆에서 알려드리며</b> 함께 합니다. 제공인력이 가신 뒤가 진짜입니다."],
-    rest:["체력 걱정형","😴","무엇보다 쉬고 싶으십니다.",
-      "제공인력은 <b>낮 시간(09~18시)</b>에 오십니다. 낮에 아기를 봐드리는 동안 <b>눈을 붙이실 수 있는 것</b>이 가장 큰 차이입니다."]
-  }[w] || ["맞춤 상담형","🌸","산모님 상황에 맞춰 안내해 드리겠습니다.",""];
-  var recos = [];
-  if (ha.indexOf("mom") >= 0 || ha.indexOf("mil") >= 0)
-    recos.push(["가족 산후관리사 — 꼭 보세요",
-      (h==="mom"?"친정어머니":"시어머니")+"께서 저희 소속 제공인력로 등록하시면 <b>국가지원을 받으면서</b> 돌봐주실 수 있습니다."]);
-  else if (ha.indexOf("none") >= 0) recos.push(["기간을 넉넉히","도와주실 분이 없으면 짧게 잡으셨다 힘들어하시는 경우가 많습니다."]);
-  else recos.push(["남편분과 함께","오시는 시간과 해주시는 범위를 두 분이 같이 아셔야 편합니다."]);
-  if (j === "center") recos.push(["조리원 다음이 진짜","바우처는 <b>출산일부터 90일</b> 안에 쓰시면 됩니다."]);
-  else if (j === "home") recos.push(["집에서 하시면 기간이 중요","제공인력과 보내는 시간이 산후조리 그 자체가 됩니다."]);
-  if (hw === "long") recos.push(["15일 상한 확인","창원시 환급은 15일까지입니다."]);
-  else recos.push(["금액 보고 정하셔도","단축·표준·연장 세 금액을 나란히 보여드립니다."]);
-  return {name:R[0], em:R[1], line:R[2], desc:R[3], recos:recos};
-}
-function s_typefinder(){
-  tfApply();
-  var h = "";
-  if (tfIdx < TFQ.length){
-    var q = TFQ[tfIdx], picked = q.multi ? (TF[q.k] || []) : TF[q.k];
-    h += '<div style="text-align:center;"><span class="qcount">'+(tfIdx+1)+' / '+TFQ.length+'</span>' +
-      '<div class="qhead big">'+q.q+'</div><p class="qsub">'+q.sub+'</p></div>' +
-      '<div class="pick big n'+q.opts.length+'">';
-    q.opts.forEach(function(o){
-      var sel = q.multi ? (picked.indexOf(o[0])>=0) : (picked === o[0]);
-      h += '<button class="pk'+(sel?" sel":"")+'" type="button" data-tf="'+q.k+'" data-tv="'+o[0]+'"' +
-        (q.multi?' data-multi="1"':'') + '><span class="em">'+o[1]+'</span>' +
-        '<span class="tl2">'+o[2]+'</span>'+(o[3]?'<span class="sb">'+o[3]+'</span>':'')+'</button>';
-    });
-    h += '</div>';
-    if (q.multi && q.k === "help") h += '<p class="pickinfo" style="text-align:center;">여러 명 계시면 <b>모두</b> 눌러주세요 — 고르셨으면 <b>다음</b>을 눌러주세요.</p>';
-    else if (q.multi) h += '<p class="pickinfo" style="text-align:center;"><b>'+(TF[q.k]||[]).length+' / '+MAXPICK+'</b>개 선택 — 2개를 고르시면 다음으로 넘어갑니다.</p>';
-  } else if (tfDone()){
-    var r = tfResult();
-    h += '<div class="split" style="margin-bottom:12px;">' +
-      photo("type-"+((TF.focus||[])[0]||"body")+".jpg", r.name) +
-      '<div class="result-card" style="margin-bottom:0;"><div class="rl">산모님은</div>' +
-      '<div class="rt">'+r.em+' '+r.name+'</div>' +
-      '<div class="rd">'+r.line+(r.desc?'<br><br>'+r.desc:'')+'</div></div></div>' +
-      '<div class="cards c3">' +
-      r.recos.map(function(x){ return '<div class="box soft"><h3 style="font-size:15.5px;">'+x[0]+'</h3><p class="sm">'+x[1]+'</p></div>'; }).join("") + '</div>';
-  } else {
-    h += '<div class="note w"><span class="ic">?</span><span>아직 안 고르신 항목이 있습니다. <b>이전</b>으로 돌아가 채워주세요.</span></div>';
-  }
-  return h + script([
-    "안녕하세요! 편하게 앉으세요. 혹시 정부지원 산후도우미 — 산모신생아 건강관리사 지원사업이라고 들어보셨어요?",
-    "네, 정부가 비용 대부분을 지원해주는 제도예요. 오늘 그 내용, 산모님 기준으로 쉽게 풀어드릴게요.",
-    "본격적으로 설명드리기 전에요, 산모님께 딱 맞는 것부터 같이 찾아볼까요? 몇 개만 골라주시면 돼요.",
-    "몇째 아기세요? 조리는 어디서 하실 계획이세요? 집에서 도와주실 분은 계세요?",
-    "그리고 이게 제일 중요한데요, 제공인력께 뭘 가장 바라세요? 두 개만 골라주세요.",
-    "아 그러시구나. 저도 그 말씀 정말 많이 들어요. 그러면 그 부분을 중심으로 말씀드릴게요."
-  ], "여기가 <b>라포를 만드는 자리</b>입니다. 설명하지 말고 <b>같이 골라보는 시간</b>으로 쓰세요. " +
-     "2개 제한은 <b>진짜 중요한 게 뭔지 스스로 정리하시게</b> 하기 위해서입니다.") +
-  checklist("tf", ["산모님이 직접 누르시게 하기","고르실 때마다 공감으로 받아주기","결과 카드를 소리 내어 읽어드리기","친정엄마·시어머니 나오면 가족 산후관리사로"]);
-}
-
-/* ══════════ 2. 맞춤 배정 ══════════ */
-function s_matching(){
-  var wants = TF.want || [], chips = "";
-  if (TF.birth) chips += chip(tfLabel("birth", TF.birth));
-  if (TF.jori) chips += chip(tfLabel("jori", TF.jori));
-  (TF.help||[]).forEach(function(v){ chips += chip(tfLabel("help", v)); });
-  wants.forEach(function(v){ chips += chip(tfLabel("want", v), true); });
-  (TF.focus||[]).forEach(function(v){ chips += chip("신경 — " + tfLabel("focus", v)); });
-  var wantTxt = wants.length ? wants.map(function(v){ return tfLabel("want", v); }).join(" · ") : "산모님께 맞는";
-  var h = head("산모님이 먼저", "방금 고르신 것, 그냥 물어본 게 아닙니다",
-    "담당자에게 그대로 전달돼서 <b>제공인력을 배정할 때 실제로 봅니다.</b>");
-  if (chips)
-    h += '<div class="box" style="margin-bottom:14px;"><h3>산모님이 고르신 것</h3><div class="chips">'+chips+'</div>' +
-      '</div>';
-  h += '<div class="split">' + photo("matching-team.jpg","244명 중에서 산모님께 맞는 분을 찾습니다") +
-    '<div><div class="punch" style="margin-bottom:0;"><div class="lab">이게 가능한 이유</div>' +
-    '<div class="txt">제공인력이 <b>경남에서 가장 많습니다.</b><br><b>사람이 많아야 고를 수 있습니다.</b></div></div></div></div>' +
-  '<div class="cards c2">' +
-    '<div class="box hi"><h3>조건에 맞는 분을 찾습니다</h3><p>오늘 말씀해 주신 내용을 그대로 보고 배정합니다.</p></div>' +
-    '<div class="box"><h3>안 맞으시면 교체됩니다</h3><p>평일 <b>15시 이전</b>에 연락 주시면 가장 빠르게 진행되며, ' +
-    '교체까지 <b>2~3일</b> 정도 걸릴 수 있습니다.</p></div></div>';
-  return h + script([
-    "방금 고르신 거, 그냥 재미로 물어본 게 아니에요. 담당자한테 그대로 전달돼서 배정할 때 실제로 봐요.",
-    "그런데 이게 아무 데서나 되는 게 아니에요. 저희는 제공인력이 244분 계세요. 경남에서 제일 많아요.",
-    "사람이 많아야 고를 수 있거든요. 몇 분 안 계신 곳은 지금 비어 있는 분을 보낼 수밖에 없어요.",
-    "혹시 오신 분이 안 맞으시면 교체도 돼요. 대기 인력이 있어서 바로 바꿔드릴 수 있어요."
-  ], "<b>이 장이 상담의 핵심입니다.</b> 산모님이 방금 고른 것과 &lsquo;244명&rsquo;이 여기서 만납니다.") +
-  checklist("matching", ["고르신 항목을 하나씩 짚으며 읽기","“배정에 실제로 반영된다” 분명히","244명 → 고를 수 있다 → 맞춤 배정","안 맞으면 교체 가능"]);
-}
-
-/* ══════════ 3. 걱정 해소 ══════════ */
-var FEAR_ANSWER = {
-  mismatch:["안 맞으면 어쩌지","<b>바꾸실 수 있습니다.</b> 244명이라 즉시 투입 가능한 분이 있으면 바로 교체됩니다."],
-  absent:["갑자기 못 오시면","<b>대기 인력이 있습니다.</b> 한 분이 못 오셔도 다른 분이 이어받습니다."],
-  skill:["아기를 잘 못 보시면","<b>교육원을 함께 운영합니다.</b> 양성부터 정기 보수교육까지 저희가 직접 합니다."],
-  hygiene:["위생과 안전","<b>정부가 점검한 부분입니다.</b> 품질평가 항목에 안전 관리가 들어 있고 A등급을 받았습니다."],
-  talk:["말이 안 통하면","<b>교육으로 다룹니다.</b> 보수교육에 대화 마음가짐·경청과 공감이 들어 있습니다."],
-  money:["돈이 얼마나 나갈지","<b>지금 이 자리에서 정확히</b> 계산해 드립니다. 추가 요금도 미리 말씀드립니다."]
-};
-var CHOOSE_ANSWER = {
-  skill:["제공인력 실력과 경력","28년 · 경력 제공인력 <b>244명</b>"],
-  backup:["문제 생겼을 때 대응","대기 인력으로 <b>즉시 교체</b>"],
-  price:["금액과 지원금","가격은 <b>정부 고시로 동일</b> · 창원시 <b>90% 환급</b>까지 안내"],
-  size:["회사 규모와 신뢰도","경남 <b>이용자·인력 1위</b> · 품질평가 <b>A등급</b>"],
-  edu:["교육을 제대로 받았는지","교육원 함께 운영 · <b>정기 보수교육</b>"],
-  review:["후기와 평판","누적 이용 <b>7,668명</b> · 정부 사이트에서 확인 가능"]
-};
-function s_relief(){
-  var fears = TF.fear || [], chooses = TF.choose || [];
-  var h = head("산모님이 먼저", "걱정하시는 부분부터 풀어드릴게요", "고르신 것만 골라서 답해 드립니다.");
-  if (!fears.length && !chooses.length)
-    return h + '<div class="note w"><span class="ic">?</span><span>앞 단계에서 고르시면 여기에 답이 나옵니다.</span></div>' +
-      script(["앞에서 골라주신 걸로 답해 드릴게요."], "먼저 유형 찾기를 마쳐주세요.");
-  if (fears.length){
-    h += '<div class="qhead" style="margin-bottom:9px;">걱정된다고 하신 것</div><div class="cards c2">';
-    fears.forEach(function(k){ var a = FEAR_ANSWER[k]; if (a) h += '<div class="box hi"><h3>“'+a[0]+'”</h3><p>'+a[1]+'</p></div>'; });
-    h += '</div>';
-  }
-  if (chooses.length){
-    h += '<div class="qhead" style="margin:12px 0 9px;">중요하게 보신다고 하신 것</div><div class="cards c2">';
-    chooses.forEach(function(k){ var a = CHOOSE_ANSWER[k]; if (a) h += '<div class="box soft"><h3>'+a[0]+'</h3><p>'+a[1]+'</p></div>'; });
-    h += '</div>';
-  }
-  return h + script([
-    "산모님이 걱정된다고 하신 부분부터 먼저 말씀드릴게요.",
-    "이게 저희가 제일 자신 있는 부분이거든요.",
-    "혹시 더 궁금하시거나 걱정되시는 게 있으면 편하게 말씀해 주세요."
-  ], "<b>고른 것만</b> 나옵니다. 자랑을 늘어놓지 말고 <b>걱정에 하나씩 답하는 자리</b>로 쓰세요.") +
-  checklist("relief", ["고르신 걱정을 그대로 읽고 시작","하나씩 답하고 확인","없는 걱정은 F키로 찾기","다 답한 뒤 한 번 더 묻기"]);
-}
-
 /* ══════════ 4. 참사랑 소개 ══════════ */
 function s_company(){
   return head("업체소개", '<span class="brandname">참사랑어머니회</span>',
@@ -1181,9 +1028,9 @@ function s_service(){
     "첫째 산모 케어. 매일 몸 상태를 확인하고, 수유 지원이랑 좌욕, 산후 회복 식단까지 챙겨드려요. 힘드실 때 말벗이 되어드리는 것도 여기 들어가요.",
     "둘째 신생아 케어. 건강상태 확인, 수유 지원, 목욕이랑 청결, 배꼽 관리, 예방접종 챙기기, 응급상황 대응까지요.",
     "셋째 가사 지원. 산모님 식사, 산모님이랑 아기 공간 청소, 세탁물, 젖병 소독, 아기 옷 정리요.",
-    "아까 골라주신 부분은 특히 더 신경 써드릴게요."
-  ], "<b>3대 영역</b>으로 말씀하세요. 앞에서 고르신 &lsquo;신경 써주면 좋겠는 것&rsquo;을 <b>여기서 다시 언급</b>하면 훨씬 잘 들립니다.") +
-  checklist("service", ["3대 영역이 정부 기준","각 영역 항목까지 꼼꼼히","가사는 산모님·아기 공간 중심","앞에서 고르신 부분 다시 언급"]);
+    "이 중에 산모님이 특히 신경 쓰이는 부분이 있으시면 말씀해 주세요. 그 부분 더 챙겨드릴게요."
+  ], "<b>3대 영역</b>으로 말씀하세요. 산모님이 <b>가장 신경 쓰이는 부분을 직접 물어보고</b> 상담 메모에 적어두세요.") +
+  checklist("service", ["3대 영역이 정부 기준","각 영역 항목까지 꼼꼼히","가사는 산모님·아기 공간 중심","신경 쓰이는 부분 물어보고 메모"]);
 }
 
 /* ══════════ 9. 제공인력의 하루 ══════════ */
@@ -1415,13 +1262,8 @@ function s_process(){
 /* ══════════ 21. 상담 요약 ══════════ */
 function s_summary(){
   var q = quote();
-  function j(k){ return (TF[k]||[]).map(function(v){ return tfLabel(k,v); }).join(" · "); }
   var sum = '<div class="sum"><h3>오늘 상담 요약</h3>';
-  sum += row("상황", situation() + (TF.jori ? "  ·  " + tfLabel("jori", TF.jori) : "") +
-                     ((TF.help&&TF.help.length) ? "  ·  " + TF.help.map(function(v){return tfLabel("help",v);}).join(", ") : ""));
-  if (j("focus")) sum += row("중점 케어", j("focus"));
-  if (j("want")) sum += row("바라시는 분", j("want"));
-  if (j("fear")) sum += row("걱정하신 것", j("fear"));
+  sum += row("상황", situation());
   if (!q.unavailable && q.inc.entered){
     var r = q.all[S.period];
     sum += row("유형 · 기간", q.code + "  ·  " + PNAME[S.period] + " " + q.days[S.period] + "일");
@@ -1690,9 +1532,6 @@ var STEPS = [
 { group:"서비스안내", nav:"정부지원 산후도우미란?", render:s_intro },
 { group:"서비스안내", nav:"제공인력이 하는 일", render:s_service },
 { group:"서비스안내", nav:"제공인력의 하루", render:s_day },
-{ group:"설문", nav:"내 산후조리 유형 찾기", render:s_typefinder },
-{ group:"설문", nav:"걱정하시는 부분 풀어드립니다", render:s_relief },
-{ group:"설문", nav:"이걸로 제공인력을 배정합니다", render:s_matching },
 { group:"회사소개", nav:"참사랑어머니회", render:s_company },
 { group:"회사소개", nav:"품질평가 A등급이란", render:s_grade },
 { group:"회사소개", nav:"정기 교육 · 간담회", render:s_edu },
@@ -1828,10 +1667,6 @@ function smsSummaryText(){
   var q = quote(), lines = [];
   var f = {single:"단태아", twin:"쌍태아", triplet:"삼태아 이상"}[S.fetus] || "";
   if (f) lines.push("· 상황: " + f + " " + (S.order===1?"첫째":"둘째 이상"));
-  function tfj(k){ return (TF[k]||[]).map(function(v){ return tfLabel(k,v); }).join(", "); }
-  if (tfj("focus")) lines.push("· 중점 케어: " + tfj("focus"));
-  if (tfj("want")) lines.push("· 바라시는 분: " + tfj("want") + " — 배정에 그대로 반영됩니다");
-  if (tfj("fear")) lines.push("· 걱정하신 것: " + tfj("fear") + " — 전담 담당자가 챙겨드립니다");
   if (S.dateNotice) lines.push("· 실제 이용 일자는 출산 후 상황에 따라 조절됩니다 (안내드린 내용)");
   if (!q.unavailable){
     var d = q.days ? q.days[S.period] : "";
@@ -2103,8 +1938,7 @@ function render(){
   document.getElementById("scriptBtn").classList.toggle("on", showScript);
   document.getElementById("scriptBtn2").classList.toggle("on", showScript);
   var v = visible(), pos = v.indexOf(cur);
-  var inner = (STEPS[cur].render === s_typefinder && tfIdx > 0);
-  var atStart = (pos <= 0) && !inner;
+  var atStart = (pos <= 0);
   document.getElementById("prevBtn").disabled = atStart;
   document.getElementById("prevBtn").style.opacity = atStart ? ".4" : "1";
   document.getElementById("nextBtn").textContent = (pos === v.length-1) ? "처음으로" : "다음 →";
@@ -2143,11 +1977,6 @@ function renderMomBar(){
   var mb = document.getElementById("mombar");
   if (!mb) return;
   var bits = [];
-  if (TF.birth) bits.push([tfLabel("birth", TF.birth), false]);
-  (TF.help||[]).forEach(function(v){ bits.push([tfLabel("help", v), false]); });
-  (TF.focus||[]).forEach(function(v){ bits.push(["신경 " + tfLabel("focus", v), false]); });
-  (TF.want||[]).forEach(function(v){ bits.push([tfLabel("want", v), false]); });
-  (TF.fear||[]).forEach(function(v){ bits.push(["걱정 " + tfLabel("fear", v), true]); });
   if (!bits.length){ mb.classList.remove("on"); mb.innerHTML = ""; return; }
   mb.classList.add("on");
   mb.innerHTML = '<span class="ml">산모님</span>' +
@@ -2215,10 +2044,6 @@ function resultHTML(q){
 
 /* ══ 이벤트 ══ */
 function step(d){
-  if (STEPS[cur].render === s_typefinder){
-    if (d > 0 && tfIdx < TFQ.length){ tfIdx++; render(); return; }
-    if (d < 0 && tfIdx > 0){ tfIdx--; render(); return; }
-  }
   var v = visible(), pos = v.indexOf(cur);
   if (pos < 0){
     var cand = (d > 0) ? v.filter(function(i){ return i > cur; })[0]
@@ -2316,27 +2141,6 @@ document.addEventListener("click", function(e){
   if (lgo){ restoreLog(parseInt(lgo.dataset.lgo,10)); return; }
   var ldel = e.target.closest("[data-ldel]");
   if (ldel){ delLog(parseInt(ldel.dataset.ldel,10)); return; }
-  var tf = e.target.closest("[data-tf]");
-  if (tf){
-    var k = tf.dataset.tf, v = tf.dataset.tv;
-    if (k === "help"){
-      var ha = TF.help || [], hi = ha.indexOf(v);
-      if (v === "none"){ TF.help = (hi >= 0) ? [] : ["none"]; }
-      else {
-        if (hi >= 0) ha.splice(hi,1); else ha.push(v);
-        TF.help = ha.filter(function(x){ return x !== "none"; });
-      }
-      render(); return;
-    }
-    if (tf.dataset.multi){
-      var arr = TF[k] || [], at = arr.indexOf(v);
-      if (at >= 0) arr.splice(at,1);
-      else { if (arr.length >= MAXPICK) arr.shift(); arr.push(v); }
-      TF[k] = arr;
-      if (arr.length >= MAXPICK && tfIdx < TFQ.length) tfIdx++;
-    } else { TF[k] = v; if (tfIdx < TFQ.length) tfIdx++; }
-    render(); return;
-  }
   var qz = e.target.closest("[data-qz]");
   if (qz){ QA_STATE[qz.dataset.qz] = (qz.dataset.qv === "1"); render(); return; }
   var gs = e.target.closest("[data-guess]");
@@ -2379,7 +2183,6 @@ if (__sb) __sb.addEventListener("click", function(){ startAt(0); });
   var el = document.getElementById("coverMenu");
   if (!el) return;
   var DESC = {
-    "설문":"산모님께 맞는 방향부터 같이 찾기",
     "회사소개":"참사랑은 어떤 회사인가",
     "서비스안내":"정부지원 산후도우미란? 부터",
     "요금안내":"비용 체계 설명 · 내 부담금 계산",
