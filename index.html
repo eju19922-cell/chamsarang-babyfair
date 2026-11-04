@@ -237,6 +237,7 @@ table.bk th:first-child,table.bk td:first-child{text-align:left;}
 table.bk thead th{font-size:13.5px;color:var(--text-3);font-weight:500;border-bottom:1.5px solid var(--line-2);}
 table.bk td.me{font-weight:700;color:var(--brand-d);}
 .bkpick{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 12px;}
+.bkx{align-items:stretch;}.bkcol{display:grid;gap:10px;}.bkcol .box{margin:0;padding-top:12px;padding-bottom:12px;}.bkcol h3{margin-bottom:4px;}
 .bkpick button{font-size:15.5px;padding:9px 16px;}
 .benefit .bn{display:inline-block;font-size:12.5px;font-weight:700;color:#fff;background:var(--brand);border-radius:99px;padding:1px 10px;margin-bottom:6px;}
 .caprow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:4px;}
@@ -1219,7 +1220,8 @@ function s_bigkid(){
     "둘째 이상 출산으로 <b>집에 큰아이가 있는 가정</b>만 해당돼요. 미리 알고 계시면 나중에 놀라실 일이 없어요.") +
   '<div class="bkpick">' + pick("early","5시 이전 하원") + pick("late","5시 이후 하원") +
     pick("home","종일 집에 있어요 (가정보육·방학)") + pick("","큰아이 없음") + '</div>' +
-  '<div class="cards c3">' +
+  '<div class="split bkx">' + photo("bigkid-care.jpg","큰아이가 있는 집 — 관리사님이 함께해요") +
+  '<div class="bkcol">' +
     '<div class="box"><h3>언제 붙나요?</h3><ul>' +
       '<li>둘째 이상 출산으로 <b>큰아이가 있을 때만</b></li></ul></div>' +
     '<div class="box"><h3>왜 붙나요?</h3>' +
@@ -1229,7 +1231,7 @@ function s_bigkid(){
       '<li><b>하루 단위</b>, 큰아이 <b>1명 기준</b></li>' +
       '<li>하원 시간(<b>오후 5시</b> 기준)과 <b>가정보육</b> 여부에 따라 달라요</li>' +
       '<li>큰아이가 둘이면 <b>한 명씩</b> 계산돼요</li></ul>' + fee + '</div>' +
-  '</div>' +
+    '</div></div>' +
   '<div class="cards c2">' +
     '<div class="box soft"><h3>예약 때 안내드리고, 첫날 조율해요</h3>' +
       '<p>센터에서 <b>예약 시에 큰아이 요금을 안내</b>드려요. 협의하실 부분이 있으면 ' +
