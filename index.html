@@ -237,7 +237,7 @@ table.bk th:first-child,table.bk td:first-child{text-align:left;}
 table.bk thead th{font-size:13.5px;color:var(--text-3);font-weight:500;border-bottom:1.5px solid var(--line-2);}
 table.bk td.me{font-weight:700;color:var(--brand-d);}
 .bkpick{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 12px;}
-.bkx{align-items:stretch;grid-template-columns:1.15fr 1fr;}.bkleft .shot{margin:0;}.bkleft figcaption{display:none;}.bknote{list-style:none;margin:12px 2px 0;padding:0;font-size:15px;line-height:1.55;color:var(--text-2,#555);word-break:keep-all;}.bknote li{position:relative;padding-left:14px;margin-bottom:6px;}.bknote li:before{content:'·';position:absolute;left:2px;font-weight:700;}.bknote b{color:var(--text,#222);}.bkcol{display:grid;grid-template-rows:auto 1fr 1fr;gap:10px;}.bkcol .box{margin:0;padding-top:14px;padding-bottom:14px;display:flex;flex-direction:column;justify-content:center;}.bkcol h3{margin-bottom:6px;}
+.bkx{align-items:stretch;grid-template-columns:1.15fr 1fr;}.bkleft .shot{margin:0;}.bkleft figcaption{display:none;}.bknote{list-style:none;margin:14px 2px 0;padding:0;font-size:16px;line-height:1.6;color:var(--text-2,#555);word-break:keep-all;}.bknote li{position:relative;padding-left:14px;margin-bottom:6px;}.bknote li:before{content:'·';position:absolute;left:2px;font-weight:700;}.bknote b{color:var(--text,#222);}.bkcol{display:grid;grid-template-rows:auto 1fr 1fr;gap:10px;}.bkcol .box{margin:0;padding-top:14px;padding-bottom:14px;display:flex;flex-direction:column;justify-content:center;}.bkcol h3{margin-bottom:6px;}
 .bkpick button{font-size:15.5px;padding:9px 16px;}
 .benefit .bn{display:inline-block;font-size:12.5px;font-weight:700;color:#fff;background:var(--brand);border-radius:99px;padding:1px 10px;margin-bottom:6px;}
 .caprow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:4px;}
@@ -1217,7 +1217,7 @@ function s_bigkid(){
   var pick = function(v, l){ return '<button type="button" class="qjbtn'+(S.bigkid===v?' on2':'')+'" data-bk="'+v+'">'+l+'</button>'; };
   var fee = (BIGKID_FEE && S.bigkid && BIGKID_FEE[S.bigkid]) ? '<p class="sm" style="margin-top:6px;">' + BIGKID_KIND[S.bigkid] + ' — <b>' + bigkidFeeText(S.bigkid) + '</b></p>' : '';
   return head("요금안내", "큰아이 요금안내",
-    "둘째 이상 출산으로 <b>집에 큰아이가 있는 가정</b>만 해당돼요. 미리 알고 계시면 나중에 놀라실 일이 없어요.") +
+    "둘째 이상 출산으로 <b>집에 큰아이가 있는 가정</b>만 해당돼요.") +
   '<div class="bkpick">' + pick("early","5시 이전 하원") + pick("late","5시 이후 하원") +
     pick("home","종일 집에 있어요 (가정보육·방학)") + pick("","큰아이 없음") + '</div>' +
   '<div class="split bkx">' +
