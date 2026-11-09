@@ -2261,7 +2261,7 @@ document.addEventListener("input", function(e){
 document.addEventListener("click", function(e){
   var cg = e.target.closest ? e.target.closest("[data-cgo]") : null;
   if (cg){
-    var CGO = {calc:s_calc, bigkid:s_bigkid, day:s_service, company:s_company, family:s_class};
+    var CGO = {calc:s_feestruct, bigkid:s_bigkid, day:s_service, company:s_company, family:s_class};
     startAt(stepIndexOf(CGO[cg.dataset.cgo])); return;
   }
   var bk = e.target.closest ? e.target.closest("[data-bk]") : null;
