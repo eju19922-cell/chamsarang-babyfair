@@ -778,7 +778,7 @@ figure.shot img{border-radius:22px;border-color:var(--line);box-shadow:0 10px 26
 .chk input{accent-color:#F4B9B0;}
 .chk label{border-bottom-color:#644A43;color:#F3E4E0;}
 .drawer:not(.open){border-top-color:transparent;background:transparent;}
-.covermenu.cm4{max-width:1000px;}.covermenu.cm4 .cms-t{font-size:20px;word-break:keep-all;}.cms-d{word-break:keep-all;}
+.cover-in{max-width:1100px;}.covermenu.cm4{max-width:1060px;width:100%;grid-template-columns:repeat(5,minmax(0,1fr));}@media (max-width:1000px){.covermenu.cm4{grid-template-columns:repeat(3,1fr);}}@media (max-width:640px){.covermenu.cm4{grid-template-columns:repeat(2,1fr);}}.covermenu.cm4 .cms-t{font-size:20px;word-break:keep-all;}.cms-d{word-break:keep-all;}
 .tag.b{background:var(--brand-soft);color:var(--brand-d);}
 </style>
 </head>
@@ -794,6 +794,7 @@ figure.shot img{border-radius:22px;border-color:var(--line);box-shadow:0 10px 26
       <button type="button" class="cms" data-cgo="bigkid"><span class="cms-t">큰아이가 있어요</span><span class="cms-d">큰아이 추가요금 · 지급 방법</span></button>
       <button type="button" class="cms" data-cgo="day"><span class="cms-t">제공인력의 업무와 표준일정표</span><span class="cms-d">하는 일 · 하루 일정</span></button>
       <button type="button" class="cms" data-cgo="family"><span class="cms-t">친정엄마 · 산모교실</span><span class="cms-d">가족 관리사 · 무료 산모교실</span></button>
+      <button type="button" class="cms" data-cgo="company"><span class="cms-t">참사랑어머니회가 궁금해요</span><span class="cms-d">국내 최초 · 이용자 수 1위</span></button>
     </div>
     <button class="btn pri go" id="startBtn" type="button">처음부터 순서대로</button>
     <div class="hint"><span class="kbd">→</span> 다음 · <span class="kbd">N</span> 대본 · <span class="kbd">F</span> 질문·문자 · 원하는 화면을 눌러 바로 시작할 수도 있어요</div>
@@ -2253,7 +2254,7 @@ document.addEventListener("input", function(e){
 document.addEventListener("click", function(e){
   var cg = e.target.closest ? e.target.closest("[data-cgo]") : null;
   if (cg){
-    var CGO = {calc:s_calc, bigkid:s_bigkid, day:s_service, family:s_family};
+    var CGO = {calc:s_calc, bigkid:s_bigkid, day:s_service, company:s_company, family:s_family};
     startAt(stepIndexOf(CGO[cg.dataset.cgo])); return;
   }
   var bk = e.target.closest ? e.target.closest("[data-bk]") : null;
