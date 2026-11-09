@@ -239,6 +239,10 @@ table.bk td.me{font-weight:700;color:var(--brand-d);}
 .bkpick{display:flex;gap:8px;flex-wrap:wrap;margin:2px 0 10px;}
 .bkx{align-items:stretch;grid-template-columns:1.15fr 1fr;}.bkleft .shot{margin:0;}.bkleft figcaption{display:none;}.bknote{list-style:none;margin:14px 2px 0;padding:0;font-size:16px;line-height:1.6;color:var(--text-2,#555);word-break:keep-all;}.bknote li{position:relative;padding-left:14px;margin-bottom:6px;}.bknote li:before{content:'·';position:absolute;left:2px;font-weight:700;}.bknote b{color:var(--text,#222);}.bkcol{display:grid;grid-template-rows:auto auto auto;align-content:start;gap:10px;}.bkcol .box{margin:0;padding-top:12px;padding-bottom:12px;display:flex;flex-direction:column;justify-content:center;}.bkcol h3{display:flex;align-items:center;gap:9px;font-size:22px;font-weight:700;color:var(--brand);margin:0 0 9px;letter-spacing:-.02em;}.bkcol h3:before{content:'';flex:none;width:6px;height:22px;border-radius:3px;background:var(--brand);}.bkcol .box.hi h3{color:var(--brand-d);}.bkcol .box.hi h3:before{background:var(--brand-d);}
 .bkpick button{font-size:15.5px;padding:9px 16px;}
+.classgrid.cg-sq{grid-template-columns:1.35fr 1fr 0.85fr;align-items:center;}
+figure.shot.sq img{aspect-ratio:1/1;max-height:none;height:auto;object-fit:cover;}
+.classgrid.cg-sq .gal figure.shot img{max-height:190px;}
+@media (max-width:900px){.classgrid.cg-sq{grid-template-columns:1fr;}}
 h1.title .ttl-note{font-size:22px;font-weight:inherit;font-family:inherit;color:inherit;letter-spacing:-.01em;margin-left:10px;}
 .bkunit{margin-left:auto;font-size:13px;font-weight:600;color:var(--text-3);letter-spacing:0;}
 .bkfee{display:grid;gap:5px;margin:0 0 2px;}
@@ -1357,7 +1361,7 @@ function s_class(){
   '<div class="punch"><div class="lab">산모님께 드리는 혜택</div>' +
     '<div class="txt">참가비 <b class="hl">무료</b> · 준비된 <b class="hl">사은품</b>까지 — ' +
     '저희 서비스 예약은 안 하셔도 됩니다. <b>산모교실 신청만</b> 하시면 돼요.</div></div>' +
-  '<div class="classgrid">' + photo("poster-class-dec.jpg","12월 산모교실 — 신생아 목욕법 & 크리스마스 트리 만들기","tall") +
+  '<div class="classgrid cg-sq">' + photo("class-dec-card.jpg","12월 산모교실 — 신생아 목욕법 & 크리스마스 트리 만들기","sq") +
     '<div class="gal" style="gap:10px;margin:0;">' + photo("class-flower.jpg","참사랑 산모교실 현장") +
     photo("class-scene.jpg","태교 꽃꽂이 산모교실") + '</div>' +
     photo("poster-monthly.jpg","참사랑씨앤이 산모교실","tall") + '</div>' +
