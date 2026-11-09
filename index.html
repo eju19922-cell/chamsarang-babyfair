@@ -236,9 +236,18 @@ table.bk th,table.bk td{padding:8px 10px;border-bottom:1px solid var(--line);tex
 table.bk th:first-child,table.bk td:first-child{text-align:left;}
 table.bk thead th{font-size:13.5px;color:var(--text-3);font-weight:500;border-bottom:1.5px solid var(--line-2);}
 table.bk td.me{font-weight:700;color:var(--brand-d);}
-.bkpick{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 12px;}
-.bkx{align-items:stretch;grid-template-columns:1.15fr 1fr;}.bkleft .shot{margin:0;}.bkleft figcaption{display:none;}.bknote{list-style:none;margin:14px 2px 0;padding:0;font-size:16px;line-height:1.6;color:var(--text-2,#555);word-break:keep-all;}.bknote li{position:relative;padding-left:14px;margin-bottom:6px;}.bknote li:before{content:'·';position:absolute;left:2px;font-weight:700;}.bknote b{color:var(--text,#222);}.bkcol{display:grid;grid-template-rows:auto 1fr 1fr;gap:10px;}.bkcol .box{margin:0;padding-top:14px;padding-bottom:14px;display:flex;flex-direction:column;justify-content:center;}.bkcol h3{display:flex;align-items:center;gap:9px;font-size:22px;font-weight:700;color:var(--brand);margin:0 0 9px;letter-spacing:-.02em;}.bkcol h3:before{content:'';flex:none;width:6px;height:22px;border-radius:3px;background:var(--brand);}.bkcol .box.hi h3{color:var(--brand-d);}.bkcol .box.hi h3:before{background:var(--brand-d);}
+.bkpick{display:flex;gap:8px;flex-wrap:wrap;margin:2px 0 10px;}
+.bkx{align-items:stretch;grid-template-columns:1.15fr 1fr;}.bkleft .shot{margin:0;}.bkleft figcaption{display:none;}.bknote{list-style:none;margin:14px 2px 0;padding:0;font-size:16px;line-height:1.6;color:var(--text-2,#555);word-break:keep-all;}.bknote li{position:relative;padding-left:14px;margin-bottom:6px;}.bknote li:before{content:'·';position:absolute;left:2px;font-weight:700;}.bknote b{color:var(--text,#222);}.bkcol{display:grid;grid-template-rows:auto auto auto;align-content:start;gap:10px;}.bkcol .box{margin:0;padding-top:12px;padding-bottom:12px;display:flex;flex-direction:column;justify-content:center;}.bkcol h3{display:flex;align-items:center;gap:9px;font-size:22px;font-weight:700;color:var(--brand);margin:0 0 9px;letter-spacing:-.02em;}.bkcol h3:before{content:'';flex:none;width:6px;height:22px;border-radius:3px;background:var(--brand);}.bkcol .box.hi h3{color:var(--brand-d);}.bkcol .box.hi h3:before{background:var(--brand-d);}
 .bkpick button{font-size:15.5px;padding:9px 16px;}
+h1.title .ttl-note{font-family:'Noto Sans KR',sans-serif;font-size:18px;font-weight:600;color:var(--brand);letter-spacing:0;margin-left:10px;vertical-align:middle;background:var(--brand-soft);border:1px solid var(--brand-line);border-radius:99px;padding:4px 12px;}
+.bkunit{margin-left:auto;font-size:13px;font-weight:600;color:var(--text-3);letter-spacing:0;}
+.bkfee{display:grid;gap:5px;margin:0 0 2px;}
+.bkrow{display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px 14px;}
+.bkrow span{font-size:16.5px;font-weight:600;color:var(--ink);}
+.bkrow span small{font-size:13px;font-weight:500;color:var(--text-3);margin-left:4px;}
+.bkrow b{font-size:19px;font-weight:700;color:var(--brand-d);font-variant-numeric:tabular-nums;}
+.bkrow.on{background:var(--brand);border-color:var(--brand);}.bkrow.on span,.bkrow.on b,.bkrow.on small{color:#fff;}
+.bkfoot{margin:4px 0 0 !important;font-size:15px !important;color:var(--text-2);}
 .benefit .bn{display:inline-block;font-size:12.5px;font-weight:700;color:#fff;background:var(--brand);border-radius:99px;padding:1px 10px;margin-bottom:6px;}
 .caprow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:4px;}
 .datechk{display:flex;gap:9px;align-items:center;font-size:15.5px;color:var(--text-2);cursor:pointer;}
@@ -1297,9 +1306,8 @@ function s_extra(){
 }
 
 /* ══════════ 큰아이 추가요금 (현장 피드백: 마산·황나연 / 근거: 2026.4~7월 상담통화 56건 정리) ══════════ */
-/* 금액은 화면에 싣지 않고 상담자가 직접 안내합니다.
-   나중에 화면·문자에도 금액을 보이려면 BIGKID_FEE 에 숫자로 넣으세요 (예: {early:5000, late:3000, home:10000}) */
-var BIGKID_FEE = null;
+/* 큰아이 1명 하루 금액 (본인부담금 외 별도) — 바뀌면 여기 숫자만 고치면 화면 표·문자에 반영됩니다 */
+var BIGKID_FEE = {home:10000, early:5000, late:3000};
 var BIGKID_KIND = {early:"오후 5시 이전 하원", late:"오후 5시 이후 하원", home:"종일 집에 있음(가정보육·방학)"};
 function bigkidFeeText(kind){
   if (!BIGKID_FEE || !BIGKID_FEE[kind]) return "금액은 상담 시 안내";
@@ -1307,8 +1315,10 @@ function bigkidFeeText(kind){
 }
 function s_bigkid(){
   var pick = function(v, l){ return '<button type="button" class="qjbtn'+(S.bigkid===v?' on2':'')+'" data-bk="'+v+'">'+l+'</button>'; };
-  var fee = (BIGKID_FEE && S.bigkid && BIGKID_FEE[S.bigkid]) ? '<p class="sm" style="margin-top:6px;">' + BIGKID_KIND[S.bigkid] + ' — <b>' + bigkidFeeText(S.bigkid) + '</b></p>' : '';
-  return head("요금안내", "큰아이 요금안내",
+  var row = function(k, l){ return '<div class="bkrow'+(S.bigkid===k?' on':'')+'"><span>'+l+'</span><b>'+won(BIGKID_FEE[k])+'</b></div>'; };
+  var feeTable = '<div class="bkfee">' + row("home","종일 <small>가정보육·방학</small>") +
+    row("early","5시 이전 하원") + row("late","5시 이후 하원") + '</div>';
+  return head("요금안내", '큰아이 요금안내 <span class="ttl-note">*본인부담금 외 별도</span>',
     "둘째 이상 출산으로 <b>집에 큰아이가 있는 가정</b>만 해당돼요.") +
   '<div class="bkpick">' + pick("early","5시 이전 하원") + pick("late","5시 이후 하원") +
     pick("home","종일 집에 있어요 (가정보육·방학)") + pick("","큰아이 없음") + '</div>' +
@@ -1326,21 +1336,19 @@ function s_bigkid(){
     '<div class="box"><h3>왜 붙나요?</h3>' +
       '<p style="word-break:keep-all;">본인부담금은 <b>산모님과 신생아</b> 케어 요금이에요. 큰아이 때문에 <b>늘어나는 가사업무</b>' +
       '(빨래 · 설거지 · 반찬 · 장난감 정리 · 청소)만큼 관리사님 인건비가 더해져요.</p></div>' +
-    '<div class="box hi"><h3>얼마예요?</h3><ul>' +
-      '<li><b>하루 단위</b>, 큰아이 <b>1명 기준</b></li>' +
-      '<li>하원 시간(<b>오후 5시</b> 기준)과 <b>가정보육</b> 여부에 따라 달라요</li>' +
-      '<li>큰아이가 둘 이상이면 <b>한 명씩</b> 계산돼요</li></ul>' + fee + '</div>' +
+    '<div class="box hi"><h3>얼마예요? <span class="bkunit">하루 · 큰아이 1명</span></h3>' + feeTable +
+      '<p class="bkfoot">큰아이가 둘 이상이면 <b>한 명씩</b> 계산돼요</p></div>' +
     '</div></div>' +
   script([
     "혹시 큰아이가 있으세요? 큰아이가 있으면 미리 알려드릴 부분이 있어서 여쭤봐요.",
     "큰아이가 몇 살이에요? 어린이집이나 유치원은 몇 시에 가서 몇 시에 와요?",
     "앞에서 보신 본인부담금은 산모님이랑 신생아 케어 요금이에요. 큰아이 때문에 늘어나는 가사업무(빨래, 설거지, 반찬, 장난감 정리, 청소)만큼 관리사님 인건비가 하루 단위로 조금 붙어요.",
-    "(하원 시간·가정보육 여부를 듣고 하루 금액을 말씀드리기) 큰아이가 둘 이상이면 한 명씩 계산돼요.",
+    "하루 기준으로 종일 집에 있으면 1만 원, 5시 이전에 하원하면 5천 원, 5시 이후에 하원하면 3천 원이에요. 큰아이가 둘 이상이면 한 명씩 계산돼요.",
     "이건 회사가 받는 게 아니라 관리사님 인건비라서, 마지막 날 관리사님께 직접 드리시면 돼요.",
     "큰아이 요금은 예약하실 때 센터에서 안내드리고요, 협의하실 부분이 있으면 서비스 첫날 관리사님과 조율하실 수 있어요."
-  ], "<b>금액은 화면에 나오지 않아요 — 상담자가 직접 말씀드리세요.</b> 위에서 하원 시간을 눌러두면 문자에 같이 들어가요. " +
+  ], "<b>본인부담금과 별도</b>라는 점을 꼭 짚어주세요. 위에서 하원 시간을 눌러두면 표에 표시되고 문자에도 금액이 들어가요. " +
      "등록 메모에 &lsquo;첫날 관리사님과 조율 / 하원 시간 / 하루 금액&rsquo;을 꼭 남겨주세요.") +
-  checklist("bigkid", ["큰아이 있는지 · 나이","등·하원 시간 (5시 기준) · 가정보육 여부","본인부담금은 산모+신생아, 큰아이는 가사 추가분","하루 금액 직접 안내 (2명이면 한 명씩)","마지막 날 관리사님께 직접 지급","첫날 제공계획서로 조율 + 등록 메모"]);
+  checklist("bigkid", ["큰아이 있는지 · 나이","등·하원 시간 (5시 기준) · 가정보육 여부","본인부담금은 산모+신생아, 큰아이는 가사 추가분","하루 금액 안내 (둘 이상이면 한 명씩)","마지막 날 관리사님께 직접 지급","첫날 제공계획서로 조율 + 등록 메모"]);
 }
 
 /* ══════════ 17. 산모교실 ══════════ */
@@ -1750,7 +1758,7 @@ var FAQ = [
 ["청소는 어디까지요?", "<b>산모님과 아기 생활공간</b> 위주입니다. 대청소·다른 가족 세탁물은 제외."],
 ["큰아이도 봐주세요?",
  "<b>둘째 이상 출산으로 큰아이가 있으면 하루 단위 추가요금</b>이 있어요. 큰아이 때문에 늘어나는 가사업무(빨래·설거지·반찬·장난감 정리·청소)에 대한 관리사님 인건비예요.<br><br>" +
- "금액은 <b>하원 시간(오후 5시 기준)·가정보육 여부</b>로 달라지고, 큰아이가 둘 이상이면 한 명씩 계산. " +
+ "하루 기준 <b>종일 1만 원 · 5시 이전 하원 5천 원 · 5시 이후 하원 3천 원</b> (본인부담금 외 별도), 큰아이가 둘 이상이면 한 명씩 계산. " +
  "<b>마지막 날 관리사님께 직접</b>(현금·계좌이체) 드려요. <b>예약 시 센터에서 안내</b>드리고, 협의할 부분은 <b>서비스 첫날 관리사님과 조율</b>할 수 있어요. 자세한 건 <b>큰아이 요금안내 화면</b>."],
 ["남편이 집에 있으면 추가요금 있어요?", "<b>없어요.</b> 추가요금은 큰아이가 있을 때만이에요. 첫째 출산이어도 없어요."],
 ["큰아이는 낮에 어린이집 가는데도 붙어요?",
