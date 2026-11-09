@@ -2414,6 +2414,7 @@ function reset(){
   S = {name:"",phone:"",birth:"",addr:"",due:"",deliv:"",startWish:"",memo:"",phone4:"",
        fetus:"single",order:1,staff:1,disability:false,preemie:false,band:"통합",period:1,bigkid:""};
   checks = {}; TF = {}; tfIdx = 0; QA_STATE = {}; GUESS = null; justSaved = false; cur = 0; render();
+  menu(false); document.getElementById("cover").classList.remove("hide");  /* 새 상담 → 시작 화면(궁금한 것 고르기)으로 */
 }
 document.getElementById("resetBtn").addEventListener("click", reset);
 (function(){
