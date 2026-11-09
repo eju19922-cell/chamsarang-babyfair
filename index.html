@@ -790,11 +790,11 @@ figure.shot img{border-radius:22px;border-color:var(--line);box-shadow:0 10px 26
     <div class="lgtop">SINCE 1998</div>
     <div class="concern-l">산모님, 오늘 가장 궁금하신 것 하나만 골라주세요</div>
     <div class="covermenu cm4" id="concernMenu">
+      <button type="button" class="cms" data-cgo="day"><span class="cms-t">제공인력의 업무와 표준일정표</span><span class="cms-d">하는 일 · 하루 일정</span></button>
+      <button type="button" class="cms" data-cgo="company"><span class="cms-t">참사랑어머니회가 궁금해요</span><span class="cms-d">국내 최초 · 이용자 수 1위</span></button>
       <button type="button" class="cms" data-cgo="calc"><span class="cms-t">비용이 얼마인지</span><span class="cms-d">정부지원 · 본인부담금 바로 계산</span></button>
       <button type="button" class="cms" data-cgo="bigkid"><span class="cms-t">큰아이가 있어요</span><span class="cms-d">큰아이 추가요금 · 지급 방법</span></button>
-      <button type="button" class="cms" data-cgo="day"><span class="cms-t">제공인력의 업무와 표준일정표</span><span class="cms-d">하는 일 · 하루 일정</span></button>
       <button type="button" class="cms" data-cgo="family"><span class="cms-t">친정엄마 · 산모교실</span><span class="cms-d">가족 관리사 · 무료 산모교실</span></button>
-      <button type="button" class="cms" data-cgo="company"><span class="cms-t">참사랑어머니회가 궁금해요</span><span class="cms-d">국내 최초 · 이용자 수 1위</span></button>
     </div>
     <button class="btn pri go" id="startBtn" type="button">처음부터 순서대로</button>
     <div class="hint"><span class="kbd">→</span> 다음 · <span class="kbd">N</span> 대본 · <span class="kbd">F</span> 질문·문자 · 원하는 화면을 눌러 바로 시작할 수도 있어요</div>
@@ -1349,15 +1349,15 @@ function s_class(){
   '<div class="punch"><div class="lab">산모님께 드리는 혜택</div>' +
     '<div class="txt">참가비 <b class="hl">무료</b> · 준비된 <b class="hl">사은품</b>까지 — ' +
     '저희 서비스 예약은 안 하셔도 됩니다. <b>산모교실 신청만</b> 하시면 돼요.</div></div>' +
-  '<div class="classgrid">' + photo("poster-class.jpg","AI와 만드는 태교 동화","tall") +
+  '<div class="classgrid">' + photo("poster-class-dec.jpg","12월 산모교실 — 신생아 목욕법 & 크리스마스 트리 만들기","tall") +
     '<div class="gal" style="gap:10px;margin:0;">' + photo("class-flower.jpg","참사랑 산모교실 현장") +
     photo("class-scene.jpg","태교 꽃꽂이 산모교실") + '</div>' +
-    photo("poster-monthly.jpg","월간 산모교실 — 매월 마지막 주","tall") + '</div>' +
+    photo("poster-monthly.jpg","참사랑씨앤이 산모교실","tall") + '</div>' +
   script([
     "그리고 하나 더, 산모님께 드리는 혜택이 있어요. 저희가 무료 산모교실을 정기적으로 운영해요.",
     "저희 서비스 예약은 안 하셔도 돼요. 산모교실 신청만 하시면 무료로 참여하시고, 준비된 사은품도 받아 가세요.",
-    "이번에는 AI로 태교 동화를 만들어보는 시간이에요. 사진 보시면 매번 이렇게 많이 오세요.",
-    "매월 마지막 주에 열리니까, 카카오채널 친구추가 해두시면 일정을 알려드려요.",
+    "이번 12월에는 신생아 목욕법을 배우고, 크리스마스 트리도 직접 만들어 가져가세요. 사진 보시면 매번 이렇게 많이 오세요.",
+    "카카오채널 친구추가 해두시면 산모교실 일정이 잡힐 때마다 알려드려요.",
     "산모교실 오시면 사은품만이 아니라 실제 육아 정보도 실속 있게 얻어가실 수 있어요. 선배 산모님들 얘기도 듣고요."
   ], "<b>&lsquo;무료로 참여하고 사은품 받아 가세요&rsquo;</b>가 이 장의 전부입니다. " +
      "&lsquo;서비스 예약은 필요 없지만 산모교실 신청은 해야 한다&rsquo;를 헷갈리지 않게 말하세요.") +
@@ -1369,7 +1369,7 @@ function s_family(){
   return head("양성교육", "산모신생아 건강관리사 양성교육 — 가족도 가능합니다") +
   '<div class="punch"><div class="lab">참사랑만의 차이</div>' +
     '<div class="txt">교육 · 등록 · 바우처까지 <b class="hl">한 번에</b> · 어머니 수당 <b class="hl">경남 최대 수준</b> · <b>출산 전에 미리</b></div></div>' +
-  '<div class="gal g2 big">' + photo("poster-family.jpg","딸과 며느리의 산후조리 — 2026년 교육일정","tall") +
+  '<div class="gal g2 big">' + photo("poster-family.jpg","딸과 며느리의 산후조리 — 2027년 교육일정 (일정 미정)","tall") +
     photo("poster-extra.jpg","영유아 · 정리수납 · AI 실무 활용교육","tall") + '</div>' +
   script([
     "혹시 친정어머니나 시어머니가 집에 계시면서 도와주실 수 있는 상황이세요? 그러면 이 제도를 꼭 아셔야 해요.",
@@ -1381,7 +1381,7 @@ function s_family(){
     "산모·신생아 교육 들으시고 나서 영유아나 정리수납, AI 교육까지 이어서 들으실 수도 있고요.",
     "다만 교육 듣고 등록하는 데 시간이 걸려요. 그래서 출산 전에 미리 준비하셔야 해요."
   ], "베이비페어는 <b>어머니와 함께 오시는 경우가 많습니다.</b> " +
-     "포스터의 <b>교육 일정</b>을 짚고, <b>&lsquo;교육부터 행정까지 한 번에&rsquo;</b>와 <b>수당</b>을 꼭 말씀하세요.") +
+     "<b>2027년 교육 일정은 아직 미정</b>이에요 — 연락처를 받아두고 확정되면 안내드린다고 말씀하세요. <b>&lsquo;교육부터 행정까지 한 번에&rsquo;</b>와 <b>수당</b>을 꼭 말씀하세요.") +
   checklist("family", [
     "국가지원 받으며 근무 가능",
     "교육 → 제공인력 등록 → 바우처까지 한 번에",
@@ -2118,7 +2118,6 @@ function render(){
   document.getElementById("prevBtn").disabled = atStart;
   document.getElementById("prevBtn").style.opacity = atStart ? ".4" : "1";
   document.getElementById("nextBtn").textContent = (pos === v.length-1) ? "처음으로" : "다음 →";
-  document.body.classList.toggle('warmbg', STEPS[cur].render===s_family || STEPS[cur].render===s_class);
   renderNav(); renderMomBar(); refresh(); loadPhotos(); renderLogCount();
   if (STEPS[cur].render === s_reserve){
     var dn = document.getElementById("dateNoticeChk");
@@ -2254,7 +2253,7 @@ document.addEventListener("input", function(e){
 document.addEventListener("click", function(e){
   var cg = e.target.closest ? e.target.closest("[data-cgo]") : null;
   if (cg){
-    var CGO = {calc:s_calc, bigkid:s_bigkid, day:s_service, company:s_company, family:s_family};
+    var CGO = {calc:s_calc, bigkid:s_bigkid, day:s_service, company:s_company, family:s_class};
     startAt(stepIndexOf(CGO[cg.dataset.cgo])); return;
   }
   var bk = e.target.closest ? e.target.closest("[data-bk]") : null;
