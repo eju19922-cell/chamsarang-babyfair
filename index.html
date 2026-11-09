@@ -6,7 +6,7 @@
 <title>참사랑 베이비페어 상담</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;600;700&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <style>
 :root{
   --ground:#FBF5F3; --surface:#FFFFFF; --surface-2:#FDF1F6;
@@ -689,6 +689,98 @@ body:not(.presenting) .pagelogo{display:none;}
 @media print{.rail,.bar,.drawer,.fabs,.sheet,.cover{display:none;}.stage{height:auto;}
   .slide{overflow:visible;padding:0;}body{background:#fff;font-size:12px;}.box{box-shadow:none;}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
+
+/* ════════ 2026.11 개정판 테마 — 크림 핑크 · 웜 브라운 · 로즈 (이전 남색 버전과 구분) ════════ */
+:root{
+  --ground:#FFF7F5; --surface:#FFFFFF; --surface-2:#FCEBE7;
+  --line:#F3DED8; --line-2:#EBCBC3;
+  --ink:#43302B; --text-2:#6B514A; --text-3:#9C847D;
+  --brand:#C2475B; --brand-d:#A93A4C; --brand-soft:#FCEBE7; --brand-line:#F0C4BE;
+  --navy:#43302B; --navy-d:#43302B; --navy-soft:#FBEFEA; --navy-line:#EED6CE;
+  --shadow:0 1px 2px rgba(110,60,50,.04), 0 16px 36px -22px rgba(150,70,60,.22);
+  --shadow-lg:0 2px 4px rgba(110,60,50,.05), 0 26px 54px -28px rgba(150,70,60,.30);
+}
+body{font-family:"Noto Sans KR","Malgun Gothic","맑은 고딕",system-ui,sans-serif;color:var(--ink);}
+/* 왼쪽 목차 — 밝은 크림 */
+.rail{background:linear-gradient(180deg,#FFFFFF 0%,#FCEBE7 100%);border-right:1px solid var(--line);}
+.rail-h{border-bottom:1px solid var(--line);}
+.raillogo{background:transparent;padding:4px 0;}
+.rail-h .tag{color:var(--text-3);}
+.rail-h .tag::after{content:"2026.11 개정판";display:inline-block;white-space:nowrap;margin-left:8px;font-size:11px;font-weight:700;color:#fff;background:var(--brand);border-radius:99px;padding:2px 8px;vertical-align:1px;}
+.prog{background:#F6DCD6;}
+.prog i{background:linear-gradient(90deg,#E58A92,#C2475B);}
+.prog-t{color:var(--text-3);}
+.snav{color:var(--text-2);border-radius:14px;}
+.snav:hover{background:rgba(194,71,91,.08);color:var(--brand-d);}
+.snav.on{background:var(--brand);color:#fff;box-shadow:0 8px 18px -10px rgba(194,71,91,.6);}
+.sn{border-radius:50%;border-color:#E6C2BA;background:#fff;color:var(--brand);}
+.snav.done .sn{background:#E9A3A3;border-color:#E9A3A3;color:#fff;}
+.sgroup{color:var(--brand);letter-spacing:.08em;}
+.rail-f{border-top:1px solid var(--line);}
+.rail-f .btn{background:#fff;border-color:var(--line-2);color:var(--text-2);}
+.rail-f .btn:hover{border-color:var(--brand);color:var(--brand-d);}
+.rail .logcount,.rail-f .logcount{color:var(--text-3);}
+body.presenting .rail::after{color:var(--brand);}
+/* 버튼 — 둥근 알약 모양 */
+.btn{border-radius:99px;color:var(--text-2);}
+.btn.pri{background:linear-gradient(135deg,#D25E6E,#B8404F);border-color:transparent;}
+/* 화면 배경 — 크림 + 파스텔 원 */
+.slide{background:
+  radial-gradient(circle at 92% 12%, rgba(244,186,186,.35) 0 120px, transparent 121px),
+  radial-gradient(circle at 97% 30%, rgba(252,228,224,.9) 0 70px, transparent 71px),
+  radial-gradient(circle at 3% 92%, rgba(246,205,196,.38) 0 150px, transparent 151px),
+  radial-gradient(circle at 12% 104%, rgba(255,236,214,.7) 0 90px, transparent 91px),
+  var(--ground);}
+.eyebrow{display:inline-block;background:var(--brand-soft);color:var(--brand);border:1px solid var(--brand-line);
+  border-radius:99px;padding:3px 13px;letter-spacing:.06em;font-size:12.5px;}
+h1.title{color:var(--ink);}
+h1.title b,h1.title .pk-word{color:var(--brand);}
+p.lede b{color:var(--brand);}
+.box{border-radius:24px;border-color:var(--line);padding:16px 20px;}
+.box h3{color:var(--ink);font-weight:700;}
+.box.hi{background:#FFF1EE;border-color:var(--brand);}
+.box.soft{background:#FDF3F0;}
+figure.shot img{border-radius:22px;border-color:var(--line);box-shadow:0 10px 26px -16px rgba(150,70,60,.35);}
+.punch{background:linear-gradient(135deg,#FCEBE7 0%,#FFF7F5 75%);border-color:var(--brand-line);border-left-color:var(--brand);border-radius:22px;}
+.modecard,.cms{background:#fff;border-color:var(--line-2);border-radius:24px;}
+.cms-t,.modecard .mt{color:var(--ink);}
+.qjbtn{border-radius:99px;}
+.ringc{border-radius:50%;}
+/* 시작 화면 */
+.cover{background:
+  radial-gradient(circle at 88% 14%, rgba(244,186,186,.45) 0 160px, transparent 161px),
+  radial-gradient(circle at 8% 86%, rgba(246,205,196,.5) 0 190px, transparent 191px),
+  radial-gradient(circle at 16% 18%, rgba(255,236,214,.8) 0 70px, transparent 71px),
+  linear-gradient(160deg,#FFF7F5 0%,#FCE4E0 100%);}
+.lgtop{color:var(--brand);opacity:1;}
+.lgtop::before{content:"2026.11 개정판";display:inline-block;margin-right:10px;font-size:11.5px;letter-spacing:.06em;
+  color:#fff;background:var(--brand);border-radius:99px;padding:3px 11px;}
+.concern-l{color:var(--ink);font-family:"Gowun Batang",serif;font-size:19px;}
+/* 아래 진행 바 — 밝게 */
+.bar{background:#FFFFFF;border-top:1px solid var(--line);box-shadow:0 -10px 26px -20px rgba(150,70,60,.35);}
+.bar .btn{background:#fff;border-color:var(--line-2);color:var(--text-2);}
+.bar .btn:hover{border-color:var(--brand);background:var(--brand-soft);color:var(--brand-d);}
+.bar .btn.on{background:var(--brand-soft);border-color:var(--brand);color:var(--brand-d);}
+.bar .btn.pri{background:linear-gradient(135deg,#D25E6E,#B8404F);color:#fff;box-shadow:0 10px 22px -12px rgba(184,64,79,.7);}
+.bar .mid{color:var(--text-3);}
+.bar .mid b{color:var(--ink);}
+.bar .mid .pg{color:var(--brand-d);background:var(--brand-soft);border-color:var(--brand-line);}
+.fsbtn{background:#fff;border-color:var(--line-2);color:var(--text-2);border-radius:50%;}
+.fsbtn:hover{border-color:var(--brand);color:var(--brand);}
+.fab{background:linear-gradient(135deg,#D25E6E,#B8404F);box-shadow:0 12px 26px -12px rgba(184,64,79,.7);}
+.fab:hover{background:var(--brand-d);}
+/* 상담자용 대본 패널 — 따뜻한 짙은 갈색 */
+.drawer{background:#3D2B27;border-top-color:#5A423C;}
+.chk{background:#4A3631;border-color:#644A43;}
+.script h4,.chk h4{color:#F4B9B0;}
+.script h4::before{background:#F4B9B0;}
+.script .say::before,.script .say::after{color:#F4B9B0;}
+.script .say{color:#FBF1EE;}
+.chk input{accent-color:#F4B9B0;}
+.chk label{border-bottom-color:#644A43;color:#F3E4E0;}
+.drawer:not(.open){border-top-color:transparent;background:transparent;}
+.covermenu.cm4{max-width:1000px;}.covermenu.cm4 .cms-t{font-size:20px;word-break:keep-all;}.cms-d{word-break:keep-all;}
+.tag.b{background:var(--brand-soft);color:var(--brand-d);}
 </style>
 </head>
 <body>
@@ -1396,7 +1488,7 @@ function s_close(){
   '<div class="chk" data-staff hidden><h4>상담자 마무리 체크 <span class="cnt">저장·전달</span></h4>' +
     '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">' +
     '<input type="text" data-s="phone4" value="' + esc(S.phone4) + '" placeholder="연락처 뒷 네 자리" ' +
-    'style="width:170px;padding:9px 12px;border-radius:9px;border:1.5px solid #2A4A6E;background:#0F2038;color:#EAF1F8;font-family:inherit;font-size:15px;">' +
+    'style="width:170px;padding:9px 12px;border-radius:9px;border:1.5px solid #644A43;background:#2F201D;color:#FBF1EE;font-family:inherit;font-size:15px;">' +
     '<button class="btn pri" id="saveBtn" type="button">오늘 상담 저장</button>' +
     '<button class="btn" id="newBtn2" type="button">새 상담 시작</button></div>' +
     '<p style="margin:0;font-size:14px;color:#9FB4CE;">예약 원하시면 본사 사이트에서 바로 진행(예약금은 담당자 안내) · ' +
